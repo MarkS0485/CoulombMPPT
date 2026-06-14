@@ -1,0 +1,339 @@
+<UserControl x:Class="CoulombMppt.Ui.Pages.DashboardPage"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:c="clr-namespace:CoulombMppt.Ui.Controls"
+             xmlns:vm="clr-namespace:CoulombMppt.Ui.ViewModels">
+    <UserControl.DataContext>
+        <vm:DashboardViewModel/>
+    </UserControl.DataContext>
+
+    <UserControl.Resources>
+        <!-- One cell in the gauge cluster: a gauge with a small frame. -->
+        <Style x:Key="GaugeCell" TargetType="Border">
+            <Setter Property="Width"   Value="150"/>
+            <Setter Property="Height"  Value="150"/>
+            <Setter Property="Margin"  Value="6"/>
+            <Setter Property="Background" Value="{StaticResource Body2}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource LineGrey}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="10"/>
+            <Setter Property="Padding" Value="6"/>
+        </Style>
+
+        <!-- A small stat block: caption over a big value. -->
+        <Style x:Key="StatCaption" TargetType="TextBlock" BasedOn="{StaticResource Caption}">
+            <Setter Property="Margin" Value="0,0,0,1"/>
+        </Style>
+
+        <!-- The trend range chips. -->
+        <Style x:Key="RangeChip" TargetType="Button" BasedOn="{StaticResource OutlinedButton}">
+            <Setter Property="Padding" Value="9,3"/>
+            <Setter Property="MinWidth" Value="42"/>
+            <Setter Property="Margin" Value="4,0,0,0"/>
+        </Style>
+    </UserControl.Resources>
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel Margin="20">
+            <c:PageHeader Title="Dashboard" Subtitle="Live overview of the connected controller">
+                <c:PageHeader.ActionContent>
+                    <StackPanel Orientation="Horizontal">
+                        <Border CornerRadius="5" Padding="8,3" Margin="0,0,8,0"
+                                Background="#120F766E" BorderBrush="#300F766E" BorderThickness="1"
+                                Visibility="{Binding RelayActive, Converter={StaticResource BoolToVis}}">
+                            <TextBlock Text="↻ phone relay" FontSize="11" Foreground="{StaticResource SolarTeal}"/>
+                        </Border>
+                        <c:StatusPill Label="{Binding StatusLabel}"
+                                      Kind="{Binding StatusLabel, Converter={StaticResource StatusLabelToKind}}"
+                                      VerticalAlignment="Center" Margin="0,0,8,0"/>
+                        <Button Content="Connect" Style="{StaticResource PrimaryButton}"
+                                Command="{Binding ConnectCommand}" Margin="0,0,6,0"/>
+                        <Button Content="Disconnect" Style="{StaticResource OutlinedButton}"
+                                Command="{Binding DisconnectCommand}"/>
+                    </StackPanel>
+                </c:PageHeader.ActionContent>
+            </c:PageHeader>
+
+            <!-- Error banner -->
+            <Border Background="#FFFFEBE0" CornerRadius="6" Padding="12,8" Margin="0,0,0,10"
+                    Visibility="{Binding LastError, Converter={StaticResource StringNotEmptyToVis}}">
+                <TextBlock Text="{Binding LastError}" Foreground="{StaticResource ErrRed}" TextWrapping="Wrap"/>
+            </Border>
+
+            <!-- Active alert banner -->
+            <Border Background="#FFFFF4E5" CornerRadius="6" Padding="12,8" Margin="0,0,0,10"
+                    BorderBrush="{StaticResource WarnAmber}" BorderThickness="1"
+                    Visibility="{Binding HasActiveAlert, Converter={StaticResource BoolToVis}}">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0" Text="{Binding ActiveAlertText}" TextWrapping="Wrap"
+                               Foreground="{StaticResource InkHi}" VerticalAlignment="Center"/>
+                    <Button Grid.Column="1" Content="Dismiss all" Style="{StaticResource OutlinedButton}"
+                            Command="{Binding DismissAlertsCommand}"/>
+                </Grid>
+            </Border>
+
+            <!-- ============ HERO: identity · SoC · headline metrics ============ -->
+            <Border Style="{StaticResource Card}" Padding="18,16">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <!-- Big state-of-charge ring -->
+                    <c:SocRing Grid.Column="0" Percent="{Binding Soc}" Caption="state of charge"
+                               Thickness="15" Width="150" Height="150" Margin="0,0,22,0"/>
+
+                    <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                        <!-- Name + charge-state badge -->
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0">
+                                <TextBlock Text="{Binding ControllerName}" Style="{StaticResource H1}" FontSize="20"/>
+                                <TextBlock Text="{Binding ControllerMac}" Style="{StaticResource Mono}"
+                                           FontSize="11" Foreground="{StaticResource InkLo}"/>
+                            </StackPanel>
+                            <StackPanel Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Top">
+                                <c:ChargeStateBadge State="{Binding ChargerStateValue}" HorizontalAlignment="Right"/>
+                                <TextBlock Text="{Binding FlowStatusLabel}" Style="{StaticResource H2}"
+                                           HorizontalAlignment="Right" Margin="0,6,2,0"
+                                           Foreground="{StaticResource InkMd}"/>
+                            </StackPanel>
+                        </Grid>
+
+                        <Border Height="1" Background="{StaticResource LineGrey}" Margin="0,12,0,12"/>
+
+                        <!-- Headline metrics -->
+                        <UniformGrid Columns="4">
+                            <StackPanel Margin="0,0,10,0">
+                                <TextBlock Text="BATTERY" Style="{StaticResource StatCaption}"/>
+                                <TextBlock Text="{Binding BatteryVoltsLabel}" Style="{StaticResource Metric}" FontSize="22"
+                                           Foreground="{StaticResource CoolBlue}"/>
+                            </StackPanel>
+                            <StackPanel Margin="0,0,10,0">
+                                <TextBlock Text="PV POWER" Style="{StaticResource StatCaption}"/>
+                                <TextBlock Text="{Binding PvLabel}" Style="{StaticResource Metric}" FontSize="22"
+                                           Foreground="{StaticResource SolarTeal}"/>
+                            </StackPanel>
+                            <StackPanel Margin="0,0,10,0">
+                                <TextBlock Text="MPPT CHARGE" Style="{StaticResource StatCaption}"/>
+                                <TextBlock Text="{Binding ChargeLabel}" Style="{StaticResource Metric}" FontSize="22"
+                                           Foreground="{StaticResource OkGreen}"/>
+                            </StackPanel>
+                            <StackPanel>
+                                <TextBlock Text="CONTROLLER TEMP" Style="{StaticResource StatCaption}"/>
+                                <TextBlock Text="{Binding TempLabel}" Style="{StaticResource Metric}" FontSize="22"
+                                           Foreground="{StaticResource WarnAmber}"/>
+                            </StackPanel>
+                        </UniformGrid>
+                        <TextBlock Text="{Binding UpdatedLabel}" Style="{StaticResource Caption}" Margin="0,8,0,0"/>
+                    </StackPanel>
+                </Grid>
+            </Border>
+
+            <!-- ============ ENERGY FLOW (animated) ============ -->
+            <Border Style="{StaticResource Card}" Margin="0,12,0,0">
+                <StackPanel>
+                    <TextBlock Text="POWER FLOW" Style="{StaticResource SectionHeader}"/>
+                    <c:EnergyFlowDiagram Height="206" Margin="0,4,0,0"
+                                         SolarW="{Binding PvWatts}"
+                                         BatteryNetW="{Binding BatteryNetW}"
+                                         EasunW="{Binding EasunWatts}"
+                                         Soc="{Binding Soc}"
+                                         BatteryVoltage="{Binding BatteryVoltage}"
+                                         HasInference="{Binding HasLiveEasun}"
+                                         IsLive="{Binding HasLive}"/>
+                    <TextBlock Style="{StaticResource Caption}" Margin="0,6,0,0" TextWrapping="Wrap"
+                               Text="The MPPT array figure is sensed directly. The EA SUN inverter's contribution is inferred from how the battery voltage moves versus the MPPT's known current — flowing into the bank when its panels are charging, out to the load when the inverter is drawing."/>
+                    <TextBlock Style="{StaticResource Caption}" Margin="0,4,0,0" Foreground="{StaticResource InkLo}"
+                               Text="Add the battery pack profile (App settings → Battery) to enable the EA SUN inference."
+                               Visibility="{Binding HasEnergyProfile, Converter={StaticResource BoolToVisInv}}"/>
+                </StackPanel>
+            </Border>
+
+            <!-- ============ ENERGY TODAY ============ -->
+            <Border Style="{StaticResource Card}" Margin="0,12,0,0">
+                <StackPanel>
+                    <TextBlock Text="ENERGY TODAY" Style="{StaticResource SectionHeader}"/>
+                    <UniformGrid Columns="5" Margin="0,4">
+                        <StackPanel Margin="0,4,8,4">
+                            <TextBlock Text="PV today" Style="{StaticResource Caption}"/>
+                            <TextBlock Text="{Binding TodayPvKwh}" Style="{StaticResource Metric}" FontSize="20"
+                                       Foreground="{StaticResource OkGreen}"/>
+                        </StackPanel>
+                        <StackPanel Margin="0,4,8,4">
+                            <TextBlock Text="PV yesterday" Style="{StaticResource Caption}"/>
+                            <TextBlock Text="{Binding YesterdayPvKwh}" Style="{StaticResource Metric}" FontSize="20"
+                                       Foreground="{StaticResource SolarTeal}"/>
+                        </StackPanel>
+                        <StackPanel Margin="0,4,8,4"
+                                    Visibility="{Binding HasEnergyProfile, Converter={StaticResource BoolToVis}}">
+                            <TextBlock Text="Battery in" Style="{StaticResource Caption}"/>
+                            <TextBlock Text="{Binding TodayBattIn}" Style="{StaticResource Metric}" FontSize="20"
+                                       Foreground="{StaticResource CoolBlue}"/>
+                        </StackPanel>
+                        <StackPanel Margin="0,4,8,4"
+                                    Visibility="{Binding HasEnergyProfile, Converter={StaticResource BoolToVis}}">
+                            <TextBlock Text="Battery out" Style="{StaticResource Caption}"/>
+                            <TextBlock Text="{Binding TodayBattOut}" Style="{StaticResource Metric}" FontSize="20"
+                                       Foreground="{StaticResource SolarCopper}"/>
+                        </StackPanel>
+                        <StackPanel Margin="0,4,0,4"
+                                    Visibility="{Binding HasEnergyProfile, Converter={StaticResource BoolToVis}}">
+                            <TextBlock Text="EA SUN net" Style="{StaticResource Caption}"/>
+                            <TextBlock Text="{Binding TodayEasun}" Style="{StaticResource Metric}" FontSize="16"
+                                       Foreground="{StaticResource SolarViolet}"/>
+                        </StackPanel>
+                    </UniformGrid>
+                </StackPanel>
+            </Border>
+
+            <!-- ============ INTERACTIVE LIVE TREND ============ -->
+            <Border Style="{StaticResource Card}" Margin="0,12,0,0">
+                <StackPanel>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0" VerticalAlignment="Center">
+                            <Run Text="LIVE TREND" FontSize="10" FontWeight="SemiBold"
+                                 Foreground="{StaticResource InkLo}"/>
+                            <Run Text="·" Foreground="{StaticResource InkLo}"/>
+                            <Run Text="{Binding TrendRangeLabel, Mode=OneWay}" FontSize="10" FontWeight="SemiBold"
+                                 Foreground="{StaticResource SolarTeal}"/>
+                        </TextBlock>
+
+                        <!-- Range chips + snap-to-live -->
+                        <StackPanel Grid.Column="2" Orientation="Horizontal">
+                            <Button Content="5m"  Style="{StaticResource RangeChip}"
+                                    Command="{Binding SetTrendRangeCommand}" CommandParameter="5"/>
+                            <Button Content="30m" Style="{StaticResource RangeChip}"
+                                    Command="{Binding SetTrendRangeCommand}" CommandParameter="30"/>
+                            <Button Content="2h"  Style="{StaticResource RangeChip}"
+                                    Command="{Binding SetTrendRangeCommand}" CommandParameter="120"/>
+                            <Button Content="⟲ Live" Style="{StaticResource RangeChip}" MinWidth="56" Margin="10,0,0,0"
+                                    Command="{Binding SnapLiveCommand}"/>
+                        </StackPanel>
+                    </Grid>
+
+                    <TextBlock Text="{Binding TrendReadout}" Style="{StaticResource Mono}" FontSize="12"
+                               Foreground="{StaticResource InkHi}" Margin="0,8,0,2"/>
+                    <TextBlock Text="Drag to pan · scroll to zoom · hover to read off any moment — all three charts move together."
+                               Style="{StaticResource Caption}" Foreground="{StaticResource InkLo}" Margin="0,0,0,2"/>
+
+                    <TextBlock Text="Battery voltage (V)" Style="{StaticResource Caption}" Margin="2,8,0,2"/>
+                    <c:OxyChartControl Values="{Binding VoltTrend}" Timestamps="{Binding TrendAxis}" Unit="V" Height="118"
+                                       LineColor="{StaticResource CoolBlueColor}"
+                                       ViewStartMs="{Binding TrendViewStartMs, Mode=TwoWay}"
+                                       ViewEndMs="{Binding TrendViewEndMs, Mode=TwoWay}"
+                                       CrosshairMs="{Binding TrendCrosshairMs, Mode=TwoWay}"
+                                       MinViewMs="{Binding TrendMinViewMs}" MaxViewMs="{Binding TrendMaxViewMs}"/>
+
+                    <TextBlock Text="PV power (W)" Style="{StaticResource Caption}" Margin="2,10,0,2"/>
+                    <c:OxyChartControl Values="{Binding PvTrend}" Timestamps="{Binding TrendAxis}" Unit="W" Height="118"
+                                       LineColor="{StaticResource SolarTealColor}" MinForced="0"
+                                       ViewStartMs="{Binding TrendViewStartMs, Mode=TwoWay}"
+                                       ViewEndMs="{Binding TrendViewEndMs, Mode=TwoWay}"
+                                       CrosshairMs="{Binding TrendCrosshairMs, Mode=TwoWay}"
+                                       MinViewMs="{Binding TrendMinViewMs}" MaxViewMs="{Binding TrendMaxViewMs}"/>
+
+                    <TextBlock Text="Battery net power (W)" Style="{StaticResource Caption}" Margin="2,10,0,2"/>
+                    <c:OxyChartControl Values="{Binding NetTrend}" Timestamps="{Binding TrendAxis}" Unit="W" Height="118"
+                                       LineColor="{StaticResource SolarVioletColor}"
+                                       ViewStartMs="{Binding TrendViewStartMs, Mode=TwoWay}"
+                                       ViewEndMs="{Binding TrendViewEndMs, Mode=TwoWay}"
+                                       CrosshairMs="{Binding TrendCrosshairMs, Mode=TwoWay}"
+                                       MinViewMs="{Binding TrendMinViewMs}" MaxViewMs="{Binding TrendMaxViewMs}"/>
+                </StackPanel>
+            </Border>
+
+            <!-- ============ DETAILED GAUGES ============ -->
+            <Border Style="{StaticResource Card}" Margin="0,12,0,0">
+                <StackPanel>
+                    <TextBlock Text="DETAILED GAUGES" Style="{StaticResource SectionHeader}"/>
+                    <WrapPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                        <Border Style="{StaticResource GaugeCell}">
+                            <c:RadialGauge Value="{Binding BatteryVoltage}" Min="{Binding VoltMin}" Max="{Binding VoltMax}"
+                                           Unit="V" Label="Battery" ValueFormat="0.0"
+                                           Accent="{StaticResource CoolBlueColor}"/>
+                        </Border>
+                        <Border Style="{StaticResource GaugeCell}">
+                            <c:RadialGauge Value="{Binding PvWatts}" Min="0" Max="{Binding PvScaleMax}"
+                                           Unit="W" Label="PV power" ValueFormat="0"
+                                           Accent="{StaticResource SolarTealColor}"/>
+                        </Border>
+                        <Border Style="{StaticResource GaugeCell}">
+                            <c:RadialGauge Value="{Binding ChargeCurrentA}" Min="0" Max="{Binding ChargeScaleMax}"
+                                           Unit="A" Label="MPPT charge" ValueFormat="0.0"
+                                           Accent="{StaticResource OkGreenColor}"/>
+                        </Border>
+                        <Border Style="{StaticResource GaugeCell}">
+                            <c:RadialGauge Value="{Binding BatteryNetW}" Max="{Binding BattWScaleMax}"
+                                           Bidirectional="True" Unit="W" Label="Battery net" ValueFormat="0"
+                                           Accent="{StaticResource OkGreenColor}"
+                                           NegativeAccent="{StaticResource SolarCopperColor}"/>
+                        </Border>
+                        <Border Style="{StaticResource GaugeCell}">
+                            <c:RadialGauge Value="{Binding EasunNetA}" Max="{Binding EasunScaleMax}"
+                                           Bidirectional="True" Unit="A" Label="EA SUN est." ValueFormat="0.0"
+                                           Accent="{StaticResource SolarVioletColor}"
+                                           NegativeAccent="{StaticResource ErrRedColor}"/>
+                        </Border>
+                        <Border Style="{StaticResource GaugeCell}">
+                            <c:RadialGauge Value="{Binding TemperatureC}" Min="0" Max="70"
+                                           Unit="°C" Label="Controller" ValueFormat="0.0"
+                                           Accent="{StaticResource WarnAmberColor}"/>
+                        </Border>
+                    </WrapPanel>
+                </StackPanel>
+            </Border>
+
+            <!-- ============ CONTROLLERS ============ -->
+            <Border Style="{StaticResource Card}" Margin="0,12,0,0">
+                <StackPanel>
+                    <TextBlock Text="PAIRED CONTROLLERS" Style="{StaticResource SectionHeader}"/>
+                    <TextBlock Text="No controllers paired yet — use Scan / pair to add one."
+                               Style="{StaticResource Caption}"
+                               Visibility="{Binding Controllers.Count, Converter={StaticResource CountZeroToVis}}"/>
+                    <ItemsControl ItemsSource="{Binding Controllers}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Border Background="{StaticResource Body2}" CornerRadius="6"
+                                        Padding="12,8" Margin="0,4">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+                                        <StackPanel Grid.Column="0">
+                                            <TextBlock Text="{Binding Label}" Style="{StaticResource H2}"/>
+                                            <TextBlock Text="{Binding SiteLabel}" Style="{StaticResource Caption}"/>
+                                        </StackPanel>
+                                        <Button Grid.Column="1" Content="Connect"
+                                                Style="{StaticResource OutlinedButton}"
+                                                Command="{Binding DataContext.SelectControllerCommand,
+                                                    RelativeSource={RelativeSource AncestorType=ItemsControl}}"
+                                                CommandParameter="{Binding}"/>
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+
+                    <Button Content="Toggle demo mode" Style="{StaticResource OutlinedButton}"
+                            Command="{Binding ToggleDemoCommand}" HorizontalAlignment="Left"
+                            Margin="0,10,0,0"/>
+                </StackPanel>
+            </Border>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

@@ -1,0 +1,9 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Compose owns everything; the XML theme just gives the system a sensible
+         pre-Compose splash colour matching the website's body background. -->
+    <style name="Theme.CoulombMppt" parent="android:Theme.Material.Light.NoActionBar">
+        <item name="android:statusBarColor" tools:targetApi="l">@color/coulomb_navy</item>
+        <item name="android:navigationBarColor" tools:targetApi="o_mr1">@color/body_0</item>
+        <item name="android:windowBackground">@color/body_0</item>
+    </style>
+</resources>

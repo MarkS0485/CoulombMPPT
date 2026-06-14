@@ -1,0 +1,18 @@
+<Project>
+
+  <!-- Applies to every .NET project under windows/ (currently src/CoulombMppt). -->
+  <PropertyGroup>
+    <!-- CoulombMppt targets a net*-windows TFM. GitHub's "Automatic Dependency
+         Submission (NuGet)" workflow runs on a LINUX runner and does a
+         `dotnet restore`, which fails with NETSDK1100 ("set the
+         EnableWindowsTargeting property to true") when restoring a
+         Windows-targeted project off-Windows. Enabling it lets that restore (and
+         the dependency-graph submission) succeed. It is a no-op for the real
+         build/release, which runs on windows-latest. -->
+    <EnableWindowsTargeting>true</EnableWindowsTargeting>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <AnalysisLevel>latest-recommended</AnalysisLevel>
+    <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+  </PropertyGroup>
+
+</Project>

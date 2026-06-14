@@ -1,0 +1,131 @@
+name: Release
+
+# Builds release artifacts for BOTH apps and, when a GitHub Release is
+# published, attaches them to it:
+#   * Android  — release APK  (UNSIGNED — no keystore is configured)
+#   * Windows  — self-contained win-x64 build, as a portable .zip AND an
+#                Inno Setup installer (.exe), both unsigned
+#
+# Triggers:
+#   * Publishing a GitHub Release  -> the tag is the version; assets are uploaded
+#                                     to that release.
+#   * The "Run workflow" button     -> builds the artifacts and leaves them as
+#                                     downloadable workflow artifacts (no upload).
+
+on:
+  push:
+    tags: [ 'v*' ]          # pushing a tag like v0.1.0 builds AND creates the release
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version label for the build (e.g. 0.1.0)'
+        required: true
+        default: '0.1.0'
+
+# Needed so the built-in token can upload assets onto a published release.
+permissions:
+  contents: write
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  # --------------------------------------------------------------- Android ---
+  android:
+    name: Android · release APK
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: android
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+          cache: gradle
+      - name: Make gradlew executable
+        run: chmod +x ./gradlew
+
+      - name: Build release APK
+        run: ./gradlew :app:assembleRelease --no-daemon --stacktrace
+
+      # Unsigned build, so this is app-release-unsigned.apk.
+      - name: Collect APK
+        run: |
+          mkdir -p "$GITHUB_WORKSPACE/dist"
+          find app/build/outputs/apk/release -name '*.apk' -exec cp {} "$GITHUB_WORKSPACE/dist/" \;
+          ls -l "$GITHUB_WORKSPACE/dist"
+      - name: Upload APK artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: android-apk
+          path: dist/*.apk
+          if-no-files-found: error
+
+  # --------------------------------------------------------------- Windows ---
+  windows:
+    name: Windows · publish + installer
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up .NET 10
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: Publish self-contained (win-x64)
+        run: >
+          dotnet publish windows/src/CoulombMppt/CoulombMppt.csproj
+          -c Release -r win-x64 --self-contained true -p:Platform=x64
+          -o windows/publish/win-x64
+
+      - name: Build Inno Setup installer
+        shell: pwsh
+        run: |
+          choco install innosetup --no-progress -y
+          $iscc = "C:\Program Files (x86)\Inno Setup 6\ISCC.exe"
+          & $iscc "windows\installer\CoulombMppt.iss"
+          if ($LASTEXITCODE -ne 0) { throw "ISCC failed ($LASTEXITCODE)" }
+
+      - name: Zip portable build
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force dist | Out-Null
+          Compress-Archive -Path windows/publish/win-x64/* -DestinationPath dist/CoulombMppt-win-x64.zip -Force
+
+      - name: Upload Windows artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows-build
+          path: |
+            windows/installer/Output/*.exe
+            dist/CoulombMppt-win-x64.zip
+          if-no-files-found: error
+
+  # ----------------------------------------------- Attach to the release -----
+  attach:
+    name: Attach assets to release
+    needs: [android, windows]
+    # Runs for a published Release OR a pushed v* tag (which creates the release).
+    if: github.event_name == 'release' || startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download built artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+      - name: Create / update the GitHub Release and upload assets
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.ref_name }}
+          name: ${{ github.ref_name }}
+          generate_release_notes: true
+          files: |
+            artifacts/**/*.apk
+            artifacts/**/*.exe
+            artifacts/**/*.zip

@@ -1,0 +1,47 @@
+<UserControl x:Class="CoulombMppt.Ui.Controls.BrandTopBar"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             mc:Ignorable="d"
+             x:Name="self">
+    <Border Background="{StaticResource BrandTopBarBrush}" Padding="20,18">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <Button Grid.Column="0" Click="OnBack"
+                    Visibility="{Binding ShowBack, ElementName=self, Converter={StaticResource BoolToVis}}"
+                    Background="Transparent" BorderThickness="0" Margin="0,0,12,0"
+                    Cursor="Hand">
+                <Button.Template>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="b" Background="Transparent" CornerRadius="999" Padding="8">
+                            <TextBlock Text="&#xE72B;" FontFamily="Segoe MDL2 Assets"
+                                       FontSize="18" Foreground="White"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="b" Property="Background" Value="#33FFFFFF"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Button.Template>
+            </Button>
+            <StackPanel Grid.Column="1">
+                <TextBlock Text="{Binding Title, ElementName=self}"
+                           FontSize="22" FontWeight="SemiBold"
+                           Foreground="White"/>
+                <TextBlock Text="{Binding Subtitle, ElementName=self}"
+                           FontSize="13"
+                           Foreground="#CCFFFFFF"
+                           Margin="0,2,0,0"/>
+            </StackPanel>
+            <ContentPresenter Grid.Column="2"
+                              Content="{Binding ActionContent, ElementName=self}"
+                              VerticalAlignment="Center"/>
+        </Grid>
+    </Border>
+</UserControl>

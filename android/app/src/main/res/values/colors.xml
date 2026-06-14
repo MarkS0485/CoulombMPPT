@@ -1,0 +1,7 @@
+<resources>
+    <!-- Mirror the brand palette used by Compose so the system splash/status
+         match the in-app navigation gradient. -->
+    <color name="coulomb_navy">#012169</color>
+    <color name="coulomb_red">#C8102E</color>
+    <color name="body_0">#F1F3F9</color>
+</resources>

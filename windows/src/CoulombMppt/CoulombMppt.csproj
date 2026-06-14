@@ -1,0 +1,55 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <!-- Target the Windows 11 SDK so Windows.Devices.Bluetooth.* projects in
+         directly, no contracts NuGet needed. -->
+    <TargetFramework>net10.0-windows10.0.22621.0</TargetFramework>
+    <SupportedOSPlatformVersion>10.0.17763.0</SupportedOSPlatformVersion>
+    <UseWPF>true</UseWPF>
+    <!-- Pulls in System.Windows.Forms so we can use NotifyIcon for the tray.
+         Coexists with WPF; we fully-qualify the few WinForms types we touch. -->
+    <UseWindowsForms>true</UseWindowsForms>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <LangVersion>latest</LangVersion>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <ApplicationIcon>Assets\app.ico</ApplicationIcon>
+    <AssemblyName>CoulombMppt</AssemblyName>
+    <RootNamespace>CoulombMppt</RootNamespace>
+    <Platforms>x64</Platforms>
+    <Version>0.1.0</Version>
+    <!-- DPI awareness configured here instead of app.manifest to satisfy WFO0003. -->
+    <ApplicationHighDpiMode>PerMonitorV2</ApplicationHighDpiMode>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- Embedded so the window + tray can load the same icon at runtime. -->
+    <Resource Include="Assets\app.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- UseWindowsForms adds System.Drawing + System.Windows.Forms to the
+         implicit global usings, which collide with WPF's UserControl, Point and
+         Color. We only touch WinForms via aliases (WinForms./Drawing.), so drop
+         those globals to keep the WPF code unambiguous. -->
+    <Using Remove="System.Windows.Forms" />
+    <Using Remove="System.Drawing" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
+    <PackageReference Include="OxyPlot.Wpf" Version="2.1.2" />
+    <PackageReference Include="QRCoder" Version="1.6.0" />
+    <PackageReference Include="Mono.Nat" Version="3.0.4" />
+  </ItemGroup>
+
+  <!-- Pulls Kestrel + minimal-API surface into the WPF app. The
+       Microsoft.WindowsDesktop.App ref is already there transitively
+       via UseWPF; this adds the ASP.NET runtime on top so the remote
+       controller API can be hosted in-process. -->
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+
+</Project>

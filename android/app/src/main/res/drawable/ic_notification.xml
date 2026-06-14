@@ -1,0 +1,27 @@
+<!--
+  Monochrome status-bar / notification icon for the polling foreground
+  service. Battery silhouette with a lightning bolt cut out of the
+  centre — instantly readable as "MPPT charge controller" without the
+  full-colour brand logo, which Android Tiramisu+ would otherwise show
+  as a featureless white square in the status bar.
+
+  Pure white on transparent at 24x24dp; the system tints + sizes it as
+  needed for the status bar, lockscreen, and bundled-notification chip.
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24"
+    android:tint="?android:attr/colorControlNormal">
+
+    <!-- Battery outline -->
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M9,3 L9,5 L7,5 C5.9,5 5,5.9 5,7 L5,20 C5,21.1 5.9,22 7,22 L17,22 C18.1,22 19,21.1 19,20 L19,7 C19,5.9 18.1,5 17,5 L15,5 L15,3 L9,3 Z M7,7 L17,7 L17,20 L7,20 L7,7 Z" />
+
+    <!-- Lightning bolt inside the battery body -->
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M13,8 L9.5,14 L11.5,14 L11,18 L14.5,12 L12.5,12 L13,8 Z" />
+</vector>

@@ -1,0 +1,143 @@
+<UserControl x:Class="CoulombMppt.Ui.Pages.LivePage"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:c="clr-namespace:CoulombMppt.Ui.Controls"
+             xmlns:vm="clr-namespace:CoulombMppt.Ui.ViewModels">
+    <UserControl.DataContext>
+        <vm:LiveViewModel/>
+    </UserControl.DataContext>
+
+    <UserControl.Resources>
+        <Style x:Key="MetricRow" TargetType="Grid">
+            <Setter Property="Margin" Value="0,5"/>
+        </Style>
+    </UserControl.Resources>
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel Margin="20">
+            <c:PageHeader Title="Live data" Subtitle="Decoded telemetry from the controller's holding registers">
+                <c:PageHeader.ActionContent>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="{Binding UpdatedLabel}" Style="{StaticResource Caption}"
+                                   VerticalAlignment="Center" Margin="0,0,10,0"/>
+                        <Button Content="Refresh settings" Style="{StaticResource OutlinedButton}"
+                                Command="{Binding RefreshCommand}" IsEnabled="{Binding IsReady}"/>
+                    </StackPanel>
+                </c:PageHeader.ActionContent>
+            </c:PageHeader>
+
+            <TextBlock Text="No telemetry yet — connect a controller or enable demo mode on the Dashboard."
+                       Style="{StaticResource Caption}" Margin="0,0,0,8"
+                       Visibility="{Binding HasLive, Converter={StaticResource BoolToVisInv}}"/>
+
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <Border Grid.Column="0" Style="{StaticResource Card}" Margin="0,0,8,0">
+                    <StackPanel>
+                        <TextBlock Text="POWER FLOW" Style="{StaticResource SectionHeader}"/>
+                        <Grid Style="{StaticResource MetricRow}">
+                            <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+                            <TextBlock Text="Battery voltage" Style="{StaticResource Body}"/>
+                            <TextBlock Grid.Column="1" Text="{Binding BatteryVolts}" Style="{StaticResource Mono}"/>
+                        </Grid>
+                        <Grid Style="{StaticResource MetricRow}">
+                            <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+                            <TextBlock Text="Charge current" Style="{StaticResource Body}"/>
+                            <TextBlock Grid.Column="1" Text="{Binding ChargeCurrent}" Style="{StaticResource Mono}"/>
+                        </Grid>
+                        <Grid Style="{StaticResource MetricRow}">
+                            <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+                            <TextBlock Text="Discharge current" Style="{StaticResource Body}"/>
+                            <TextBlock Grid.Column="1" Text="{Binding DischargeCurrent}" Style="{StaticResource Mono}"/>
+                        </Grid>
+                        <Grid Style="{StaticResource MetricRow}">
+                            <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+                            <TextBlock Text="Battery power" Style="{StaticResource Body}"/>
+                            <TextBlock Grid.Column="1" Text="{Binding BatteryWatts}" Style="{StaticResource Mono}"/>
+                        </Grid>
+                        <Grid Style="{StaticResource MetricRow}">
+                            <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+                            <TextBlock Text="Load power" Style="{StaticResource Body}"/>
+                            <TextBlock Grid.Column="1" Text="{Binding LoadWatts}" Style="{StaticResource Mono}"/>
+                        </Grid>
+                        <Grid Style="{StaticResource MetricRow}">
+                            <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+                            <TextBlock Text="PV power (approx)" Style="{StaticResource Body}"/>
+                            <TextBlock Grid.Column="1" Text="{Binding PvWatts}" Style="{StaticResource Mono}"/>
+                        </Grid>
+                    </StackPanel>
+                </Border>
+
+                <Border Grid.Column="1" Style="{StaticResource Card}" Margin="8,0,0,0">
+                    <StackPanel>
+                        <TextBlock Text="STATE" Style="{StaticResource SectionHeader}"/>
+                        <Grid Style="{StaticResource MetricRow}">
+                            <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+                            <TextBlock Text="Charger state" Style="{StaticResource Body}"/>
+                            <TextBlock Grid.Column="1" Text="{Binding ChargerState}" Style="{StaticResource Mono}"/>
+                        </Grid>
+                        <Grid Style="{StaticResource MetricRow}">
+                            <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+                            <TextBlock Text="State of charge" Style="{StaticResource Body}"/>
+                            <TextBlock Grid.Column="1" Text="{Binding Soc}" Style="{StaticResource Mono}"/>
+                        </Grid>
+                        <Grid Style="{StaticResource MetricRow}">
+                            <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+                            <TextBlock Text="Temperature" Style="{StaticResource Body}"/>
+                            <TextBlock Grid.Column="1" Text="{Binding Temperature}" Style="{StaticResource Mono}"/>
+                        </Grid>
+                        <Grid Style="{StaticResource MetricRow}">
+                            <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+                            <TextBlock Text="Lifetime throughput" Style="{StaticResource Body}"/>
+                            <TextBlock Grid.Column="1" Text="{Binding TotalAh}" Style="{StaticResource Mono}"/>
+                        </Grid>
+
+                        <TextBlock Text="RAW STATUS REGISTERS" Style="{StaticResource SectionHeader}" Margin="2,14,0,4"/>
+                        <Grid Style="{StaticResource MetricRow}">
+                            <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+                            <TextBlock Text="Solar status" Style="{StaticResource Body}"/>
+                            <TextBlock Grid.Column="1" Text="{Binding SolarStatusRaw}" Style="{StaticResource Mono}"/>
+                        </Grid>
+                        <Grid Style="{StaticResource MetricRow}">
+                            <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+                            <TextBlock Text="Work status" Style="{StaticResource Body}"/>
+                            <TextBlock Grid.Column="1" Text="{Binding WorkStatusRaw}" Style="{StaticResource Mono}"/>
+                        </Grid>
+                        <Grid Style="{StaticResource MetricRow}">
+                            <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+                            <TextBlock Text="Power status" Style="{StaticResource Body}"/>
+                            <TextBlock Grid.Column="1" Text="{Binding PowerStatusRaw}" Style="{StaticResource Mono}"/>
+                        </Grid>
+                    </StackPanel>
+                </Border>
+            </Grid>
+
+            <Border Style="{StaticResource Card}" Margin="0,10,0,0">
+                <StackPanel>
+                    <Grid>
+                        <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+                        <TextBlock Text="LIVE TREND" Style="{StaticResource SectionHeader}"/>
+                        <TextBlock Grid.Column="1" Text="{Binding LiveChartCaption}" Style="{StaticResource Caption}"
+                                   VerticalAlignment="Center"/>
+                    </Grid>
+
+                    <TextBlock Text="Battery voltage (V)" Style="{StaticResource Caption}" Margin="2,6,0,2"/>
+                    <c:OxyChartControl Values="{Binding VoltageHistory}" Timestamps="{Binding TimeAxis}" Unit="V"
+                                       LineColor="{StaticResource CoolBlueColor}" Height="90"/>
+
+                    <TextBlock Text="Charge current (A)" Style="{StaticResource Caption}" Margin="2,10,0,2"/>
+                    <c:OxyChartControl Values="{Binding ChargeHistory}" Timestamps="{Binding TimeAxis}" Unit="A"
+                                       LineColor="{StaticResource OkGreenColor}" MinForced="0" Height="90"/>
+
+                    <TextBlock Text="PV power (W, approx)" Style="{StaticResource Caption}" Margin="2,10,0,2"/>
+                    <c:OxyChartControl Values="{Binding PvHistory}" Timestamps="{Binding TimeAxis}" Unit="W"
+                                       LineColor="{StaticResource SolarTealColor}" MinForced="0" Height="90"/>
+                </StackPanel>
+            </Border>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

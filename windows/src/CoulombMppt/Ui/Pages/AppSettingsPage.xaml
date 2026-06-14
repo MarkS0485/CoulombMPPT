@@ -1,0 +1,104 @@
+<UserControl x:Class="CoulombMppt.Ui.Pages.AppSettingsPage"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:c="clr-namespace:CoulombMppt.Ui.Controls"
+             xmlns:vm="clr-namespace:CoulombMppt.Ui.ViewModels">
+    <UserControl.DataContext>
+        <vm:AppSettingsViewModel/>
+    </UserControl.DataContext>
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel Margin="20">
+            <c:PageHeader Title="App settings"
+                          Subtitle="Preferences for this Windows client — changes save immediately"/>
+
+            <!-- Connection -->
+            <Border Style="{StaticResource Card}" Margin="0,0,0,10">
+                <StackPanel>
+                    <TextBlock Text="CONNECTION" Style="{StaticResource SectionHeader}"/>
+                    <CheckBox Content="Auto-reconnect to the last controller on launch"
+                              IsChecked="{Binding AutoReconnect, Mode=TwoWay}" Margin="0,4"/>
+                </StackPanel>
+            </Border>
+
+            <!-- Logging / history -->
+            <Border Style="{StaticResource Card}" Margin="0,0,0,10">
+                <StackPanel>
+                    <TextBlock Text="LOGGING &amp; HISTORY" Style="{StaticResource SectionHeader}"/>
+                    <CheckBox Content="Record telemetry history"
+                              IsChecked="{Binding RecordHistory, Mode=TwoWay}" Margin="0,4"/>
+                    <Grid Margin="0,4" Width="320" HorizontalAlignment="Left">
+                        <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="100"/></Grid.ColumnDefinitions>
+                        <TextBlock Text="Sample every (seconds)" Style="{StaticResource Body}" VerticalAlignment="Center"/>
+                        <TextBox Grid.Column="1" Padding="6,3" FontFamily="Cascadia Mono, Consolas"
+                                 Text="{Binding HistoryEverySec, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"/>
+                    </Grid>
+                    <CheckBox Content="Raise alerts on threshold crossings"
+                              IsChecked="{Binding AlertsEnabled, Mode=TwoWay}" Margin="0,4"/>
+                </StackPanel>
+            </Border>
+
+            <!-- Battery pack profile (energy math + EA SUN inference) -->
+            <Border Style="{StaticResource Card}" Margin="0,0,0,10">
+                <StackPanel>
+                    <TextBlock Text="BATTERY PACK" Style="{StaticResource SectionHeader}"/>
+                    <TextBlock Text="{Binding PackSummary}" Style="{StaticResource Caption}"
+                               TextWrapping="Wrap" Margin="0,0,0,8"/>
+                    <Grid Width="420" HorizontalAlignment="Left">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition/><RowDefinition/><RowDefinition/>
+                        </Grid.RowDefinitions>
+                        <StackPanel Grid.Row="0" Grid.Column="0" Margin="0,4,8,4">
+                            <TextBlock Text="Nominal V" Style="{StaticResource Caption}"/>
+                            <TextBox Padding="6,3" FontFamily="Cascadia Mono, Consolas"
+                                     Text="{Binding PackNominalVInput, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"/>
+                        </StackPanel>
+                        <StackPanel Grid.Row="0" Grid.Column="1" Margin="8,4,0,4">
+                            <TextBlock Text="Capacity Ah" Style="{StaticResource Caption}"/>
+                            <TextBox Padding="6,3" FontFamily="Cascadia Mono, Consolas"
+                                     Text="{Binding PackCapacityAhInput, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"/>
+                        </StackPanel>
+                        <StackPanel Grid.Row="1" Grid.Column="0" Margin="0,4,8,4">
+                            <TextBlock Text="Full voltage (100% SoC)" Style="{StaticResource Caption}"/>
+                            <TextBox Padding="6,3" FontFamily="Cascadia Mono, Consolas"
+                                     Text="{Binding PackFullVInput, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"/>
+                        </StackPanel>
+                        <StackPanel Grid.Row="1" Grid.Column="1" Margin="8,4,0,4">
+                            <TextBlock Text="Empty voltage (0% SoC)" Style="{StaticResource Caption}"/>
+                            <TextBox Padding="6,3" FontFamily="Cascadia Mono, Consolas"
+                                     Text="{Binding PackEmptyVInput, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"/>
+                        </StackPanel>
+                        <Button Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2"
+                                Content="Save battery profile"
+                                Style="{StaticResource PrimaryButton}"
+                                Command="{Binding SaveBatteryPackCommand}"
+                                HorizontalAlignment="Left" Margin="0,8,0,4"/>
+                    </Grid>
+                </StackPanel>
+            </Border>
+
+            <!-- Remote API -->
+            <Border Style="{StaticResource Card}">
+                <StackPanel>
+                    <TextBlock Text="REMOTE API" Style="{StaticResource SectionHeader}"/>
+                    <Grid Margin="0,4" Width="320" HorizontalAlignment="Left">
+                        <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="100"/></Grid.ColumnDefinitions>
+                        <TextBlock Text="API port" Style="{StaticResource Body}" VerticalAlignment="Center"/>
+                        <TextBox Grid.Column="1" Padding="6,3" FontFamily="Cascadia Mono, Consolas"
+                                 Text="{Binding ApiPort, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"/>
+                    </Grid>
+                    <CheckBox Content="Start the API server automatically on launch"
+                              IsChecked="{Binding ApiAutoStart, Mode=TwoWay}" Margin="0,4"/>
+                    <CheckBox Content="Attempt UPnP / NAT-PMP port forwarding"
+                              IsChecked="{Binding UpnpEnabled, Mode=TwoWay}" Margin="0,4"/>
+                    <TextBlock Style="{StaticResource Caption}" Margin="0,6,0,0" TextWrapping="Wrap"
+                               Text="Manage paired remote clients and the pairing QR on the Remote access page."/>
+                </StackPanel>
+            </Border>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

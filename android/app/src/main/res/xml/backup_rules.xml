@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<full-backup-content>
+    <!-- DataStore prefs only — that's where the paired-device MAC + settings
+         live. Excludes any binary state. -->
+    <include domain="file" path="datastore/" />
+</full-backup-content>

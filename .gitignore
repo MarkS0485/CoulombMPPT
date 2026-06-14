@@ -1,0 +1,41 @@
+# ============================================================================
+# Repo-root ignores ONLY.
+#
+# This is a two-app monorepo. Each app keeps its own build-output rules in its
+# own folder so either is self-contained and portable:
+#   - android/.gitignore   (Gradle / Kotlin / Android Studio)
+#   - windows/.gitignore   (.NET / Visual Studio / Rider / dotnet)
+#
+# Keep this file limited to things that legitimately appear at the repo root
+# (OS/editor noise, an IDE opened on the whole repo, shared reference material).
+# ============================================================================
+
+# OS / editor noise
+.DS_Store
+Thumbs.db
+*.swp
+*~
+
+# IDE / build caches that show up at the repo root when a tool is opened or run
+# from here (the real builds live under android/ and windows/). Anchored with a
+# leading slash so they only match at the root — the per-app folders ignore
+# their own copies.
+/.idea/
+*.iml
+/.gradle/
+/.kotlin/
+
+# Reverse-engineered reference material — third-party, shared across both apps,
+# never push.
+/decompiled/
+
+# Signing material — NEVER commit. The actual keys live OUTSIDE this repo and
+# are injected in CI from encrypted GitHub Actions secrets. These unanchored
+# patterns match in any subfolder (e.g. android/keystore.properties) as a
+# safety net. See docs/SIGNING.md.
+keystore.properties
+*.keystore
+*.jks
+*.pfx
+*.p12
+*.snk

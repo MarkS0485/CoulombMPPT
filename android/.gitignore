@@ -1,0 +1,23 @@
+# ----------------------------------------------------------------------------
+# Android app — Gradle / Android Studio / Kotlin
+# Self-contained so this folder can stand alone as its own project/repo.
+# ----------------------------------------------------------------------------
+*.iml
+.gradle/
+.kotlin/
+.idea/
+local.properties
+build/
+mnt/
+captures/
+.externalNativeBuild/
+.cxx/
+
+# Signing material — never commit
+*.jks
+*.keystore
+google-services.json
+
+# JVM/Gradle daemon crash artifacts
+hs_err_pid*.log
+replay_pid*.log

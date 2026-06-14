@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <!-- Stylised solar-panel + battery glyph, white on the launcher background. -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M30,38 L78,38 L74,68 L34,68 Z"
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="1.5"/>
+    <path
+        android:strokeColor="#012169"
+        android:strokeWidth="1.5"
+        android:pathData="M40,38 L37,68 M50,38 L48,68 M60,38 L60,68 M70,38 L71,68 M32,48 L76,48 M31,58 L75,58"/>
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M48,74 L60,74 L60,76 L62,76 L62,84 L46,84 L46,76 L48,76 Z"/>
+    <path
+        android:fillColor="#C8102E"
+        android:pathData="M52,77 L56,77 L56,81 L52,81 Z"/>
+</vector>

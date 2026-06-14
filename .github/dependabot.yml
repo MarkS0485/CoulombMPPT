@@ -1,0 +1,61 @@
+# Dependabot — tuned aggressive, mirroring the sibling project's policy: checks
+# DAILY, allows every update type (including majors), and lifts the open-PR cap
+# so nothing is held back. CI (Android assembleDebug + Windows dotnet build)
+# runs on each PR, so any update that breaks a build shows up red before merge.
+#
+# Two-app monorepo, so two build ecosystems plus the workflows:
+#   * gradle         — the Android app (version catalogue at android/gradle/libs.versions.toml)
+#   * nuget          — the Windows app (windows/CoulombMppt.sln)
+#   * github-actions — the action versions pinned in .github/workflows/*
+#
+# Docs: https://docs.github.com/code-security/dependabot/dependabot-version-updates/configuration-options-for-the-dependabot.yml-file
+version: 2
+updates:
+  # --------------------------------------------------------------- Android ---
+  - package-ecosystem: "gradle"
+    directory: "/android"            # build.gradle.kts + gradle/libs.versions.toml
+    schedule:
+      interval: "daily"
+    open-pull-requests-limit: 20
+    groups:
+      gradle-minor-and-patch:        # batch low-risk bumps into one PR
+        patterns: ["*"]
+        update-types: ["minor", "patch"]
+    # Majors left ungrouped so each arrives as its own PR you can merge or close
+    # independently; some may need an AGP/Kotlin/SDK bump, and CI flags those red.
+    labels: ["dependencies", "android"]
+    commit-message:
+      prefix: "deps"
+      include: "scope"
+    assignees: ["MarkS0485"]
+
+  # --------------------------------------------------------------- Windows ---
+  - package-ecosystem: "nuget"
+    directory: "/windows"            # CoulombMppt.sln covers src/CoulombMppt
+    schedule:
+      interval: "daily"
+    open-pull-requests-limit: 20
+    groups:
+      nuget-minor-and-patch:
+        patterns: ["*"]
+        update-types: ["minor", "patch"]
+    labels: ["dependencies", "windows"]
+    commit-message:
+      prefix: "deps"
+      include: "scope"
+    assignees: ["MarkS0485"]
+
+  # -------------------------------------------------------- GitHub Actions ---
+  - package-ecosystem: "github-actions"
+    directory: "/"                   # scans .github/workflows/
+    schedule:
+      interval: "daily"
+    open-pull-requests-limit: 20
+    groups:
+      github-actions-all:
+        patterns: ["*"]
+    labels: ["dependencies", "github-actions"]
+    commit-message:
+      prefix: "ci"
+      include: "scope"
+    assignees: ["MarkS0485"]

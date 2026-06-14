@@ -1,0 +1,174 @@
+<UserControl x:Class="CoulombMppt.Ui.Pages.RemotePage"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:c="clr-namespace:CoulombMppt.Ui.Controls"
+             xmlns:vm="clr-namespace:CoulombMppt.Ui.ViewModels">
+    <UserControl.DataContext>
+        <vm:RemoteViewModel/>
+    </UserControl.DataContext>
+
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <c:PageHeader Grid.Row="0" Title="Remote access"
+                      Subtitle="HTTPS endpoint for the mobile client (HMAC authenticated)">
+            <c:PageHeader.ActionContent>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="Port:" VerticalAlignment="Center" Margin="0,0,6,0"/>
+                    <TextBox Width="64" Padding="6,3"
+                             Text="{Binding Port, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
+                             IsEnabled="{Binding Running, Converter={StaticResource BoolToVisInv}}"/>
+                    <Button Style="{StaticResource PrimaryButton}" Content="Start" Margin="8,0,0,0"
+                            Command="{Binding ToggleServerCommand}"
+                            Visibility="{Binding Running, Converter={StaticResource BoolToVisInv}}"/>
+                    <Button Style="{StaticResource DangerButton}" Content="Stop" Margin="8,0,0,0"
+                            Command="{Binding ToggleServerCommand}"
+                            Visibility="{Binding Running, Converter={StaticResource BoolToVis}}"/>
+                </StackPanel>
+            </c:PageHeader.ActionContent>
+        </c:PageHeader>
+
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="360"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- LEFT: status + reach + paired clients -->
+                <StackPanel Grid.Column="0" Margin="0,0,12,0">
+
+                    <Border Style="{StaticResource Card}" Margin="0,0,0,8">
+                        <StackPanel>
+                            <TextBlock Text="Reachability" Style="{StaticResource H2}"/>
+                            <Grid Margin="0,6,0,0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition/><RowDefinition/><RowDefinition/><RowDefinition/>
+                                </Grid.RowDefinitions>
+
+                                <TextBlock Grid.Row="0" Grid.Column="0" Style="{StaticResource Body}" Text="Local IPs"/>
+                                <ItemsControl Grid.Row="0" Grid.Column="1" ItemsSource="{Binding HostChoices}">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding}" Style="{StaticResource Mono}"/>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+
+                                <TextBlock Grid.Row="1" Grid.Column="0" Style="{StaticResource Body}" Text="UPnP"/>
+                                <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding UpnpStatus}" Style="{StaticResource Mono}"/>
+
+                                <TextBlock Grid.Row="2" Grid.Column="0" Style="{StaticResource Body}" Text="Public address"/>
+                                <TextBlock Grid.Row="2" Grid.Column="1" Style="{StaticResource Mono}"
+                                           Text="{Binding PublicAddress, FallbackValue='(not detected)'}"/>
+
+                                <TextBlock Grid.Row="3" Grid.Column="0" Style="{StaticResource Body}" Text="Cert SHA-256"/>
+                                <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding CertThumbprint}"
+                                           Style="{StaticResource Mono}" FontSize="11" TextWrapping="Wrap"/>
+                            </Grid>
+                            <TextBlock Style="{StaticResource Caption}" Margin="0,8,0,0" TextWrapping="Wrap">
+                                The QR pins this cert thumbprint so the mobile client doesn't have to trust an arbitrary
+                                self-signed cert. If UPnP fails, forward TCP at your router to the laptop's LAN IP.
+                            </TextBlock>
+                        </StackPanel>
+                    </Border>
+
+                    <Border Style="{StaticResource Card}">
+                        <StackPanel>
+                            <Grid Margin="0,0,0,6">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Column="0" Text="Paired clients" Style="{StaticResource H2}"/>
+                                <TextBlock Grid.Column="1" Text="{Binding Clients.Count, StringFormat={}{0} total}"
+                                           Style="{StaticResource Caption}"/>
+                            </Grid>
+                            <ItemsControl ItemsSource="{Binding Clients}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Border Background="{StaticResource Body2}" CornerRadius="6"
+                                                Padding="8" Margin="0,0,0,4">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                </Grid.ColumnDefinitions>
+                                                <StackPanel Grid.Column="0">
+                                                    <TextBlock>
+                                                        <Run Text="{Binding Label}" FontWeight="SemiBold"/>
+                                                        <Run Text="  ·  "/>
+                                                        <Run Text="{Binding KeyId}" FontFamily="Cascadia Mono, Consolas"/>
+                                                    </TextBlock>
+                                                    <TextBlock Style="{StaticResource Caption}">
+                                                        <Run Text="paired "/>
+                                                        <Run Text="{Binding PairedAtMs, Converter={StaticResource UnixMsToDateTime}}"/>
+                                                        <Run Text="  ·  last seen "/>
+                                                        <Run Text="{Binding LastSeenAtMs, Converter={StaticResource UnixMsToDateTime}}"/>
+                                                    </TextBlock>
+                                                </StackPanel>
+                                                <Button Grid.Column="1" Style="{StaticResource OutlinedButton}"
+                                                        Content="Revoke" Padding="8,3" Margin="0,0,4,0"
+                                                        Command="{Binding DataContext.RevokeCommand,
+                                                                  RelativeSource={RelativeSource AncestorType=ItemsControl}}"
+                                                        CommandParameter="{Binding}"/>
+                                                <Button Grid.Column="2" Style="{StaticResource DangerButton}"
+                                                        Content="Delete" Padding="8,3"
+                                                        Command="{Binding DataContext.DeleteCommand,
+                                                                  RelativeSource={RelativeSource AncestorType=ItemsControl}}"
+                                                        CommandParameter="{Binding}"/>
+                                            </Grid>
+                                        </Border>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                            <TextBlock Text="No clients paired yet. Use the QR on the right to add one."
+                                       Style="{StaticResource Caption}"
+                                       Visibility="{Binding Clients.Count, Converter={StaticResource CountZeroToVis}}"/>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+
+                <!-- RIGHT: pair-new-client QR -->
+                <Border Grid.Column="1" Style="{StaticResource Card}" VerticalAlignment="Top">
+                    <StackPanel>
+                        <TextBlock Text="Pair new client" Style="{StaticResource H2}"/>
+                        <TextBlock Style="{StaticResource Caption}" Margin="0,0,0,8" TextWrapping="Wrap">
+                            Generates a one-time QR carrying the URL, key, secret and cert pin.
+                            Scan it in the mobile app's "Pair laptop" flow.
+                        </TextBlock>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBox Grid.Column="0" Padding="6,3"
+                                     Text="{Binding NewClientLabel, Mode=TwoWay}"/>
+                            <Button Grid.Column="1" Style="{StaticResource PrimaryButton}"
+                                    Content="Generate" Margin="6,0,0,0"
+                                    Command="{Binding PairCommand}"/>
+                        </Grid>
+                        <ComboBox ItemsSource="{Binding HostChoices}"
+                                  SelectedItem="{Binding SelectedHost, Mode=TwoWay}"
+                                  Padding="6,3" Margin="0,6,0,0"/>
+                        <Border Margin="0,8,0,0" Background="White"
+                                BorderBrush="{StaticResource LineGreyDk}" BorderThickness="1"
+                                CornerRadius="6" Padding="8" HorizontalAlignment="Center">
+                            <Image Source="{Binding PairingQr}" Width="280" Height="280" Stretch="Uniform"/>
+                        </Border>
+                        <TextBlock Style="{StaticResource Mono}" FontSize="10" Margin="0,8,0,0"
+                                   Text="{Binding PairingUriPreview}" TextWrapping="Wrap"/>
+                    </StackPanel>
+                </Border>
+            </Grid>
+        </ScrollViewer>
+    </Grid>
+</UserControl>

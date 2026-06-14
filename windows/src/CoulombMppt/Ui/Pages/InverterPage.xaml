@@ -1,0 +1,158 @@
+<UserControl x:Class="CoulombMppt.Ui.Pages.InverterPage"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:c="clr-namespace:CoulombMppt.Ui.Controls"
+             xmlns:vm="clr-namespace:CoulombMppt.Ui.ViewModels">
+    <UserControl.DataContext>
+        <vm:InverterViewModel/>
+    </UserControl.DataContext>
+
+    <UserControl.Resources>
+        <Style x:Key="TileCard" TargetType="Border" BasedOn="{StaticResource Card}">
+            <Setter Property="Padding" Value="14,12"/>
+        </Style>
+        <Style x:Key="TileCaption" TargetType="TextBlock" BasedOn="{StaticResource Caption}">
+            <Setter Property="Margin" Value="0,0,0,3"/>
+        </Style>
+    </UserControl.Resources>
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel Margin="20">
+
+            <!-- ===== Page header ===== -->
+            <c:PageHeader Title="Inverter · EA SUN"
+                          Subtitle="Inferred from battery voltage dynamics"/>
+
+            <!-- ===== Live estimate: gauge + watts label ===== -->
+            <Border Style="{StaticResource Card}" Margin="0,0,0,12"
+                    Visibility="{Binding HasLiveEasun, Converter={StaticResource BoolToVis}}">
+                <StackPanel>
+                    <TextBlock Text="LIVE ESTIMATE" Style="{StaticResource SectionHeader}"/>
+                    <!-- Phase 2: which inference path produced the number (empty until known) -->
+                    <TextBlock Text="{Binding ModelStateLabel}" Style="{StaticResource Caption}"
+                               Margin="0,2,0,6" FontWeight="SemiBold"/>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="160"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <!-- Radial gauge for EA SUN current -->
+                        <Border Grid.Column="0" Width="150" Height="150"
+                                Background="{StaticResource Body2}"
+                                BorderBrush="{StaticResource LineGrey}" BorderThickness="1"
+                                CornerRadius="10" Padding="6" Margin="0,4,12,4">
+                            <c:RadialGauge Value="{Binding EasunNetA}"
+                                           Min="-20" Max="20"
+                                           Bidirectional="True"
+                                           Unit="A" Label="EA SUN CURRENT"
+                                           ValueFormat="0.0"
+                                           Accent="{StaticResource OkGreenColor}"
+                                           NegativeAccent="{StaticResource SolarCopperColor}"/>
+                        </Border>
+
+                        <!-- Watts label + descriptor -->
+                        <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                            <TextBlock Text="EA SUN WATTS" Style="{StaticResource Caption}"/>
+                            <TextBlock Style="{StaticResource Metric}" FontSize="32"
+                                       Foreground="{StaticResource OkGreen}">
+                                <TextBlock.Text>
+                                    <Binding Path="EasunWatts" StringFormat="{}{0:0} W"/>
+                                </TextBlock.Text>
+                            </TextBlock>
+                            <TextBlock Text="{Binding LiveEasunLabel}"
+                                       Style="{StaticResource Caption}"
+                                       Margin="0,6,0,0" TextWrapping="Wrap"/>
+                        </StackPanel>
+                    </Grid>
+                </StackPanel>
+            </Border>
+
+            <!-- Placeholder when no estimate yet but profile is present -->
+            <Border Style="{StaticResource Card}" Margin="0,0,0,12"
+                    Visibility="{Binding HasLiveEasun, Converter={StaticResource BoolToVisInv}}">
+                <StackPanel>
+                    <TextBlock Text="LIVE ESTIMATE" Style="{StaticResource SectionHeader}"/>
+                    <TextBlock Text="{Binding LiveEasunLabel}" Style="{StaticResource Caption}"
+                               Margin="0,4,0,0"/>
+                </StackPanel>
+            </Border>
+
+            <!-- ===== Energy flow diagram ===== -->
+            <Border Style="{StaticResource Card}" Margin="0,0,0,12">
+                <StackPanel>
+                    <TextBlock Text="POWER FLOW" Style="{StaticResource SectionHeader}"/>
+                    <c:EnergyFlowDiagram Height="206" Margin="0,4,0,0"
+                                         SolarW="{Binding SolarW}"
+                                         BatteryNetW="{Binding BatteryNetW}"
+                                         EasunW="{Binding EasunWatts}"
+                                         Soc="{Binding Soc}"
+                                         BatteryVoltage="{Binding BatteryVoltage}"
+                                         HasInference="{Binding HasLiveEasun}"
+                                         IsLive="{Binding IsLive}"/>
+                    <TextBlock Style="{StaticResource Caption}" Margin="0,6,0,0" TextWrapping="Wrap"
+                               Text="The EA SUN contribution is inferred from how the battery voltage moves versus the MPPT's measured current. Positive means the EA SUN array is charging the bank; negative means the inverter is drawing load."/>
+                </StackPanel>
+            </Border>
+
+            <!-- ===== Today's breakdown tiles ===== -->
+            <Border Style="{StaticResource Card}" Margin="0,0,0,12"
+                    Visibility="{Binding HasBatteryProfile, Converter={StaticResource BoolToVis}}">
+                <StackPanel>
+                    <TextBlock Text="TODAY" Style="{StaticResource SectionHeader}"/>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="12"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <!-- Array charge tile -->
+                        <Border Grid.Column="0" Style="{StaticResource TileCard}">
+                            <StackPanel>
+                                <TextBlock Text="ARRAY CHARGE" Style="{StaticResource TileCaption}"/>
+                                <TextBlock Style="{StaticResource Metric}" FontSize="22"
+                                           Foreground="{StaticResource OkGreen}"
+                                           Text="{Binding TodayEasunChargeKwh}"/>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- Inverter load tile -->
+                        <Border Grid.Column="2" Style="{StaticResource TileCard}">
+                            <StackPanel>
+                                <TextBlock Text="INVERTER LOAD" Style="{StaticResource TileCaption}"/>
+                                <TextBlock Style="{StaticResource Metric}" FontSize="22"
+                                           Foreground="{StaticResource SolarCopper}"
+                                           Text="{Binding TodayEasunLoadKwh}"/>
+                            </StackPanel>
+                        </Border>
+                    </Grid>
+                </StackPanel>
+            </Border>
+
+            <!-- ===== 7-day bar chart ===== -->
+            <Border Style="{StaticResource Card}" Margin="0,0,0,12"
+                    Visibility="{Binding HasBatteryProfile, Converter={StaticResource BoolToVis}}">
+                <StackPanel>
+                    <TextBlock Text="7-DAY HISTORY" Style="{StaticResource SectionHeader}"/>
+                    <c:OxyChartControl x:Name="WeekChart" Height="200" Margin="0,4,0,0"/>
+                </StackPanel>
+            </Border>
+
+            <!-- ===== No-data notice ===== -->
+            <Border Style="{StaticResource Card}" Margin="0,0,0,12"
+                    BorderBrush="{StaticResource WarnAmber}" BorderThickness="1"
+                    Background="#FFFFF4E5"
+                    Visibility="{Binding HasBatteryProfile, Converter={StaticResource BoolToVisInv}}">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="&#xE7BA;" FontFamily="Segoe MDL2 Assets" FontSize="16"
+                               Foreground="{StaticResource WarnAmber}"
+                               VerticalAlignment="Center" Margin="0,0,10,0"/>
+                    <TextBlock Text="{Binding NoDataReason}" TextWrapping="Wrap"
+                               Foreground="{StaticResource InkHi}" VerticalAlignment="Center"/>
+                </StackPanel>
+            </Border>
+
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

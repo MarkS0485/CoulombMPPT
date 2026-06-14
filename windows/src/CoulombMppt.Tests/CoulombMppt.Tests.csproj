@@ -1,0 +1,31 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <!-- Matches the app TFM family so the Windows-targeted app project (and its
+         WPF/WinForms refs) resolve. UseWPF is not needed: the tests only touch
+         the pure Data/Services math, not any UI type. -->
+    <TargetFramework>net10.0-windows10.0.22621.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <LangVersion>latest</LangVersion>
+    <IsPackable>false</IsPackable>
+    <Platforms>x64</Platforms>
+    <!-- xUnit's generated entry point + a couple of analyzer rules trip the
+         solution-wide warnings-as-errors; relax just for the test assembly. -->
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <!-- Test-method names use the Method_State_Expectation underscore convention,
+         and small inline arrays in arrange blocks are clearer than static fields. -->
+    <NoWarn>$(NoWarn);CA1707;CA1861</NoWarn>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.11.1" />
+    <PackageReference Include="xunit" Version="2.9.2" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.8.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\CoulombMppt\CoulombMppt.csproj" />
+  </ItemGroup>
+
+</Project>

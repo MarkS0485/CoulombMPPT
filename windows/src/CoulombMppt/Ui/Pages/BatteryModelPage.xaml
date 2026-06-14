@@ -1,0 +1,239 @@
+<UserControl x:Class="CoulombMppt.Ui.Pages.BatteryModelPage"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:c="clr-namespace:CoulombMppt.Ui.Controls"
+             xmlns:vm="clr-namespace:CoulombMppt.Ui.ViewModels">
+    <UserControl.DataContext>
+        <vm:BatteryModelViewModel/>
+    </UserControl.DataContext>
+
+    <UserControl.Resources>
+        <Style x:Key="TileCard" TargetType="Border" BasedOn="{StaticResource Card}">
+            <Setter Property="Padding" Value="14,12"/>
+        </Style>
+        <Style x:Key="TileCaption" TargetType="TextBlock" BasedOn="{StaticResource Caption}">
+            <Setter Property="Margin" Value="0,0,0,3"/>
+        </Style>
+    </UserControl.Resources>
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel Margin="20">
+
+            <!-- ===== Page header + status pill ===== -->
+            <c:PageHeader Title="Battery model · Calibration"
+                          Subtitle="What the app has learned about this battery — read straight from the voltage, no inference changes here.">
+                <c:PageHeader.ActionContent>
+                    <c:StatusPill Label="{Binding StatusLabel}" Kind="{Binding PillKind}"/>
+                </c:PageHeader.ActionContent>
+            </c:PageHeader>
+
+            <!-- Gate context line -->
+            <TextBlock Text="{Binding GateContext}" Style="{StaticResource Caption}"
+                       Margin="2,0,0,12" TextWrapping="Wrap"/>
+
+            <!-- ===== No-model notice ===== -->
+            <Border Style="{StaticResource Card}" Margin="0,0,0,12"
+                    BorderBrush="{StaticResource WarnAmber}" BorderThickness="1"
+                    Background="#FFFFF4E5"
+                    Visibility="{Binding HasModel, Converter={StaticResource BoolToVisInv}}">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="&#xE7BA;" FontFamily="Segoe MDL2 Assets" FontSize="16"
+                               Foreground="{StaticResource WarnAmber}"
+                               VerticalAlignment="Center" Margin="0,0,10,0"/>
+                    <TextBlock Text="No model learned yet — leave the app running overnight with a battery profile set."
+                               TextWrapping="Wrap"
+                               Foreground="{StaticResource InkHi}" VerticalAlignment="Center"/>
+                </StackPanel>
+            </Border>
+
+            <!-- ===== OCV-vs-SoC chart (centrepiece) ===== -->
+            <Border Style="{StaticResource Card}" Margin="0,0,0,12">
+                <StackPanel>
+                    <TextBlock Text="RESTED OCV vs STATE OF CHARGE" Style="{StaticResource SectionHeader}"/>
+                    <c:OxyChartControl x:Name="OcvChart" Height="260" Margin="0,4,0,0"/>
+                    <TextBlock Style="{StaticResource Caption}" Margin="0,6,0,0" TextWrapping="Wrap"
+                               Text="Dots are learned open-circuit-voltage anchors (size ≈ sample count); the solid line is the piecewise curve the app uses. The dashed line is the old linear assumption — the gap between them is the calibration gained."/>
+                </StackPanel>
+            </Border>
+
+            <!-- ===== Internal resistance ===== -->
+            <Border Style="{StaticResource Card}" Margin="0,0,0,12">
+                <StackPanel>
+                    <TextBlock Text="INTERNAL RESISTANCE" Style="{StaticResource SectionHeader}"/>
+                    <Grid Margin="0,4,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="12"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Border Grid.Column="0" Style="{StaticResource TileCard}">
+                            <StackPanel>
+                                <TextBlock Text="GLOBAL R" Style="{StaticResource TileCaption}"/>
+                                <TextBlock Style="{StaticResource Metric}" FontSize="22"
+                                           Foreground="{StaticResource SolarTeal}"
+                                           Text="{Binding RGlobalMilliohms}"/>
+                            </StackPanel>
+                        </Border>
+                        <Border Grid.Column="2" Style="{StaticResource TileCard}">
+                            <StackPanel>
+                                <TextBlock Text="SAMPLES" Style="{StaticResource TileCaption}"/>
+                                <TextBlock Style="{StaticResource Metric}" FontSize="22"
+                                           Text="{Binding RTotalSamples}"/>
+                            </StackPanel>
+                        </Border>
+                    </Grid>
+
+                    <!-- Per-SoC/temp bins -->
+                    <ItemsControl ItemsSource="{Binding ResistanceBins}" Margin="0,10,0,0">
+                        <ItemsControl.Template>
+                            <ControlTemplate TargetType="ItemsControl">
+                                <StackPanel>
+                                    <Grid Margin="2,0,2,4">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Grid.Column="0" Text="SoC" Style="{StaticResource Caption}"/>
+                                        <TextBlock Grid.Column="1" Text="Temp" Style="{StaticResource Caption}"/>
+                                        <TextBlock Grid.Column="2" Text="R" Style="{StaticResource Caption}"/>
+                                        <TextBlock Grid.Column="3" Text="Samples" Style="{StaticResource Caption}"/>
+                                    </Grid>
+                                    <Border Height="1" Background="{StaticResource LineGrey}" Margin="2,0,2,2"/>
+                                    <ItemsPresenter/>
+                                </StackPanel>
+                            </ControlTemplate>
+                        </ItemsControl.Template>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Grid Margin="2,3,2,3">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Grid.Column="0" Text="{Binding SocRange}"  Style="{StaticResource Mono}" FontSize="11"/>
+                                    <TextBlock Grid.Column="1" Text="{Binding TempRange}" Style="{StaticResource Mono}" FontSize="11"/>
+                                    <TextBlock Grid.Column="2" Text="{Binding Milliohms}" Style="{StaticResource Mono}" FontSize="11"/>
+                                    <TextBlock Grid.Column="3" Text="{Binding Samples}"   Style="{StaticResource Mono}" FontSize="11"/>
+                                </Grid>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+
+                    <TextBlock Style="{StaticResource Caption}" Margin="2,8,0,0"
+                               Visibility="{Binding HasResistance, Converter={StaticResource BoolToVisInv}}"
+                               Text="No resistance learned yet — the global fallback is in use."/>
+                </StackPanel>
+            </Border>
+
+            <!-- ===== Baseload band ===== -->
+            <Border Style="{StaticResource Card}" Margin="0,0,0,12"
+                    Visibility="{Binding HasBaseload, Converter={StaticResource BoolToVis}}">
+                <StackPanel>
+                    <TextBlock Text="OVERNIGHT BASELOAD" Style="{StaticResource SectionHeader}"/>
+                    <Grid Margin="0,4,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="12"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="12"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Border Grid.Column="0" Style="{StaticResource TileCard}">
+                            <StackPanel>
+                                <TextBlock Text="MEDIAN (P50)" Style="{StaticResource TileCaption}"/>
+                                <TextBlock Style="{StaticResource Metric}" FontSize="18"
+                                           Foreground="{StaticResource SolarCopper}"
+                                           Text="{Binding BaseloadP50}"/>
+                            </StackPanel>
+                        </Border>
+                        <Border Grid.Column="2" Style="{StaticResource TileCard}">
+                            <StackPanel>
+                                <TextBlock Text="P90" Style="{StaticResource TileCaption}"/>
+                                <TextBlock Style="{StaticResource Metric}" FontSize="18"
+                                           Text="{Binding BaseloadP90}"/>
+                            </StackPanel>
+                        </Border>
+                        <Border Grid.Column="4" Style="{StaticResource TileCard}">
+                            <StackPanel>
+                                <TextBlock Text="MEAN" Style="{StaticResource TileCaption}"/>
+                                <TextBlock Style="{StaticResource Metric}" FontSize="18"
+                                           Text="{Binding BaseloadMean}"/>
+                            </StackPanel>
+                        </Border>
+                    </Grid>
+                    <TextBlock Style="{StaticResource Caption}" Margin="2,8,0,0" TextWrapping="Wrap">
+                        <Run Text="Inferred quiescent bus draw the inverter wanders around · "/>
+                        <Run Text="{Binding BaseloadSamples, Mode=OneWay}"/>
+                        <Run Text=" samples."/>
+                    </TextBlock>
+                </StackPanel>
+            </Border>
+
+            <!-- ===== Live estimate vs legacy ===== -->
+            <Border Style="{StaticResource Card}" Margin="0,0,0,12"
+                    Visibility="{Binding HasEstimate, Converter={StaticResource BoolToVis}}">
+                <StackPanel>
+                    <TextBlock Text="LIVE ESTIMATE vs LEGACY METHOD" Style="{StaticResource SectionHeader}"/>
+                    <Grid Margin="0,4,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="12"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Border Grid.Column="0" Style="{StaticResource TileCard}">
+                            <StackPanel>
+                                <TextBlock Text="NEW MODEL · BUS LOAD" Style="{StaticResource TileCaption}"/>
+                                <TextBlock Style="{StaticResource Metric}" FontSize="18"
+                                           Foreground="{StaticResource SolarTeal}"
+                                           Text="{Binding LiveBusLabel}" TextWrapping="Wrap"/>
+                                <TextBlock Style="{StaticResource Caption}" Margin="0,4,0,0">
+                                    <Run Text="SoC "/>
+                                    <Run Text="{Binding LiveSocLabel, Mode=OneWay}"/>
+                                </TextBlock>
+                            </StackPanel>
+                        </Border>
+                        <Border Grid.Column="2" Style="{StaticResource TileCard}">
+                            <StackPanel>
+                                <TextBlock Text="LEGACY ESTIMATE" Style="{StaticResource TileCaption}"/>
+                                <TextBlock Style="{StaticResource Metric}" FontSize="18"
+                                           Foreground="{StaticResource InkLo}"
+                                           Text="{Binding LegacyEstLabel}" TextWrapping="Wrap"/>
+                                <TextBlock Text="EA SUN net current (old method)"
+                                           Style="{StaticResource Caption}" Margin="0,4,0,0"/>
+                            </StackPanel>
+                        </Border>
+                    </Grid>
+                    <Border Margin="0,10,0,0" CornerRadius="6" Padding="10,6"
+                            Background="{StaticResource Body2}">
+                        <TextBlock Text="{Binding EstimateModeNote}" Style="{StaticResource Caption}"
+                                   TextWrapping="Wrap"/>
+                    </Border>
+                </StackPanel>
+            </Border>
+
+            <!-- ===== Freshness / anchors ===== -->
+            <Border Style="{StaticResource Card}" Margin="0,0,0,12"
+                    Visibility="{Binding HasModel, Converter={StaticResource BoolToVis}}">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Grid.Column="0">
+                        <TextBlock Text="LEARNED AT" Style="{StaticResource TileCaption}"/>
+                        <TextBlock Text="{Binding LearnedAtLabel}" Style="{StaticResource Body}"/>
+                    </StackPanel>
+                    <StackPanel Grid.Column="1">
+                        <TextBlock Text="CAPACITY ANCHOR" Style="{StaticResource TileCaption}"/>
+                        <TextBlock Text="{Binding CapacityLabel}" Style="{StaticResource Body}"/>
+                    </StackPanel>
+                </Grid>
+            </Border>
+
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

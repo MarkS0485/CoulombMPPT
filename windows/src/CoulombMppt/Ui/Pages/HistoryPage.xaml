@@ -1,0 +1,89 @@
+<UserControl x:Class="CoulombMppt.Ui.Pages.HistoryPage"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:c="clr-namespace:CoulombMppt.Ui.Controls"
+             xmlns:vm="clr-namespace:CoulombMppt.Ui.ViewModels">
+    <UserControl.DataContext>
+        <vm:HistoryViewModel/>
+    </UserControl.DataContext>
+
+    <UserControl.Resources>
+        <Style x:Key="ChartCard" TargetType="Border" BasedOn="{StaticResource Card}">
+            <Setter Property="Margin" Value="0,0,0,10"/>
+        </Style>
+    </UserControl.Resources>
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel Margin="20">
+            <c:PageHeader Title="History" Subtitle="Recorded telemetry for the current controller">
+                <c:PageHeader.ActionContent>
+                    <StackPanel Orientation="Horizontal">
+                        <ComboBox Width="120" Padding="6,3" Margin="0,0,8,0"
+                                  SelectedIndex="{Binding RangeIndex, Mode=TwoWay}">
+                            <ComboBoxItem Content="Last 1 hour"/>
+                            <ComboBoxItem Content="Last 6 hours"/>
+                            <ComboBoxItem Content="Last 24 hours"/>
+                            <ComboBoxItem Content="Last 7 days"/>
+                            <ComboBoxItem Content="Last 30 days"/>
+                            <ComboBoxItem Content="All"/>
+                        </ComboBox>
+                        <Button Content="Live" Style="{StaticResource OutlinedButton}" Margin="0,0,6,0"
+                                Command="{Binding LiveCommand}"/>
+                        <Button Content="Refresh" Style="{StaticResource OutlinedButton}" Margin="0,0,6,0"
+                                Command="{Binding RefreshCommand}"/>
+                        <Button Content="Clear" Style="{StaticResource DangerButton}"
+                                Command="{Binding ClearCommand}"/>
+                    </StackPanel>
+                </c:PageHeader.ActionContent>
+            </c:PageHeader>
+
+            <TextBlock Text="{Binding Summary}" Style="{StaticResource Caption}" Margin="2,0,0,2"/>
+            <TextBlock Text="scroll to zoom · drag to pan · hover to read off a value"
+                       Style="{StaticResource Caption}" Opacity="0.7" Margin="2,0,0,10"/>
+
+            <Border Style="{StaticResource ChartCard}">
+                <StackPanel>
+                    <TextBlock Text="BATTERY VOLTAGE (V)" Style="{StaticResource SectionHeader}"/>
+                    <c:OxyChartControl Values="{Binding VoltageSeries}" Timestamps="{Binding TimeAxis}" Unit="V"
+                                       LineColor="{StaticResource CoolBlueColor}" Height="140"
+                                       ViewStartMs="{Binding ViewStartMs}" ViewEndMs="{Binding ViewEndMs}"
+                                       CrosshairMs="{Binding CrosshairMs}"
+                                       MinViewMs="{Binding MinViewMs}" MaxViewMs="{Binding MaxViewMs}"/>
+                </StackPanel>
+            </Border>
+
+            <Border Style="{StaticResource ChartCard}">
+                <StackPanel>
+                    <TextBlock Text="PV POWER (W)" Style="{StaticResource SectionHeader}"/>
+                    <c:OxyChartControl Values="{Binding PvSeries}" Timestamps="{Binding TimeAxis}" Unit="W"
+                                       LineColor="{StaticResource SolarTealColor}" MinForced="0" Height="140"
+                                       ViewStartMs="{Binding ViewStartMs}" ViewEndMs="{Binding ViewEndMs}"
+                                       CrosshairMs="{Binding CrosshairMs}"
+                                       MinViewMs="{Binding MinViewMs}" MaxViewMs="{Binding MaxViewMs}"/>
+                </StackPanel>
+            </Border>
+
+            <Border Style="{StaticResource ChartCard}">
+                <StackPanel>
+                    <TextBlock Text="LOAD POWER (W)" Style="{StaticResource SectionHeader}"/>
+                    <c:OxyChartControl Values="{Binding LoadSeries}" Timestamps="{Binding TimeAxis}" Unit="W"
+                                       LineColor="{StaticResource SolarCopperColor}" MinForced="0" Height="140"
+                                       ViewStartMs="{Binding ViewStartMs}" ViewEndMs="{Binding ViewEndMs}"
+                                       CrosshairMs="{Binding CrosshairMs}"
+                                       MinViewMs="{Binding MinViewMs}" MaxViewMs="{Binding MaxViewMs}"/>
+                </StackPanel>
+            </Border>
+
+            <Border Style="{StaticResource ChartCard}">
+                <StackPanel>
+                    <TextBlock Text="STATE OF CHARGE (%)" Style="{StaticResource SectionHeader}"/>
+                    <c:OxyChartControl Values="{Binding SocSeries}" Timestamps="{Binding TimeAxis}" Unit="%"
+                                       LineColor="{StaticResource OkGreenColor}" MinForced="0" MaxForced="100" Height="140"
+                                       ViewStartMs="{Binding ViewStartMs}" ViewEndMs="{Binding ViewEndMs}"
+                                       CrosshairMs="{Binding CrosshairMs}"
+                                       MinViewMs="{Binding MinViewMs}" MaxViewMs="{Binding MaxViewMs}"/>
+                </StackPanel>
+            </Border>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>
