@@ -31,7 +31,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
-import androidx.compose.material3.MenuAnchorType
+import androidx.compose.material3.ExposedDropdownMenuAnchorType
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -525,7 +525,7 @@ private fun PackSpecEditor(
                 singleLine = true,
                 label = { Text("Chemistry") },
                 trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = chemOpen) },
-                modifier = Modifier.fillMaxWidth().menuAnchor(MenuAnchorType.PrimaryEditable),
+                modifier = Modifier.fillMaxWidth().menuAnchor(ExposedDropdownMenuAnchorType.PrimaryEditable),
             )
             ExposedDropdownMenu(
                 expanded = chemOpen,
@@ -634,7 +634,7 @@ private fun NumberField(
         modifier = modifier.onFocusChanged { fs ->
             // Auto-save when the user moves focus away: saves the step of
             // manually tapping the check icon on every field.
-            if (!fs.isFocused && isDirty) parsed?.let(onSave)
+            if (!fs.isFocused && isDirty) parsed.let(onSave)
         },
         trailingIcon = {
             IconButton(
@@ -768,8 +768,8 @@ private fun ConfigTab(
                 ) { Text("Save battery configuration") }
                 if (syncDone) {
                     Text(
-                        "Saved — ${full?.let { "%.2f".format(it) } ?: "?"} V full / " +
-                        "${empty?.let { "%.2f".format(it) } ?: "?"} V empty",
+                        "Saved — ${"%.2f".format(full)} V full / " +
+                        "${"%.2f".format(empty)} V empty",
                         style = MaterialTheme.typography.labelSmall,
                         color = ChargingGreen,
                     )

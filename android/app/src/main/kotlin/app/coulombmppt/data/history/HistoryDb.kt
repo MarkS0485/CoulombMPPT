@@ -24,7 +24,7 @@ abstract class HistoryDb : RoomDatabase() {
                     context.applicationContext,
                     HistoryDb::class.java,
                     "coulombmppt-history.db",
-                ).fallbackToDestructiveMigration().build().also { instance = it }
+                ).fallbackToDestructiveMigration(dropAllTables = true).build().also { instance = it }
             }
     }
 }
