@@ -2,7 +2,6 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
     alias(libs.plugins.android.application)
-    alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.ksp)
@@ -10,7 +9,7 @@ plugins {
 
 android {
     namespace   = "app.coulombmppt"
-    compileSdk  = 35
+    compileSdk  = 37              // androidx.core 1.19.0 + compose-bom 2026.05 require API 37
 
     defaultConfig {
         applicationId = "app.coulombmppt"

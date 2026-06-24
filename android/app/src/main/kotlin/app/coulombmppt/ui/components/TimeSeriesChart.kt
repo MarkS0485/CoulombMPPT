@@ -31,20 +31,18 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.patrykandpatrick.vico.compose.cartesian.CartesianChartHost
-import com.patrykandpatrick.vico.compose.cartesian.axis.rememberBottom
-import com.patrykandpatrick.vico.compose.cartesian.axis.rememberStart
+import com.patrykandpatrick.vico.compose.cartesian.axis.HorizontalAxis
+import com.patrykandpatrick.vico.compose.cartesian.axis.VerticalAxis
 import com.patrykandpatrick.vico.compose.cartesian.layer.rememberLine
 import com.patrykandpatrick.vico.compose.cartesian.layer.rememberLineCartesianLayer
 import com.patrykandpatrick.vico.compose.cartesian.rememberCartesianChart
 import com.patrykandpatrick.vico.compose.cartesian.rememberVicoScrollState
 import com.patrykandpatrick.vico.compose.cartesian.rememberVicoZoomState
-import com.patrykandpatrick.vico.compose.common.fill
-import com.patrykandpatrick.vico.core.cartesian.axis.HorizontalAxis
-import com.patrykandpatrick.vico.core.cartesian.axis.VerticalAxis
-import com.patrykandpatrick.vico.core.cartesian.data.CartesianChartModelProducer
-import com.patrykandpatrick.vico.core.cartesian.data.CartesianValueFormatter
-import com.patrykandpatrick.vico.core.cartesian.data.lineSeries
-import com.patrykandpatrick.vico.core.cartesian.layer.LineCartesianLayer
+import com.patrykandpatrick.vico.compose.common.Fill
+import com.patrykandpatrick.vico.compose.cartesian.data.CartesianChartModelProducer
+import com.patrykandpatrick.vico.compose.cartesian.data.CartesianValueFormatter
+import com.patrykandpatrick.vico.compose.cartesian.data.lineModel
+import com.patrykandpatrick.vico.compose.cartesian.layer.LineCartesianLayer
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -157,7 +155,7 @@ fun TimeSeriesChart(
         val hasData = series.any { it.points.isNotEmpty() }
         if (!hasData) return@LaunchedEffect
         producer.runTransaction {
-            lineSeries {
+            lineModel {
                 for (s in series) {
                     val visible = s.points.filter { it.tMs in viewport.startMs..viewport.endMs }
                     val pts = if (visible.size >= 2) visible else s.points
@@ -188,10 +186,10 @@ fun TimeSeriesChart(
         val areaColor = s.color.copy(alpha = 0.15f)
         LineCartesianLayer.rememberLine(
             fill = remember(lineArgb) {
-                LineCartesianLayer.LineFill.single(fill(Color(lineArgb)))
+                LineCartesianLayer.LineFill.single(Fill(Color(lineArgb)))
             },
             areaFill = remember(areaColor) {
-                LineCartesianLayer.AreaFill.single(fill(areaColor))
+                LineCartesianLayer.AreaFill.single(Fill(areaColor))
             },
         )
     }
