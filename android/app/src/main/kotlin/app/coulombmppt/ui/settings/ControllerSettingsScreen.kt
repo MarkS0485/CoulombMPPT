@@ -25,7 +25,7 @@ import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
-import androidx.compose.material3.MenuAnchorType
+import androidx.compose.material3.ExposedDropdownMenuAnchorType
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -222,7 +222,7 @@ fun ControllerSettingsScreen(
                     singleLine = true,
                     isError = hasError,
                     supportingText = if (hasError) {
-                        { Text(errorText!!, color = MaterialTheme.colorScheme.error,
+                        { Text(errorText, color = MaterialTheme.colorScheme.error,
                                style = MaterialTheme.typography.labelSmall) }
                     } else null,
                     modifier = Modifier.weight(1f),
@@ -319,7 +319,7 @@ fun ControllerSettingsScreen(
                         if (saving) MiniSpinner()
                         else        ExposedDropdownMenuDefaults.TrailingIcon(expanded = open)
                     },
-                    modifier = Modifier.fillMaxWidth().menuAnchor(MenuAnchorType.PrimaryEditable),
+                    modifier = Modifier.fillMaxWidth().menuAnchor(ExposedDropdownMenuAnchorType.PrimaryEditable),
                 )
                 ExposedDropdownMenu(
                     expanded = open,

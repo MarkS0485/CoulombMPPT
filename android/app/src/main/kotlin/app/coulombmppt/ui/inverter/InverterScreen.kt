@@ -37,19 +37,17 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.patrykandpatrick.vico.compose.cartesian.CartesianChartHost
-import com.patrykandpatrick.vico.compose.cartesian.axis.rememberBottom
-import com.patrykandpatrick.vico.compose.cartesian.axis.rememberStart
+import com.patrykandpatrick.vico.compose.cartesian.axis.HorizontalAxis
+import com.patrykandpatrick.vico.compose.cartesian.axis.VerticalAxis
 import com.patrykandpatrick.vico.compose.cartesian.layer.rememberColumnCartesianLayer
 import com.patrykandpatrick.vico.compose.cartesian.rememberCartesianChart
 import com.patrykandpatrick.vico.compose.cartesian.rememberVicoZoomState
 import com.patrykandpatrick.vico.compose.common.component.rememberLineComponent
-import com.patrykandpatrick.vico.compose.common.fill
-import com.patrykandpatrick.vico.core.cartesian.axis.HorizontalAxis
-import com.patrykandpatrick.vico.core.cartesian.axis.VerticalAxis
-import com.patrykandpatrick.vico.core.cartesian.data.CartesianChartModelProducer
-import com.patrykandpatrick.vico.core.cartesian.data.CartesianValueFormatter
-import com.patrykandpatrick.vico.core.cartesian.data.columnSeries
-import com.patrykandpatrick.vico.core.cartesian.layer.ColumnCartesianLayer
+import com.patrykandpatrick.vico.compose.common.Fill
+import com.patrykandpatrick.vico.compose.cartesian.data.CartesianChartModelProducer
+import com.patrykandpatrick.vico.compose.cartesian.data.CartesianValueFormatter
+import com.patrykandpatrick.vico.compose.cartesian.data.columnModel
+import com.patrykandpatrick.vico.compose.cartesian.layer.ColumnCartesianLayer
 import app.coulombmppt.data.model.DayEnergy
 import app.coulombmppt.ui.components.BrandTopBar
 import app.coulombmppt.ui.components.EnergyFlow
@@ -266,7 +264,7 @@ private fun WeeklyEasunChart(weekEnergy: List<DayEnergy>) {
 
     LaunchedEffect(weekEnergy) {
         producer.runTransaction {
-            columnSeries {
+            columnModel {
                 series(positiveWh)
                 series(negativeWh)
             }
@@ -276,8 +274,8 @@ private fun WeeklyEasunChart(weekEnergy: List<DayEnergy>) {
     val greenArgb  = ChargingGreen.toArgb()
     val amberArgb  = WarnAmber.toArgb()
 
-    val greenColumn = rememberLineComponent(fill = fill(Color(greenArgb)))
-    val amberColumn = rememberLineComponent(fill = fill(Color(amberArgb)))
+    val greenColumn = rememberLineComponent(fill = Fill(Color(greenArgb)))
+    val amberColumn = rememberLineComponent(fill = Fill(Color(amberArgb)))
 
     val columnLayer = rememberColumnCartesianLayer(
         ColumnCartesianLayer.ColumnProvider.series(greenColumn, amberColumn),
@@ -289,7 +287,7 @@ private fun WeeklyEasunChart(weekEnergy: List<DayEnergy>) {
             dayLabels.getOrNull(value.toInt()) ?: ""
         },
         itemPlacer = remember {
-            HorizontalAxis.ItemPlacer.aligned(spacing = 1, addExtremeLabelPadding = true)
+            HorizontalAxis.ItemPlacer.aligned(spacing = { 1 }, addExtremeLabelPadding = true)
         },
     )
     val startAxis = VerticalAxis.rememberStart()

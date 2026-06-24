@@ -27,19 +27,17 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.patrykandpatrick.vico.compose.cartesian.CartesianChartHost
-import com.patrykandpatrick.vico.compose.cartesian.axis.rememberBottom
-import com.patrykandpatrick.vico.compose.cartesian.axis.rememberStart
+import com.patrykandpatrick.vico.compose.cartesian.axis.HorizontalAxis
+import com.patrykandpatrick.vico.compose.cartesian.axis.VerticalAxis
 import com.patrykandpatrick.vico.compose.cartesian.layer.rememberLine
 import com.patrykandpatrick.vico.compose.cartesian.layer.rememberLineCartesianLayer
 import com.patrykandpatrick.vico.compose.cartesian.rememberCartesianChart
 import com.patrykandpatrick.vico.compose.cartesian.rememberVicoZoomState
-import com.patrykandpatrick.vico.compose.common.fill
-import com.patrykandpatrick.vico.core.cartesian.axis.HorizontalAxis
-import com.patrykandpatrick.vico.core.cartesian.axis.VerticalAxis
-import com.patrykandpatrick.vico.core.cartesian.data.CartesianChartModelProducer
-import com.patrykandpatrick.vico.core.cartesian.data.CartesianValueFormatter
-import com.patrykandpatrick.vico.core.cartesian.data.lineSeries
-import com.patrykandpatrick.vico.core.cartesian.layer.LineCartesianLayer
+import com.patrykandpatrick.vico.compose.common.Fill
+import com.patrykandpatrick.vico.compose.cartesian.data.CartesianChartModelProducer
+import com.patrykandpatrick.vico.compose.cartesian.data.CartesianValueFormatter
+import com.patrykandpatrick.vico.compose.cartesian.data.lineModel
+import com.patrykandpatrick.vico.compose.cartesian.layer.LineCartesianLayer
 
 // Vico-backed sparkline panel. Public API matches the old Canvas implementation
 // so all call sites remain unchanged.
@@ -72,7 +70,7 @@ fun ChartPanel(
     LaunchedEffect(values) {
         if (values.isNotEmpty()) {
             producer.runTransaction {
-                lineSeries {
+                lineModel {
                     series(values.indices.map { it.toFloat() }, values)
                 }
             }
@@ -92,10 +90,10 @@ fun ChartPanel(
         LineCartesianLayer.LineProvider.series(
             LineCartesianLayer.rememberLine(
                 fill = remember(lineColor) {
-                    LineCartesianLayer.LineFill.single(fill(Color(lineColor)))
+                    LineCartesianLayer.LineFill.single(Fill(Color(lineColor)))
                 },
                 areaFill = remember(areaColor) {
-                    LineCartesianLayer.AreaFill.single(fill(areaColor))
+                    LineCartesianLayer.AreaFill.single(Fill(areaColor))
                 },
             ),
         ),

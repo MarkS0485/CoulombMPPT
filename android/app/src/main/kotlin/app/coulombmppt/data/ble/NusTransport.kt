@@ -111,6 +111,7 @@ class NusTransport(
 
             try {
                 val callback = callbackFor(conn)
+                @Suppress("DEPRECATION")
                 val gatt = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                     device.connectGatt(context, false, callback, BluetoothDevice.TRANSPORT_LE)
                 } else {
@@ -189,8 +190,10 @@ class NusTransport(
                 gatt.setCharacteristicNotification(notifyable, true)
                 val descriptor = notifyable.getDescriptor(BleConstants.CCCD)
                     ?: error("missing CCCD on notify characteristic")
-                @Suppress("DEPRECATION") descriptor.value = BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE
-                @Suppress("DEPRECATION") gatt.writeDescriptor(descriptor)
+                @Suppress("DEPRECATION")
+                descriptor.value = BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE
+                @Suppress("DEPRECATION")
+                gatt.writeDescriptor(descriptor)
                 withTimeoutOrNull(3000) { conn.notifyEnabled.await() } ?: error("enable-notify timeout")
 
                 // Only declare success if a concurrent close() didn't replace
