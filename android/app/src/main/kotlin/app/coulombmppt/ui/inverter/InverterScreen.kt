@@ -287,7 +287,7 @@ private fun WeeklyEasunChart(weekEnergy: List<DayEnergy>) {
             dayLabels.getOrNull(value.toInt()) ?: ""
         },
         itemPlacer = remember {
-            HorizontalAxis.ItemPlacer.aligned(spacing = 1, addExtremeLabelPadding = true)
+            HorizontalAxis.ItemPlacer.aligned(spacing = { 1 }, addExtremeLabelPadding = true)
         },
     )
     val startAxis = VerticalAxis.rememberStart()
