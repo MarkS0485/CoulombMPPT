@@ -2,16 +2,16 @@
 # Android Studio caches. Anything Bluetooth/MPPT-specific lives only here.
 [versions]
 agp                  = "9.2.1"
-kotlin               = "2.3.10"   # pinned to AGP 9.2's built-in Kotlin compiler
+kotlin               = "2.4.0"   # pinned to AGP 9.2's built-in Kotlin compiler
 coreKtx              = "1.19.0"
-lifecycle            = "2.10.0"
+lifecycle            = "2.11.0"
 activityCompose      = "1.13.0"
-composeBom           = "2026.05.01"
+composeBom           = "2026.06.00"
 navigation           = "2.9.8"
 serialization        = "1.11.0"
 datastore            = "1.2.1"
 coroutines           = "1.11.0"
-vico                 = "3.2.2"
+vico                 = "3.2.3"
 room                 = "2.8.4"
 ksp                  = "2.3.9"
 zxing                = "4.3.0"
