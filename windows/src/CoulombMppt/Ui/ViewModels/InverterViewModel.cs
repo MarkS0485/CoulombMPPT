@@ -25,7 +25,7 @@ public sealed partial class InverterViewModel : ObservableObject
     private const long EnergyRefreshIntervalMs = 60_000L;
 
     // ---- Live estimate ----
-    [ObservableProperty] private string _liveEasunLabel  = "—";
+    [ObservableProperty] private string _liveEasunLabel  = " - ";
     [ObservableProperty] private double _easunWatts;
     [ObservableProperty] private double _easunNetA;
     [ObservableProperty] private bool   _hasLiveEasun;
@@ -33,7 +33,7 @@ public sealed partial class InverterViewModel : ObservableObject
     // ---- Inference source (Phase 2): which path produced the number above ----
     [ObservableProperty] private bool   _isModelLive;            // true = sag-based observer, false = legacy
     [ObservableProperty] private double _modelConfidencePct;
-    [ObservableProperty] private string _modelStateLabel = "";   // e.g. "Live battery-model · 72%"
+    [ObservableProperty] private string _modelStateLabel = "";   // e.g. "Live battery-model . 72%"
 
     // ---- Flow diagram inputs ----
     [ObservableProperty] private double _solarW;
@@ -50,7 +50,7 @@ public sealed partial class InverterViewModel : ObservableObject
 
     // ---- Battery profile availability ----
     [ObservableProperty] private bool   _hasBatteryProfile;
-    [ObservableProperty] private string _noDataReason = "Requires a battery profile — set one in App Settings";
+    [ObservableProperty] private string _noDataReason = "Requires a battery profile  -  set one in App Settings";
 
     // ---- 7-day bar chart data ----
     [ObservableProperty] private IReadOnlyList<double> _weekEasunCharge = Array.Empty<double>();
@@ -86,7 +86,7 @@ public sealed partial class InverterViewModel : ObservableObject
         if (live == null)
         {
             HasLiveEasun   = false;
-            LiveEasunLabel = "—";
+            LiveEasunLabel = " - ";
             EasunWatts     = 0;
             EasunNetA      = 0;
             SolarW         = 0;
@@ -138,10 +138,10 @@ public sealed partial class InverterViewModel : ObservableObject
             IsModelLive  = true;
             EasunNetA    = netA;
             EasunWatts   = -est.BusLoadW;
-            ModelStateLabel = $"Live battery-model · {est.ConfidencePct:0}%";
+            ModelStateLabel = $"Live battery-model . {est.ConfidencePct:0}%";
             LiveEasunLabel = netA >= 0
-                ? $"EA SUN  +{netA:0.0} A  ·  +{EasunWatts:0} W  (array charging the bank)"
-                : $"EA SUN  {netA:0.0} A  ·  {EasunWatts:0} W  (inverter drawing load)";
+                ? $"EA SUN  +{netA:0.0} A  .  +{EasunWatts:0} W  (array charging the bank)"
+                : $"EA SUN  {netA:0.0} A  .  {EasunWatts:0} W  (inverter drawing load)";
         }
         else if (easunA != null)
         {
@@ -150,11 +150,11 @@ public sealed partial class InverterViewModel : ObservableObject
             EasunNetA    = easunA.Value;
             EasunWatts   = easunA.Value * live.BatteryVoltage;
             ModelStateLabel = est != null
-                ? $"Calibrating · {est.ConfidencePct:0}% — legacy estimate"
+                ? $"Calibrating . {est.ConfidencePct:0}%  -  legacy estimate"
                 : "Legacy estimate";
             LiveEasunLabel = easunA.Value >= 0
-                ? $"EA SUN  ~  +{easunA.Value:0.0} A  ·  +{EasunWatts:0} W  (array charging the bank)"
-                : $"EA SUN  ~  {easunA.Value:0.0} A  ·  {EasunWatts:0} W  (inverter drawing load)";
+                ? $"EA SUN  ~  +{easunA.Value:0.0} A  .  +{EasunWatts:0} W  (array charging the bank)"
+                : $"EA SUN  ~  {easunA.Value:0.0} A  .  {EasunWatts:0} W  (inverter drawing load)";
         }
         else
         {
@@ -163,7 +163,7 @@ public sealed partial class InverterViewModel : ObservableObject
             EasunNetA      = 0;
             EasunWatts     = 0;
             ModelStateLabel = "";
-            LiveEasunLabel = profile == null ? "—" : "Warming up…";
+            LiveEasunLabel = profile == null ? " - " : "Warming up...";
         }
 
         // Total battery throughput for the flow diagram.

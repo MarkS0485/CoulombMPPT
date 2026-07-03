@@ -13,7 +13,7 @@ val CoulombRed      = Color(0xFFC8102E)
 val CoulombRedDk    = Color(0xFF9B0D23)
 val CoulombBurgundy = Color(0xFF6B0C1C)
 
-// Light surfaces — same as the website body + glass-panel cards.
+// Light surfaces  -  same as the website body + glass-panel cards.
 val Body0      = Color(0xFFF1F3F9)   // page background
 val Body1      = Color(0xFFFFFFFF)   // primary card / surface
 val Body2      = Color(0xFFF6F7FB)   // recessed surface
@@ -30,15 +30,15 @@ val OkGreen   = Color(0xFF16A34A)
 val WarnAmber = Color(0xFFD97706)
 val ErrRed    = CoulombRed
 
-// Unit 001 ("Domestic dwelling") accent from the sister coulombmonitor app —
+// Unit 001 ("Domestic dwelling") accent from the sister coulombmonitor app  -
 // warm copper / amber-700. Adopted as our primary unit accent because
 // Mark's MPPT install IS a small domestic solar+battery setup and we want
 // the two apps to feel like siblings.
 val UnitAccent001 = Color(0xFFB45309)   // amber-700
 
-// MPPT-domain accents — used on tiles + the energy-flow diagram to keep
+// MPPT-domain accents  -  used on tiles + the energy-flow diagram to keep
 // "where is the power coming from / going to" instantly readable.
-//   PV side / charging:  copper (Unit 001 accent — also reads as "sun")
+//   PV side / charging:  copper (Unit 001 accent  -  also reads as "sun")
 //   Battery side:        navy (matches the brand)
 //   Load side:           burgundy
 val SolarAmber    = UnitAccent001

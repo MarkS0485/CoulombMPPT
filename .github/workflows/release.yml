@@ -2,8 +2,8 @@ name: Release
 
 # Builds release artifacts for BOTH apps and, when a GitHub Release is
 # published, attaches them to it:
-#   * Android  — release APK  (UNSIGNED — no keystore is configured)
-#   * Windows  — self-contained win-x64 build, as a portable .zip AND an
+#   * Android   -  release APK  (UNSIGNED  -  no keystore is configured)
+#   * Windows   -  self-contained win-x64 build, as a portable .zip AND an
 #                Inno Setup installer (.exe), both unsigned
 #
 # Triggers:
@@ -35,7 +35,7 @@ concurrency:
 jobs:
   # --------------------------------------------------------------- Android ---
   android:
-    name: Android · release APK
+    name: Android . release APK
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -69,7 +69,7 @@ jobs:
 
   # --------------------------------------------------------------- Windows ---
   windows:
-    name: Windows · publish + installer
+    name: Windows . publish + installer
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v7

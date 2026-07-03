@@ -52,7 +52,7 @@ fun LogsScreen(
                 title    = "Logs",
                 subtitle = buildString {
                     append(if (state.showingAllSessions) "All sessions" else "This launch")
-                    append(" · ")
+                    append(" . ")
                     append(if (state.tailing) "live (1.5 s)" else "paused")
                 },
                 onBack   = onBack,

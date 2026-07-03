@@ -105,13 +105,13 @@
                                                 <StackPanel Grid.Column="0">
                                                     <TextBlock>
                                                         <Run Text="{Binding Label}" FontWeight="SemiBold"/>
-                                                        <Run Text="  ·  "/>
+                                                        <Run Text="  .  "/>
                                                         <Run Text="{Binding KeyId}" FontFamily="Cascadia Mono, Consolas"/>
                                                     </TextBlock>
                                                     <TextBlock Style="{StaticResource Caption}">
                                                         <Run Text="paired "/>
                                                         <Run Text="{Binding PairedAtMs, Converter={StaticResource UnixMsToDateTime}}"/>
-                                                        <Run Text="  ·  last seen "/>
+                                                        <Run Text="  .  last seen "/>
                                                         <Run Text="{Binding LastSeenAtMs, Converter={StaticResource UnixMsToDateTime}}"/>
                                                     </TextBlock>
                                                 </StackPanel>

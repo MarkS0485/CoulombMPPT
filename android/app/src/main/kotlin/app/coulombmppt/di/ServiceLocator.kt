@@ -64,7 +64,7 @@ object ServiceLocator {
     fun setRemoteModeFlag(remote: Boolean) { remoteMode = remote }
 
     /** Switch the active source kind, tearing down any existing real
-     *  repositories first so their sources disconnect cleanly — critically,
+     *  repositories first so their sources disconnect cleanly  -  critically,
      *  this stops the BLE link when moving to remote mode (clearing the map
      *  alone would leak the radio connection). The next repositoryFor()
      *  rebuilds with the chosen source. */
@@ -78,7 +78,7 @@ object ServiceLocator {
     }
 
     /** Repository for a specific paired controller, by id only. Created lazily.
-     *  Use the [PairedController] overload where possible — it's the one that
+     *  Use the [PairedController] overload where possible  -  it's the one that
      *  picks the right driver per device type. This id-only form falls back to
      *  the default BLE/remote source and is meant for call sites that operate on
      *  an already-created repo (the typed overload runs first at pair/startup). */
@@ -101,7 +101,7 @@ object ServiceLocator {
         else -> BleMpptSource(appContext)
     }
 
-    /** Demo-mode repository — single shared instance across the app. */
+    /** Demo-mode repository  -  single shared instance across the app. */
     fun fakeRepository(): MpptRepository = fakeRepo
 
     /** Resolve the repository implied by a settings snapshot. Returns the
@@ -114,11 +114,11 @@ object ServiceLocator {
         return repositoryFor(ctrl)
     }
 
-    /** Tear down and forget the repository for a controller — used after
+    /** Tear down and forget the repository for a controller  -  used after
      *  unpair. Stops it first (closing the BLE link and cancelling its
      *  reconnect loop) *before* dropping the reference: removing it from the
      *  map alone would orphan a still-running source that keeps the radio open
-     *  and keeps reconnecting to the now-deleted controller — which is what
+     *  and keeps reconnecting to the now-deleted controller  -  which is what
      *  forced the "delete the MPPT and add it back" recovery dance. Safe to
      *  call more than once; stop() is idempotent. */
     suspend fun removeRepository(controllerId: String) {

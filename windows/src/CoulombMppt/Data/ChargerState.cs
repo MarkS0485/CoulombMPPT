@@ -2,7 +2,7 @@ namespace CoulombMppt.Data;
 
 // Synthesised top-level charger state. We don't yet have ground truth for the
 // firmware's solar_status / work_status / power_status enum codes, so we derive
-// the state heuristically from the numeric registers — ported verbatim from
+// the state heuristically from the numeric registers  -  ported verbatim from
 // the Android client's ChargerState.fromRegisters. Swap for a direct mapping
 // once the firmware enum codes are confirmed on hardware.
 public enum ChargerState

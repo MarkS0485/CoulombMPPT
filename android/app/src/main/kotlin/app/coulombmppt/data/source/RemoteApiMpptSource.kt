@@ -25,7 +25,7 @@ import app.coulombmppt.data.remote.CoulombApiClient
 // poll its /status endpoint for live + settings and relay writes to its
 // /settings/register endpoint. Because it satisfies the same MpptSource
 // contract, the repository and every screen (incl. settings writes and the
-// load toggle) work unchanged — they just talk to the PC instead of a radio.
+// load toggle) work unchanged  -  they just talk to the PC instead of a radio.
 //
 // chargerState is recomputed locally from the raw status registers the API
 // returns, so it matches exactly what the BLE path would have produced.

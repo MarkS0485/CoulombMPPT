@@ -100,7 +100,7 @@ public partial class BatteryModelPage : UserControl
         model.Axes.Add(xAxis);
         model.Axes.Add(yAxis);
 
-        // Old linear reference line: (0, EmptyV) → (100, FullV). Drawn first so it
+        // Old linear reference line: (0, EmptyV) -> (100, FullV). Drawn first so it
         // sits behind the learned curve. This is "what we used to assume".
         if (_vm.LinearEmptyV is { } emptyV && _vm.LinearFullV is { } fullV)
         {
@@ -151,7 +151,7 @@ public partial class BatteryModelPage : UserControl
         OcvChart.BarModel = model;
     }
 
-    // Marker radius scaled by sample count (3–8 px), guarding the single-point case.
+    // Marker radius scaled by sample count (3-8 px), guarding the single-point case.
     private static double ScaleMarker(int samples, int maxSamples)
     {
         if (maxSamples <= 0) return 4.0;

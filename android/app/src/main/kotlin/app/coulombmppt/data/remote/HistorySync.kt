@@ -12,10 +12,10 @@ import app.coulombmppt.data.log.AppLogger
 // hands off between phone and PC each accumulates frames the other is missing.
 // Sync closes those gaps:
 //
-//   • Upload   — our Room rows for the controller's MAC → POST /history/ingest.
+//   - Upload    -  our Room rows for the controller's MAC -> POST /history/ingest.
 //                The server dedups by timestamp, so re-uploading an overlapping
 //                window is safe and idempotent.
-//   • Download — GET /history for the same MAC → merge rows we don't already
+//   - Download  -  GET /history for the same MAC -> merge rows we don't already
 //                have (deduped on tsMs) back into Room.
 //
 // Identity bridge: Room is keyed by our local controller UUID; the PC is keyed
@@ -31,7 +31,7 @@ class HistorySync(
         val addedLocal: Int,
     ) {
         override fun toString() =
-            "↑ $sentRows sent ($addedRemote new on PC) · ↓ $fetchedRows fetched ($addedLocal new here)"
+            "↑ $sentRows sent ($addedRemote new on PC) . ↓ $fetchedRows fetched ($addedLocal new here)"
     }
 
     /** Probe reachability + cert pin without mutating anything. */
@@ -56,7 +56,7 @@ class HistorySync(
             val client = CoulombApiClient(pairing)
             val since = System.currentTimeMillis() - TimeUnit.HOURS.toMillis(lookbackHours)
 
-            // --- upload: our window → PC ---
+            // --- upload: our window -> PC ---
             val localRows = dao.listSince(controllerId, since)
             var addedRemote = 0
             for (chunk in localRows.chunked(UPLOAD_CHUNK)) {
@@ -66,11 +66,11 @@ class HistorySync(
                 addedRemote += resp.added
             }
 
-            // --- download: PC window → us (dedup on tsMs) ---
+            // --- download: PC window -> us (dedup on tsMs) ---
             val remote = client.fetchHistory(mac, lookbackHours.toDouble()).getOrThrow()
             val known = dao.timestampsSince(controllerId, since).toHashSet()
             val toInsert = remote.samples
-                .filter { known.add(it.timestampMs) }     // add() == true → not seen yet
+                .filter { known.add(it.timestampMs) }     // add() == true -> not seen yet
                 .map { it.toRow(controllerId) }
             if (toInsert.isNotEmpty()) dao.insertAll(toInsert)
 
@@ -111,7 +111,7 @@ class HistorySync(
         // A week is enough to bridge realistic hand-off gaps without shipping
         // the whole 30-day retention window on every sync.
         const val DEFAULT_LOOKBACK_HOURS = 168L
-        // Bound request size: ~1000 rows ≈ 120 KB of JSON.
+        // Bound request size: ~1000 rows ~= 120 KB of JSON.
         const val UPLOAD_CHUNK = 1000
     }
 }

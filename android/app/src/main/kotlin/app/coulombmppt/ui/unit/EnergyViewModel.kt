@@ -100,6 +100,6 @@ class EnergyViewModel : ViewModel() {
     private companion object {
         const val REFRESH_INTERVAL_MS = 60_000L   // recompute every minute
         const val LIVE_WINDOW_MS      = 3 * 60_000L
-        const val MAX_RECENT_ROWS     = 60         // 10 s × 60 = 10 min cap
+        const val MAX_RECENT_ROWS     = 60         // 10 s x 60 = 10 min cap
     }
 }

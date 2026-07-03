@@ -43,10 +43,10 @@ import com.patrykandpatrick.vico.compose.cartesian.layer.LineCartesianLayer
 // so all call sites remain unchanged.
 //
 // Layout:
-//   • Card wrapper: 12 dp corner radius, outlineVariant 1 dp border, surface background.
-//   • Header row: colour swatch + monospace label + last/min/max readout.
-//   • CartesianChartHost below: single LineCartesianLayer with 15% area fill.
-//   • No interactive zoom or pan — zoom is locked.
+//   - Card wrapper: 12 dp corner radius, outlineVariant 1 dp border, surface background.
+//   - Header row: colour swatch + monospace label + last/min/max readout.
+//   - CartesianChartHost below: single LineCartesianLayer with 15% area fill.
+//   - No interactive zoom or pan  -  zoom is locked.
 @Composable
 fun ChartPanel(
     label: String,
@@ -77,7 +77,7 @@ fun ChartPanel(
         }
     }
 
-    // Suppress the start / bottom axis labels for sparklines — they add noise.
+    // Suppress the start / bottom axis labels for sparklines  -  they add noise.
     val startAxis = VerticalAxis.rememberStart()
     val bottomAxis = HorizontalAxis.rememberBottom(
         valueFormatter = CartesianValueFormatter { _, _, _ -> "" },
@@ -139,8 +139,8 @@ fun ChartPanel(
             Text(
                 buildString {
                     append("last ").append(fmt(values.lastOrNull() ?: 0.0))
-                    append(" · ↓").append(fmt(rawMin))
-                    append(" · ↑").append(fmt(rawMax))
+                    append(" . ↓").append(fmt(rawMin))
+                    append(" . ↑").append(fmt(rawMax))
                 },
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 style = MaterialTheme.typography.labelSmall.copy(fontFamily = FontFamily.Monospace),
@@ -167,7 +167,7 @@ fun ChartPanel(
                 contentAlignment = Alignment.Center,
             ) {
                 Text(
-                    "Waiting for data…",
+                    "Waiting for data...",
                     style = MaterialTheme.typography.labelSmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
@@ -176,7 +176,7 @@ fun ChartPanel(
     }
 }
 
-// Suppress unused warning — yMin/yMax are accepted for API compatibility but
+// Suppress unused warning  -  yMin/yMax are accepted for API compatibility but
 // Vico auto-ranges; removing them would break all call sites.
 @Suppress("UNUSED_PARAMETER")
 private fun unusedParams(yMin: Double?, yMax: Double?) = Unit

@@ -9,12 +9,12 @@ public sealed class TheveninMathTests
     [Fact]
     public void RobustSlope_RecoversKnownR_DespiteOutliers()
     {
-        const double r = 0.08;   // 80 mΩ pack
+        const double r = 0.08;   // 80 mohm pack
         var pairs = new List<(double dI, double dV)>();
-        // Clean events: dV = R·dI.
+        // Clean events: dV = R.dI.
         for (int i = 1; i <= 10; i++)
             pairs.Add((dI: i, dV: r * i));
-        // Outliers: an inverter step colliding with a PV edge — wildly off.
+        // Outliers: an inverter step colliding with a PV edge  -  wildly off.
         pairs.Add((dI: 3, dV: 5.0));
         pairs.Add((dI: 4, dV: -2.0));
 
@@ -88,7 +88,7 @@ public sealed class TheveninMathTests
     {
         const double cap = 100.0;   // Ah
         double soc = 50.0;
-        // Charge at +10 A for 1 h, then discharge −10 A for 1 h ⇒ back to start.
+        // Charge at +10 A for 1 h, then discharge -10 A for 1 h => back to start.
         soc = TheveninMath.CoulombStep(soc, netBattA: 10.0, dtMs: 3_600_000L, capacityAh: cap);
         Assert.Equal(60.0, soc, precision: 6);   // +10 Ah = +10% of 100 Ah
         soc = TheveninMath.CoulombStep(soc, netBattA: -10.0, dtMs: 3_600_000L, capacityAh: cap);
@@ -105,8 +105,8 @@ public sealed class TheveninMathTests
     [Fact]
     public void InferBusLoadA_HandComputedDrawCase()
     {
-        // OCV=52, V=51 ⇒ a 1 V sag across R=0.1 Ω ⇒ I_batt = −10 A (leaving the
-        // battery). No PV, no load terminal ⇒ bus draw = +10 A.
+        // OCV=52, V=51 => a 1 V sag across R=0.1 ohm => I_batt = -10 A (leaving the
+        // battery). No PV, no load terminal => bus draw = +10 A.
         double? a = TheveninMath.InferBusLoadA(ocv: 52, vObs: 51, rOhms: 0.1, chargeA: 0, dischargeA: 0);
         Assert.NotNull(a);
         Assert.Equal(10.0, a!.Value, precision: 6);
@@ -115,9 +115,9 @@ public sealed class TheveninMathTests
     [Fact]
     public void InferBusLoadA_ChargingReducesNetDraw()
     {
-        // Same sag but 4 A of PV coming in ⇒ net bus draw drops by 4 A.
+        // Same sag but 4 A of PV coming in => net bus draw drops by 4 A.
         double? a = TheveninMath.InferBusLoadA(ocv: 52, vObs: 51, rOhms: 0.1, chargeA: 4, dischargeA: 0);
-        Assert.Equal(14.0, a!.Value, precision: 6);   // 4 − (−10) = 14 A of loads
+        Assert.Equal(14.0, a!.Value, precision: 6);   // 4 - (-10) = 14 A of loads
     }
 
     [Fact]

@@ -17,7 +17,7 @@
                       Subtitle="Find nearby controllers over Bluetooth LE and pair them">
             <c:PageHeader.ActionContent>
                 <StackPanel Orientation="Horizontal">
-                    <TextBlock Text="Scanning…" Foreground="{StaticResource SolarTeal}" FontWeight="SemiBold"
+                    <TextBlock Text="Scanning..." Foreground="{StaticResource SolarTeal}" FontWeight="SemiBold"
                                VerticalAlignment="Center" Margin="0,0,10,0"
                                Visibility="{Binding IsScanning, Converter={StaticResource BoolToVis}}"/>
                     <Button Content="Start / stop scan" Style="{StaticResource PrimaryButton}"
@@ -37,7 +37,7 @@
                 <DockPanel>
                     <TextBlock DockPanel.Dock="Top" Text="NEARBY DEVICES" Style="{StaticResource SectionHeader}"/>
                     <TextBlock DockPanel.Dock="Top"
-                               Text="No devices yet — press Start scan."
+                               Text="No devices yet  -  press Start scan."
                                Style="{StaticResource Caption}"
                                Visibility="{Binding Devices.Count, Converter={StaticResource CountZeroToVis}}"/>
                     <ScrollViewer VerticalScrollBarVisibility="Auto">

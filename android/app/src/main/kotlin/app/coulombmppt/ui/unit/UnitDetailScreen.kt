@@ -91,7 +91,7 @@ import app.coulombmppt.ui.theme.WarnAmber
 // Per-controller detail screen. Top bar shows the controller's name +
 // site label; a fixed 4-tab row drives the body.
 //
-// Tabs: Overview · Data · Energy · Config
+// Tabs: Overview . Data . Energy . Config
 private val TABS = listOf("Overview", "Data", "Energy", "Config")
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -117,12 +117,12 @@ fun UnitDetailScreen(
         topBar = {
             BrandTopBar(
                 title    = profile?.title ?: "MPPT",
-                subtitle = profile?.siteLabel ?: "Loading…",
+                subtitle = profile?.siteLabel ?: "Loading...",
                 onBack   = onBack,
                 actions = {
                     val (label, kind) = when (state.connection) {
                         MpptSource.Connection.Connected    -> "Online"   to StatusKind.Connected
-                        MpptSource.Connection.Connecting   -> "Connecting…" to StatusKind.Connecting
+                        MpptSource.Connection.Connecting   -> "Connecting..." to StatusKind.Connecting
                         MpptSource.Connection.Disconnected -> "Offline"  to StatusKind.Disconnected
                     }
                     StatusPill(label = label, kind = kind, modifier = Modifier.padding(end = 4.dp))
@@ -184,7 +184,7 @@ fun UnitDetailScreen(
 }
 
 // ============================================================================
-// Overview tab — direct port of the old Home screen contents (hero ring,
+// Overview tab  -  direct port of the old Home screen contents (hero ring,
 // energy flow, two rows of NumberTiles).
 // ============================================================================
 @Composable
@@ -209,7 +209,7 @@ private fun OverviewTab(state: UnitDetailUiState, profile: UnitProfile?) {
                 }
                 StatusPill(label = label, kind = kind)
                 Text(
-                    text  = live?.let { "%.2f V".format(it.batteryVoltage) } ?: "—",
+                    text  = live?.let { "%.2f V".format(it.batteryVoltage) } ?: " - ",
                     color = MaterialTheme.colorScheme.onSurface,
                     style = MaterialTheme.typography.displaySmall.copy(
                         fontFamily = FontFamily.Monospace, fontWeight = FontWeight.Bold,
@@ -222,7 +222,7 @@ private fun OverviewTab(state: UnitDetailUiState, profile: UnitProfile?) {
                             it.dischargeCurrent > 0.05 -> "Discharging ↓"
                             else                       -> "Idle"
                         }
-                    } ?: "—",
+                    } ?: " - ",
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     style = MaterialTheme.typography.bodyMedium,
                 )
@@ -240,17 +240,17 @@ private fun OverviewTab(state: UnitDetailUiState, profile: UnitProfile?) {
 
         Row(horizontalArrangement = Arrangement.spacedBy(10.dp), modifier = Modifier.fillMaxWidth()) {
             NumberTile(
-                label = "PV", value = live?.let { "%.2f".format(it.approxPvWatts / 1000.0) } ?: "—",
+                label = "PV", value = live?.let { "%.2f".format(it.approxPvWatts / 1000.0) } ?: " - ",
                 unit  = "kW", accent = profile?.accent,
                 modifier = Modifier.weight(1f),
             )
             NumberTile(
-                label = "Load", value = live?.let { "%.2f".format(it.loadWatts / 1000.0) } ?: "—",
+                label = "Load", value = live?.let { "%.2f".format(it.loadWatts / 1000.0) } ?: " - ",
                 unit  = "kW",
                 modifier = Modifier.weight(1f),
             )
             NumberTile(
-                label = "Total", value = live?.let { "%.1f".format(it.totalAccumulatedAh) } ?: "—",
+                label = "Total", value = live?.let { "%.1f".format(it.totalAccumulatedAh) } ?: " - ",
                 unit  = "Ah",
                 modifier = Modifier.weight(1f),
             )
@@ -258,13 +258,13 @@ private fun OverviewTab(state: UnitDetailUiState, profile: UnitProfile?) {
 
         Row(horizontalArrangement = Arrangement.spacedBy(10.dp), modifier = Modifier.fillMaxWidth()) {
             NumberTile(
-                label = "Battery", value = live?.let { "%.0f".format(it.batteryWatts) } ?: "—",
+                label = "Battery", value = live?.let { "%.0f".format(it.batteryWatts) } ?: " - ",
                 unit  = "W",
                 modifier = Modifier.weight(1f),
             )
             NumberTile(
-                label = "Temp", value = live?.let { "%.1f".format(it.temperatureC) } ?: "—",
-                unit  = "°C",
+                label = "Temp", value = live?.let { "%.1f".format(it.temperatureC) } ?: " - ",
+                unit  = " degC",
                 modifier = Modifier.weight(1f),
             )
         }
@@ -320,7 +320,7 @@ private fun OverviewTab(state: UnitDetailUiState, profile: UnitProfile?) {
                     .padding(14.dp),
             ) {
                 Text(
-                    text = "Reconnecting to ${state.controller?.displayName ?: state.controller?.mac ?: "the controller"}…",
+                    text = "Reconnecting to ${state.controller?.displayName ?: state.controller?.mac ?: "the controller"}...",
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     style = MaterialTheme.typography.bodySmall,
                 )
@@ -330,7 +330,7 @@ private fun OverviewTab(state: UnitDetailUiState, profile: UnitProfile?) {
 }
 
 // ============================================================================
-// Data tab — FilterChip row toggling "Live" / "History".
+// Data tab  -  FilterChip row toggling "Live" / "History".
 //   Live: 7 ChartPanel sparklines.
 //   History: TimeSeriesChart with multiple overlaid series.
 // ============================================================================
@@ -381,7 +381,7 @@ private fun LiveContent(state: UnitDetailUiState) {
         contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
         verticalArrangement = Arrangement.spacedBy(10.dp),
     ) {
-        item { Text("Live telemetry · last ${samples.size}s",
+        item { Text("Live telemetry . last ${samples.size}s",
                     style = MaterialTheme.typography.titleMedium,
                     color = MaterialTheme.colorScheme.onSurface) }
         item { ChartPanel("Battery V",   samples.map { it.batteryVoltage },   BatteryBlue,   unit = "V") }
@@ -390,7 +390,7 @@ private fun LiveContent(state: UnitDetailUiState) {
         item { ChartPanel("Battery W",   samples.map { it.batteryWatts },     BatteryBlue,   unit = "W") }
         item { ChartPanel("PV W (approx)", samples.map { it.approxPvWatts }, SolarAmber,    unit = "W") }
         item { ChartPanel("Load W",      samples.map { it.loadWatts },        LoadNavy,      unit = "W") }
-        item { ChartPanel("Temp",        samples.map { it.temperatureC },     WarnAmber,     unit = "°C") }
+        item { ChartPanel("Temp",        samples.map { it.temperatureC },     WarnAmber,     unit = " degC") }
         item { KvRow("Lifetime accumulated", "%.1f Ah".format(live.totalAccumulatedAh)) }
         item { KvRow("Charger state",     live.chargerState.name) }
         item { KvRow("SoC (computed)",    "%.0f %%".format(state.socPercent)) }
@@ -448,7 +448,7 @@ private fun HistoryContent(controllerId: String) {
             data.loading && data.buckets.isEmpty() -> {
                 Box(modifier = Modifier.fillMaxWidth().padding(top = 32.dp),
                     contentAlignment = Alignment.Center) {
-                    Text("Loading history…",
+                    Text("Loading history...",
                          style = MaterialTheme.typography.bodyMedium,
                          color = MaterialTheme.colorScheme.onSurfaceVariant)
                 }
@@ -477,7 +477,7 @@ private fun HistoryContent(controllerId: String) {
                                 yMin = 0.0, yMax = 100.0)
                 TimeSeriesChart("PV W", "W", SolarAmber, pts { it.pvWatts }, vp)
                 TimeSeriesChart("Load W", "W", LoadNavy, pts { it.loadWatts }, vp)
-                TimeSeriesChart("Temp", "°C", WarnAmber, pts { it.temperatureC }, vp)
+                TimeSeriesChart("Temp", " degC", WarnAmber, pts { it.temperatureC }, vp)
                 Text("${b.size} points in view",
                      style = MaterialTheme.typography.labelSmall,
                      color = MaterialTheme.colorScheme.onSurfaceVariant)
@@ -579,7 +579,7 @@ private fun PackSpecEditor(
             )
         }
 
-        // Resolved profile summary — show what the math will actually use.
+        // Resolved profile summary  -  show what the math will actually use.
         val profile = controller.resolvedBatteryProfile()
         if (profile != null) {
             Row(
@@ -592,9 +592,9 @@ private fun PackSpecEditor(
                     .padding(horizontal = 12.dp, vertical = 8.dp),
             ) {
                 Text(
-                    "Energy math: ${profile.capacityAh.toInt()} Ah · " +
-                    "${profile.emptyV}–${profile.fullV} V · " +
-                    "≈${"%.1f".format(profile.capacityWh / 1000.0)} kWh",
+                    "Energy math: ${profile.capacityAh.toInt()} Ah . " +
+                    "${profile.emptyV}-${profile.fullV} V . " +
+                    "~=${"%.1f".format(profile.capacityWh / 1000.0)} kWh",
                     style = MaterialTheme.typography.labelSmall.copy(
                         fontFamily = androidx.compose.ui.text.font.FontFamily.Monospace,
                     ),
@@ -676,7 +676,7 @@ private fun MismatchWarning(text: String) {
 }
 
 // ============================================================================
-// Config tab — controller settings (charge/cutoff/recovery voltages),
+// Config tab  -  controller settings (charge/cutoff/recovery voltages),
 // pack spec editor, load output toggle, info card, and a Developer section
 // with navigation to Diagnostics/Logs.
 // ============================================================================
@@ -768,7 +768,7 @@ private fun ConfigTab(
                 ) { Text("Save battery configuration") }
                 if (syncDone) {
                     Text(
-                        "Saved — ${"%.2f".format(full)} V full / " +
+                        "Saved  -  ${"%.2f".format(full)} V full / " +
                         "${"%.2f".format(empty)} V empty",
                         style = MaterialTheme.typography.labelSmall,
                         color = ChargingGreen,
@@ -797,7 +797,7 @@ private fun ConfigTab(
                          color = MaterialTheme.colorScheme.onSurface)
                     Text(
                         text = when {
-                            cs == null -> "Awaiting settings read…"
+                            cs == null -> "Awaiting settings read..."
                             loadOn     -> "Output is enabled (DC load powered)"
                             else        -> "Output is disabled"
                         },
@@ -819,7 +819,7 @@ private fun ConfigTab(
                 ),
                 modifier = Modifier.fillMaxWidth(),
             ) {
-                Text(when { writing -> "Writing…"; loadOn -> "Turn load OFF"; else -> "Turn load ON" })
+                Text(when { writing -> "Writing..."; loadOn -> "Turn load OFF"; else -> "Turn load ON" })
             }
             if (writeError != null) {
                 Row(
@@ -904,7 +904,7 @@ private fun ConfigTab(
                      style = MaterialTheme.typography.titleSmall,
                      color = MaterialTheme.colorScheme.onSurface,
                      modifier = Modifier.weight(1f))
-                Text(if (devExpanded) "▲" else "▼",
+                Text(if (devExpanded) "" else "",
                      style = MaterialTheme.typography.labelMedium,
                      color = MaterialTheme.colorScheme.onSurfaceVariant)
             }
@@ -934,7 +934,7 @@ private fun ConfigTab(
 }
 
 // ============================================================================
-// Energy tab — daily solar generation, battery I/O totals, and the inferred
+// Energy tab  -  daily solar generation, battery I/O totals, and the inferred
 // EA SUN inverter contribution (charge from its 1050 W array vs. load drawn).
 // Requires the battery pack profile (Ah + voltage bounds) to compute I/O and
 // the inverter estimate; without it the PV generation section still works.
@@ -956,17 +956,17 @@ private fun EnergyTab(
             .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(14.dp),
     ) {
-        // View inverter report button — navigates to the dedicated InverterScreen.
+        // View inverter report button  -  navigates to the dedicated InverterScreen.
         OutlinedButton(
             onClick  = onOpenInverter,
             modifier = Modifier.fillMaxWidth(),
         ) {
-            Text("View inverter report →")
+            Text("View inverter report ->")
         }
 
         if (state.loading && state.today == null) {
             Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxWidth().padding(32.dp)) {
-                Text("Computing energy…", style = MaterialTheme.typography.bodyMedium,
+                Text("Computing energy...", style = MaterialTheme.typography.bodyMedium,
                      color = MaterialTheme.colorScheme.onSurfaceVariant)
             }
             return@Column
@@ -1054,7 +1054,7 @@ private fun DayEnergyCard(
             EnergyRow("Bat out",  "%.2f".format(day.battOutWh / 1000.0), "kWh",
                       LoadNavy, onSurface)
             if (day.easunNetWh != null) {
-                val sign  = if (day.easunChargeWh > day.easunLoadWh) "+" else "−"
+                val sign  = if (day.easunChargeWh > day.easunLoadWh) "+" else "-"
                 val wh    = maxOf(day.easunChargeWh, day.easunLoadWh)
                 val label = if (day.easunChargeWh > day.easunLoadWh) "EA SUN PV" else "EA SUN load"
                 EnergyRow(label, "$sign${"%.2f".format(wh / 1000.0)}", "kWh",
@@ -1161,7 +1161,7 @@ private fun KvRow(label: String, value: String) {
 // ============================================================================
 // Sticky alert banner above the tab row when something's triggered.
 // Critical alerts (battery OV/UV) get the brand red border + filled chip
-// to demand attention; warns are amber. Tap an individual chip × to
+// to demand attention; warns are amber. Tap an individual chip x to
 // dismiss one, or use "Dismiss all" to clear the lot.
 // ============================================================================
 @Composable
@@ -1233,7 +1233,7 @@ private fun ActiveAlertsBanner(
         }
         if (alerts.size > 3) {
             Text(
-                "+ ${alerts.size - 3} more · open Alerts to see all",
+                "+ ${alerts.size - 3} more . open Alerts to see all",
                 style = MaterialTheme.typography.labelSmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )

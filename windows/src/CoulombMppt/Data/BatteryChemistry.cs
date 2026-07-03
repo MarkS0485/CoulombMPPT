@@ -2,8 +2,8 @@ namespace CoulombMppt.Data;
 
 // User-facing battery chemistry classification, attached to an MpptController.
 // Distinct from MpptSettings.BatteryType (the controller's own firmware enum):
-//  • This one is what the user told us their pack actually is.
-//  • That one is what the controller is configured to behave as.
+//  - This one is what the user told us their pack actually is.
+//  - That one is what the controller is configured to behave as.
 // They should agree but the app doesn't assume they do. Ported from the
 // Android client's BatteryChemistry.kt.
 public enum BatteryChemistry

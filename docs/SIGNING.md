@@ -27,12 +27,12 @@ either a local, git-ignored `android/keystore.properties`:
 
 ```properties
 storeFile=/absolute/path/to/android-upload.keystore
-storePassword=…
+storePassword=...
 keyAlias=coulomb
-keyPassword=…
+keyPassword=...
 ```
 
-…or, when that file is absent, the environment variables `ANDROID_KEYSTORE_PATH`,
+...or, when that file is absent, the environment variables `ANDROID_KEYSTORE_PATH`,
 `ANDROID_KEYSTORE_PASSWORD`, `ANDROID_KEY_ALIAS` (what CI sets). Build a signed
 release locally with the properties file in place:
 
@@ -46,12 +46,12 @@ CI signs `CoulombMppt.exe`/`.dll` **before** building the Inno Setup installer (
 the installer wraps already-signed binaries), then signs the installer too. All
 signatures are timestamped, so they remain valid after the certificate expires.
 
-> ⚠️ The current Windows certificate is **self-signed**. It proves the binaries
+>  The current Windows certificate is **self-signed**. It proves the binaries
 > haven't been tampered with, but Windows SmartScreen will still warn end users
 > with "Unknown Publisher" because the cert isn't from a trusted CA. To ship
 > publicly-trusted builds, obtain a CA-issued code-signing certificate (OV/EV,
 > stored on a hardware token per current CA/B rules) and repoint the
-> `WIN_CODESIGN_PFX_*` secrets at it — no workflow changes are needed.
+> `WIN_CODESIGN_PFX_*` secrets at it  -  no workflow changes are needed.
 
 Sign a local build manually:
 

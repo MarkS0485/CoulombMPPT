@@ -7,7 +7,7 @@ public sealed record AlertRecord(
     long    Id,
     string  ControllerMac,
     long    TimestampMs,
-    string  Severity,        // "CRIT" or "WARN" — string so new severities don't break the file
+    string  Severity,        // "CRIT" or "WARN"  -  string so new severities don't break the file
     string  Kind,            // stable identifier, see AlertEngine.AlertKind
     double  Observed,        // the measurement that triggered the alert
     double  Threshold,       // the threshold that was crossed

@@ -3,7 +3,7 @@ package app.coulombmppt.data.model
 import kotlinx.serialization.Serializable
 import java.util.UUID
 
-// One paired MPPT controller. Persisted as part of CoulombMpptSettings — see
+// One paired MPPT controller. Persisted as part of CoulombMpptSettings  -  see
 // data/store/SettingsStore.kt. `id` is a stable UUID we mint on pair so the
 // rest of the app can address a controller without re-typing its MAC.
 //
@@ -23,16 +23,16 @@ data class PairedController(
     // Victron Instant Readout per-device advertisement key (32 hex chars).
     // Null for every other device type.
     val victronKeyHex: String? = null,
-    val siteLabel:    String  = "Domestic solar · charge controller",
+    val siteLabel:    String  = "Domestic solar . charge controller",
     val iconKey:      String  = ICON_HOME,
     val accentArgb:   Long    = ACCENT_COPPER_ARGB,
     val pairedAtMs:   Long    = System.currentTimeMillis(),
-    // Cached battery profile — same three values as before, scoped per
+    // Cached battery profile  -  same three values as before, scoped per
     // controller now so multiple paired units don't trample each other.
     val cachedFullV:    Double? = null,
     val cachedRecoverV: Double? = null,
     val cachedEmptyV:   Double? = null,
-    // User-supplied pack spec — what the human said the battery actually is,
+    // User-supplied pack spec  -  what the human said the battery actually is,
     // distinct from cachedFullV/EmptyV (what the controller is configured
     // for). The two should agree, but the app shouldn't assume they do.
     val packChemistry:   BatteryChemistry = BatteryChemistry.Unknown,
@@ -40,8 +40,8 @@ data class PairedController(
     val packUserFullV:   Double? = null,
     val packUserEmptyV:  Double? = null,
     val packCapacityKwh: Double? = null,
-    // Pack capacity in amp-hours — the input the energy / battery-I/O math wants
-    // (it works in Ah, then × nominal V for Wh). Null until the user enters it.
+    // Pack capacity in amp-hours  -  the input the energy / battery-I/O math wants
+    // (it works in Ah, then x nominal V for Wh). Null until the user enters it.
     val packCapacityAh:  Double? = null,
 ) {
     val hasBatteryProfile: Boolean
@@ -57,7 +57,7 @@ data class PairedController(
     /** Resolved battery profile for energy calculations. Uses the user's pack
      *  spec for voltage bounds (with controller setpoints as fallback) and the
      *  user-entered Ah capacity. Returns null when either the voltage range or
-     *  the Ah capacity is unknown — the caller must degrade gracefully. */
+     *  the Ah capacity is unknown  -  the caller must degrade gracefully. */
     fun resolvedBatteryProfile(): BatteryProfile? {
         val empty = packUserEmptyV  ?: cachedEmptyV  ?: return null
         val full  = packUserFullV   ?: cachedFullV   ?: return null
@@ -77,14 +77,14 @@ data class PairedController(
     }
 
     companion object {
-        // Icon keys — resolved to ImageVectors at render time so the data
+        // Icon keys  -  resolved to ImageVectors at render time so the data
         // layer stays Compose-free.
         const val ICON_HOME = "home"
         const val ICON_BOAT = "boat"
         const val ICON_FACTORY = "factory"
         const val ICON_CABIN = "cabin"
 
-        // Default accent (copper / amber-700) — matches Unit 001 in
+        // Default accent (copper / amber-700)  -  matches Unit 001 in
         // coulombmonitor and the brand's "domestic solar" identity.
         const val ACCENT_COPPER_ARGB = 0xFFB45309L
         const val ACCENT_TEAL_ARGB   = 0xFF0F766EL    // unit-002-ish

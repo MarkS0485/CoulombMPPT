@@ -3,7 +3,7 @@ using System.Security.Cryptography;
 namespace CoulombMppt.Ble;
 
 // Decoder for Victron's "Instant Readout" BLE manufacturer advertisement
-// (company id 0x02E1). Broadcast continuously — decoded passively, no
+// (company id 0x02E1). Broadcast continuously  -  decoded passively, no
 // connection. Mirrors the Android VictronDecoder; layout/scaling follow
 // Victron's "Extra Manufacturer Data" spec and keshavdv/victron-ble.
 //
@@ -12,9 +12,9 @@ namespace CoulombMppt.Ble;
 // is exactly that), so:
 //   [0..1] model id (LE)
 //   [2]    record type (0x01 = solar charger)
-//   [3..4] nonce (LE) — the AES-CTR IV
+//   [3..4] nonce (LE)  -  the AES-CTR IV
 //   [5]    key-check byte (== key[0])
-//   [6..]  AES-CTR ciphertext (single block; records are ≤ 16 bytes)
+//   [6..]  AES-CTR ciphertext (single block; records are <= 16 bytes)
 public static class VictronDecoder
 {
     public const ushort CompanyId = 0x02E1;
@@ -89,7 +89,7 @@ public static class VictronDecoder
     private static int U16Raw(byte[] b, int i) => b[i] | (b[i + 1] << 8);
     private static int S16Raw(byte[] b, int i) => (short)U16Raw(b, i);
 
-    /// <summary>Parse 32 hex chars (spaces/colons ignored) → 16 bytes, or null.</summary>
+    /// <summary>Parse 32 hex chars (spaces/colons ignored) -> 16 bytes, or null.</summary>
     public static byte[]? HexToBytes(string? hex)
     {
         if (hex == null) return null;

@@ -10,7 +10,7 @@ namespace CoulombMppt.Ui.ViewModels;
 // Editable view of the app-wide preferences (AppSettings). Each property writes
 // straight through to the store via the generated OnXxxChanged partials; the
 // store's Changed event re-syncs the form so external mutations stay reflected.
-// A guard flag stops the write-back ↔ re-sync round-trip from looping.
+// A guard flag stops the write-back <-> re-sync round-trip from looping.
 public sealed partial class AppSettingsViewModel : ObservableObject
 {
     private readonly AppSettings _settings = ServiceLocator.Settings;
@@ -51,7 +51,7 @@ public sealed partial class AppSettingsViewModel : ObservableObject
     // --- Battery pack profile (per current controller) ----
     private readonly ControllerStore _ctrls = ServiceLocator.Controllers;
 
-    // String inputs — empty = not set. Saved via SaveBatteryPack command.
+    // String inputs  -  empty = not set. Saved via SaveBatteryPack command.
     [ObservableProperty] private string _packNominalVInput  = "";
     [ObservableProperty] private string _packFullVInput     = "";
     [ObservableProperty] private string _packEmptyVInput    = "";
@@ -82,7 +82,7 @@ public sealed partial class AppSettingsViewModel : ObservableObject
 
             var p = ctrl.ResolvedBatteryProfile();
             PackSummary = p != null
-                ? $"Profile active: {p.EmptyV}–{p.FullV} V · {p.CapacityAh} Ah · ≈{p.CapacityWh / 1000.0:0.2f} kWh"
+                ? $"Profile active: {p.EmptyV}-{p.FullV} V . {p.CapacityAh} Ah . ~={p.CapacityWh / 1000.0:0.2f} kWh"
                 : "Enter full V, empty V, and Ah to enable battery energy tracking.";
         }
         finally { _syncing = false; }

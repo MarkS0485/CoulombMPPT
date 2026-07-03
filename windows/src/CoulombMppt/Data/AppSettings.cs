@@ -29,7 +29,7 @@ public sealed class AppSettings
         public int    QuietWindowEndHour      { get; set; } = 6;
         public int    ModelPersistEverySec    { get; set; } = 300;  // rebuild + save cadence
         public double RestDvDtThresholdMv     { get; set; } = 5.0;  // mV/s "voltage flat" gate
-        public int    RestSettleSec           { get; set; } = 60;   // flat for this long ⇒ rest
+        public int    RestSettleSec           { get; set; } = 60;   // flat for this long => rest
         public double RTransientMinDeltaA     { get; set; } = 1.0;  // min PV step to fit R
         public int    RTransientMaxStepMs     { get; set; } = 2000; // step must be this fast
         public int    SocBinWidthPct          { get; set; } = 10;

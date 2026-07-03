@@ -39,7 +39,7 @@ data class UnitDetailUiState(
 
 // VM for the per-controller detail screen with tabs. Identifies the
 // controller via the route arg (set by start()), wires its repo and emits
-// a unified UiState. Same plumbing the old HomeViewModel had — minus the
+// a unified UiState. Same plumbing the old HomeViewModel had  -  minus the
 // single-controller assumption.
 @OptIn(ExperimentalCoroutinesApi::class)
 class UnitDetailViewModel(
@@ -110,7 +110,7 @@ class UnitDetailViewModel(
             // THEN stop + forget the repository (closes the BLE link, cancels
             // the reconnect loop). Without the stop the orphaned source would
             // keep the radio open and keep reconnecting to the deleted
-            // controller — the bug that forced delete-and-re-add to recover.
+            // controller  -  the bug that forced delete-and-re-add to recover.
             settings.unpair(id)
             ServiceLocator.removeRepository(id)
             onDone()
@@ -188,7 +188,7 @@ class UnitDetailViewModel(
         }
     }
 
-    /** Manual load output on/off — writes register 0x1007. We re-read
+    /** Manual load output on/off  -  writes register 0x1007. We re-read
      *  settings on success so the visible state reflects the controller. */
     fun toggleManualLoad() {
         val id = controllerId.value ?: return
@@ -199,7 +199,7 @@ class UnitDetailViewModel(
             val newVal = if (current.manualLoadOn) 0 else 1
             repo.writeSetting(MpptProtocol.Reg.MANUAL_LOAD_ON, newVal)
                 .onSuccess {
-                    AppLogger.i("UnitDetail", "manual load → ${if (newVal == 1) "on" else "off"}")
+                    AppLogger.i("UnitDetail", "manual load -> ${if (newVal == 1) "on" else "off"}")
                     _writeError.value = null
                     runCatching { repo.readSettings() }
                 }
@@ -223,7 +223,7 @@ class UnitDetailViewModel(
             id          = "demo",
             mac         = "00:00:00:00:00:00",
             displayName = "Demo controller",
-            siteLabel   = "Synthetic telemetry · gentle diurnal curve",
+            siteLabel   = "Synthetic telemetry . gentle diurnal curve",
         )
     }
 }

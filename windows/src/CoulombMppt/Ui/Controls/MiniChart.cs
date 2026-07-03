@@ -6,15 +6,15 @@ using System.Windows.Media;
 
 namespace CoulombMppt.Ui.Controls;
 
-// Line chart for the History/Live pages — a normalised, gradient-filled
+// Line chart for the History/Live pages  -  a normalised, gradient-filled
 // polyline custom-drawn so the app keeps to its three-NuGet budget (no charting
 // package). Two modes:
 //
-//  • Index mode (default): Values are spread evenly across the width and
+//  - Index mode (default): Values are spread evenly across the width and
 //    auto-scaled to their own min/max. Hovering reads out the nearest sample.
 //    This is what the Live page uses.
 //
-//  • Viewport mode (when ViewStartMs/ViewEndMs are set and a parallel
+//  - Viewport mode (when ViewStartMs/ViewEndMs are set and a parallel
 //    Timestamps series is supplied): points are placed by their real time, the
 //    control draws value + time axes, and the user can drag to pan, wheel to
 //    zoom, and hover to scrub. ViewStartMs/ViewEndMs/CrosshairMs bind two-way,
@@ -74,7 +74,7 @@ public sealed class MiniChart : FrameworkElement
                 FrameworkPropertyMetadataOptions.AffectsRender |
                 FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
 
-    // Travel clamps (oldest sample … now); 0 = unbounded.
+    // Travel clamps (oldest sample ... now); 0 = unbounded.
     public static readonly DependencyProperty MinViewMsProperty =
         DependencyProperty.Register(nameof(MinViewMs), typeof(long), typeof(MiniChart),
             new FrameworkPropertyMetadata(0L));

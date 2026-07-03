@@ -1,18 +1,18 @@
 namespace CoulombMppt.Data;
 
-// Snapshot of the controller's writable settings (BLE_PROTOCOL.md §3.2).
+// Snapshot of the controller's writable settings (BLE_PROTOCOL.md s.3.2).
 // Every voltage field is reg/10. Ported from the Android client's
 // MpptSettings.kt.
 public sealed record MpptSettings(
     int    BatteryType,              // enum code
     int    TimerHours,
     int    TimerMinutes,
-    double ChargeVoltageSetpoint,    // V — "full" / boost target
+    double ChargeVoltageSetpoint,    // V  -  "full" / boost target
     int    OutputMode,               // enum code
-    double CutoffVoltageSetpoint,    // V — low-disconnect / "empty"
+    double CutoffVoltageSetpoint,    // V  -  low-disconnect / "empty"
     bool   ManualLoadOn,
     int    VoltageMonitorMode,       // enum code
-    double RecoveryVoltageSetpoint)  // V — load reconnect
+    double RecoveryVoltageSetpoint)  // V  -  load reconnect
 {
     /// <summary>
     /// Linear-interpolation SoC from the controller's own calibration. The

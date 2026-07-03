@@ -38,7 +38,7 @@
             </c:PageHeader>
 
             <TextBlock Text="{Binding Summary}" Style="{StaticResource Caption}" Margin="2,0,0,2"/>
-            <TextBlock Text="scroll to zoom · drag to pan · hover to read off a value"
+            <TextBlock Text="scroll to zoom . drag to pan . hover to read off a value"
                        Style="{StaticResource Caption}" Opacity="0.7" Margin="2,0,0,10"/>
 
             <Border Style="{StaticResource ChartCard}">

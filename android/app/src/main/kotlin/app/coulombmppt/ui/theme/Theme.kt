@@ -6,7 +6,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 
 // Light scheme matching the website (#F1F3F9 body, navy nav, red accents,
-// white cards). Light-only by design — engineering data reads better on
+// white cards). Light-only by design  -  engineering data reads better on
 // white and the sister app (coulombmonitor) does the same.
 private val CoulombLight = lightColorScheme(
     primary               = CoulombRed,

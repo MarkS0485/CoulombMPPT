@@ -32,7 +32,7 @@ import app.coulombmppt.di.ServiceLocator
 
 // Foreground service that keeps the BLE poll loop + history recorder
 // alive even when the screen is off or the app is backgrounded. One
-// instance handles every paired controller — it observes SettingsStore
+// instance handles every paired controller  -  it observes SettingsStore
 // and starts/stops per-controller recording as the set changes.
 //
 // The persistent notification is mandated by Android 14+ for connected-
@@ -44,7 +44,7 @@ class PollingService : Service() {
     private var watcher: Job? = null
     private var syncJob: Job? = null
     private var startedControllerIds: Set<String> = emptySet()
-    // Latest paired list, kept so the sync loop can resolve controllerId → MAC
+    // Latest paired list, kept so the sync loop can resolve controllerId -> MAC
     // (Room is keyed by our UUID, the PC's history by MAC).
     @Volatile private var pairedControllers: List<PairedController> = emptyList()
 
@@ -58,8 +58,8 @@ class PollingService : Service() {
         startSyncLoop()
     }
 
-    // The watcher is (re)launched from onStartCommand so that a mode switch —
-    // which calls PollingService.start() again — rebuilds the per-controller
+    // The watcher is (re)launched from onStartCommand so that a mode switch  -
+    // which calls PollingService.start() again  -  rebuilds the per-controller
     // repositories against the now-current source kind (BLE vs remote API).
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         relaunchWatcher()
@@ -73,7 +73,7 @@ class PollingService : Service() {
             // Authoritative source-kind selection: derive it from the persisted
             // connection mode BEFORE any repository (and therefore any BLE
             // connection) is created. This is what guarantees remote mode never
-            // opens a Bluetooth link — even on a START_STICKY process restart.
+            // opens a Bluetooth link  -  even on a START_STICKY process restart.
             val mode = ServiceLocator.remotePairing.modeSnapshot()
             // Hybrid uses local BLE sources (same as LocalBluetooth) but also
             // starts the live relay to the PC.
@@ -81,7 +81,7 @@ class PollingService : Service() {
 
             ServiceLocator.settings.flow.collectLatest { snap ->
                 if (snap.useFakeSource) {
-                    // Demo mode owns its own (in-memory) repo — no
+                    // Demo mode owns its own (in-memory) repo  -  no
                     // recording needed, and no real BLE to keep alive.
                     stopAllRecording()
                     updateNotification(0)
@@ -124,7 +124,7 @@ class PollingService : Service() {
                 startedControllerIds = current
                 updateNotification(current.size)
                 if (current.isEmpty()) {
-                    AppLogger.i(TAG, "no controllers paired — stopping service")
+                    AppLogger.i(TAG, "no controllers paired  -  stopping service")
                     stopSelf()
                 }
             }
@@ -133,7 +133,7 @@ class PollingService : Service() {
 
     // Opportunistic background gap-fill: while we're the device holding the
     // BLE link, periodically push our recorded window to the paired PC and
-    // pull back anything it logged while it held the link. Best-effort — the
+    // pull back anything it logged while it held the link. Best-effort  -  the
     // sync engine swallows network errors into a Result we just log. The
     // manual "Sync now" button on the settings screen drives the same path.
     private fun startSyncLoop() {
@@ -214,12 +214,12 @@ class PollingService : Service() {
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE,
         )
         val text = when (count) {
-            0    -> "Ready · no controllers paired"
+            0    -> "Ready . no controllers paired"
             1    -> "Monitoring 1 controller"
             else -> "Monitoring $count controllers"
         }
         return NotificationCompat.Builder(this, CHANNEL_ID)
-            // Monochrome vector — renders cleanly in the status bar.
+            // Monochrome vector  -  renders cleanly in the status bar.
             // Tinted by the system; the brand colours show up on the
             // expanded notification's large icon if one were ever set.
             .setSmallIcon(R.drawable.ic_notification)

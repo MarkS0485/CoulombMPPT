@@ -11,9 +11,9 @@ using OxyPlot.Wpf;
 namespace CoulombMppt.Ui.Controls;
 
 // OxyPlot-backed replacement for MiniChart.
-// Two modes, determined at runtime (no IsViewportMode property — mirrors MiniChart behaviour):
-//   Sparkline: ViewStartMs/ViewEndMs are both zero → index-based X, no interaction.
-//   Viewport:  ViewStartMs/ViewEndMs are non-zero → DateTimeAxis, pan/zoom, shared crosshair.
+// Two modes, determined at runtime (no IsViewportMode property  -  mirrors MiniChart behaviour):
+//   Sparkline: ViewStartMs/ViewEndMs are both zero -> index-based X, no interaction.
+//   Viewport:  ViewStartMs/ViewEndMs are non-zero -> DateTimeAxis, pan/zoom, shared crosshair.
 public partial class OxyChartControl : System.Windows.Controls.UserControl
 {
     // ------------------------------------------------------------------ //
@@ -68,7 +68,7 @@ public partial class OxyChartControl : System.Windows.Controls.UserControl
                 FrameworkPropertyMetadataOptions.BindsTwoWayByDefault,
                 OnCrosshairChanged));
 
-    // Travel clamps — 0 = unbounded.
+    // Travel clamps  -  0 = unbounded.
     public static readonly DependencyProperty MinViewMsProperty =
         DependencyProperty.Register(nameof(MinViewMs), typeof(long), typeof(OxyChartControl),
             new PropertyMetadata(0L));

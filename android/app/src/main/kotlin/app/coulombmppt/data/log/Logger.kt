@@ -18,7 +18,7 @@ import java.util.Locale
 import java.util.concurrent.TimeUnit
 
 // Append-only file logger. One singleton, hand-wired in ServiceLocator.init,
-// reachable from anywhere as `AppLogger.i("…")`.
+// reachable from anywhere as `AppLogger.i("...")`.
 //
 // File layout: one file *per launch*, named `coulombmppt-yyyyMMdd-HHmmss.log`,
 // living in the app's internal filesDir. On `init()` we scan the directory
@@ -26,7 +26,7 @@ import java.util.concurrent.TimeUnit
 // on recent runs without growing unbounded.
 //
 // Writes happen on a single background thread so callers never block on I/O.
-// The current run's file is opened lazily on the first message — there's no
+// The current run's file is opened lazily on the first message  -  there's no
 // in-session rotation; the per-launch boundary IS the rotation.
 object AppLogger {
 
@@ -66,7 +66,7 @@ object AppLogger {
 
     /** Block until any pending writes flush. Cheap; only used on share. */
     suspend fun flush() {
-        val marker = "—flush ${System.nanoTime()}—"
+        val marker = " - flush ${System.nanoTime()} - "
         channel.send(marker)
         kotlinx.coroutines.delay(20)
     }
@@ -89,7 +89,7 @@ object AppLogger {
     }
 
     /** Concatenated tail of *all* retained session files, newest last (so the
-     *  current run shows at the bottom — matches how a typical log reader
+     *  current run shows at the bottom  -  matches how a typical log reader
      *  scrolls). Capped at `maxBytes` total. */
     fun readAllSessions(maxBytes: Long = DEFAULT_TAIL_BYTES): String {
         if (!initialised) return ""
@@ -155,7 +155,7 @@ object AppLogger {
         }
     }
 
-    /** Delete log files older than RETENTION_DAYS. Quietly ignores I/O errors —
+    /** Delete log files older than RETENTION_DAYS. Quietly ignores I/O errors  -
      *  if a file can't be deleted (held by another process, weird FS state)
      *  we'd rather keep logging than crash. */
     private fun pruneOldLogs() {

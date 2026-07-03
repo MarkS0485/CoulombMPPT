@@ -22,11 +22,11 @@
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
     <!-- LAN sync with the paired Windows desktop app (HTTPS to its local API,
-         cert-pinned). No cleartext config needed — the link is always TLS. -->
+         cert-pinned). No cleartext config needed  -  the link is always TLS. -->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
-    <!-- Camera is used only to scan the desktop app's pairing QR. Optional —
+    <!-- Camera is used only to scan the desktop app's pairing QR. Optional  -
          pasting the link works without it, so the feature is not required. -->
     <uses-permission android:name="android.permission.CAMERA" />
 

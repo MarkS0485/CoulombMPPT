@@ -21,7 +21,7 @@ public partial class LogPage : UserControl
         InitializeComponent();
         LogPathLine.Text = Log.LogPath;
         // This page is cached and reused. Reseed from the ring buffer and
-        // (re)attach the live tail every time it is shown — subscribing once in
+        // (re)attach the live tail every time it is shown  -  subscribing once in
         // the constructor would leave the tail dead after the first navigation
         // away, since Unloaded detaches it and the constructor never re-runs.
         Loaded += (_, _) =>

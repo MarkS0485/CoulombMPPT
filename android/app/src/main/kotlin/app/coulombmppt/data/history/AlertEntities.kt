@@ -25,7 +25,7 @@ data class AlertRow(
     /** "CRIT" or "WARN". String so future severities don't trigger a
      *  schema migration. */
     @ColumnInfo(name = "severity")     val severity: String,
-    /** Stable enum-ish identifier — see Alert.Kind. */
+    /** Stable enum-ish identifier  -  see Alert.Kind. */
     @ColumnInfo(name = "kind")         val kind: String,
     /** The measurement that triggered the alert, in its natural unit. */
     @ColumnInfo(name = "observed")     val observed: Double,
@@ -42,11 +42,11 @@ interface AlertsDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(row: AlertRow): Long
 
-    /** Newest first, capped — drives the Alerts screen list. */
+    /** Newest first, capped  -  drives the Alerts screen list. */
     @Query("SELECT * FROM alert WHERE tsMs >= :sinceMs ORDER BY tsMs DESC LIMIT :limit")
     fun streamSince(sinceMs: Long, limit: Int = 200): Flow<List<AlertRow>>
 
-    /** Recent alerts for one specific controller — drives the banner on
+    /** Recent alerts for one specific controller  -  drives the banner on
      *  UnitDetailScreen. */
     @Query("SELECT * FROM alert WHERE controllerId = :controllerId AND tsMs >= :sinceMs AND dismissedMs IS NULL ORDER BY tsMs DESC")
     fun streamActiveFor(controllerId: String, sinceMs: Long): Flow<List<AlertRow>>

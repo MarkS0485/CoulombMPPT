@@ -63,12 +63,12 @@ class BleMpptSource(context: Context) : MpptSource {
         AppLogger.i("BleMpptSource", "start($macAddress)")
         userStopped = false
         lastMac = macAddress
-        beginStateBridge()                          // forwards transport disconnects → _conn
+        beginStateBridge()                          // forwards transport disconnects -> _conn
 
         _conn.value = MpptSource.Connection.Connecting
         val result = transport.connect(macAddress)
         if (result.isFailure) {
-            // Don't re-throw — the caller is `scope.launch { ... }` and an
+            // Don't re-throw  -  the caller is `scope.launch { ... }` and an
             // unhandled exception kills the process. The reconnect loop
             // below already handles "controller momentarily out of range"
             // gracefully with backoff, so a clean return is sufficient.
@@ -92,7 +92,7 @@ class BleMpptSource(context: Context) : MpptSource {
         if (stateBridge != null) return
         stateBridge = scope.launch {
             // transport.state is a StateFlow whose initial value is
-            // Disconnected — collecting it immediately replays that value
+            // Disconnected  -  collecting it immediately replays that value
             // before we've ever connected. Without the `everConnected`
             // gate, we'd misread the replay as a drop and schedule a
             // reconnect that races the legitimate transport.connect() in
@@ -124,7 +124,7 @@ class BleMpptSource(context: Context) : MpptSource {
         reconnectJob = scope.launch {
             var backoff = 1_000L
             while (isActive && !userStopped) {
-                AppLogger.i("BleMpptSource", "reconnect in ${backoff}ms — $reason")
+                AppLogger.i("BleMpptSource", "reconnect in ${backoff}ms  -  $reason")
                 delay(backoff)
                 if (userStopped) return@launch
                 AppLogger.i("BleMpptSource", "reconnect attempt to $mac")
@@ -241,8 +241,8 @@ class BleMpptSource(context: Context) : MpptSource {
                     // state-bridge / reconnect logic recover. Often happens
                     // before the GATT supervision timer notices anything.
                     if (consecutiveTimeouts >= 4 && !userStopped) {
-                        AppLogger.w("BleMpptSource", "4+ timeouts — forcing reconnect")
-                        transport.close()              // triggers transport state → Disconnected
+                        AppLogger.w("BleMpptSource", "4+ timeouts  -  forcing reconnect")
+                        transport.close()              // triggers transport state -> Disconnected
                         return@launch
                     }
                 } else {

@@ -4,18 +4,18 @@ namespace CoulombMppt.Data;
 // Kept free of any store/service/BLE dependency so the learner and the unit
 // tests exercise exactly the same code on live frames and on replayed history.
 //
-// Model: terminal V = OCV(SoC) + I_batt · R, where I_batt is the current INTO
+// Model: terminal V = OCV(SoC) + I_batt . R, where I_batt is the current INTO
 // the battery (charging positive). With everything on the bus, the battery's
-// net current is  I_batt = ChargeCurrent − DischargeCurrent − I_busLoads,
+// net current is  I_batt = ChargeCurrent - DischargeCurrent - I_busLoads,
 // where I_busLoads (house + EA SUN inverter, draw positive) is the unknown we
 // solve for from the voltage deficit.
 public static class TheveninMath
 {
-    /// <summary>Robust through-origin slope (R = ΔV/ΔI) from a set of
-    /// transient (ΔI, ΔV) observations — the median of the per-event ratios,
-    /// which is the Theil–Sen estimator for a line through the origin and
+    /// <summary>Robust through-origin slope (R = deltaV/deltaI) from a set of
+    /// transient (deltaI, deltaV) observations  -  the median of the per-event ratios,
+    /// which is the Theil-Sen estimator for a line through the origin and
     /// shrugs off the inevitable outliers (an inverter step coinciding with a
-    /// PV edge). Returns null if no candidate has |ΔI| ≥ <paramref name="minAbsDi"/>.</summary>
+    /// PV edge). Returns null if no candidate has |deltaI| >= <paramref name="minAbsDi"/>.</summary>
     public static double? RobustSlope(IReadOnlyList<(double dI, double dV)> pairs, double minAbsDi = 0.5)
     {
         if (pairs == null || pairs.Count == 0) return null;
@@ -64,7 +64,7 @@ public static class TheveninMath
         return p[^1].Ocv;
     }
 
-    /// <summary>State of charge for a rested terminal voltage — the inverse of
+    /// <summary>State of charge for a rested terminal voltage  -  the inverse of
     /// <see cref="InterpOcv"/>, assuming the table's OCV rises monotonically with
     /// SoC (true for NMC). Clamped to [first, last] SoC. Returns NaN if empty.</summary>
     public static double InvertOcv(OcvTable table, double ocv)
@@ -90,7 +90,7 @@ public static class TheveninMath
 
     /// <summary>Instantaneous net bus draw (A, positive = drawing from the
     /// battery) read directly from the voltage deficit against the model:
-    ///   I_busLoads = ChargeCurrent − DischargeCurrent − (V_obs − OCV)/R.
+    ///   I_busLoads = ChargeCurrent - DischargeCurrent - (V_obs - OCV)/R.
     /// Far more responsive and stable than differentiating SoC over 30 s.
     /// Returns null when R is non-physical or OCV is unknown.</summary>
     public static double? InferBusLoadA(
@@ -98,7 +98,7 @@ public static class TheveninMath
     {
         if (!double.IsFinite(ocv) || rOhms <= 0) return null;
         double iBatt = (vObs - ocv) / rOhms;             // into the battery (signed)
-        return chargeA - dischargeA - iBatt;             // loads = PV in − battery in
+        return chargeA - dischargeA - iBatt;             // loads = PV in - battery in
     }
 
     /// <summary>Advance a coulomb-counted SoC by one step.

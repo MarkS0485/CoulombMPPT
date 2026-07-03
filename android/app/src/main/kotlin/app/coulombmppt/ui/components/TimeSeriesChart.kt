@@ -57,7 +57,7 @@ private const val MAX_SPAN_MS = 40L * 24L * 60L * 60L * 1000L
 
 /**
  * Shared, mutable view window for a stack of [TimeSeriesChart]s.
- * Uses `by mutableStateOf` — must import runtime getValue/setValue.
+ * Uses `by mutableStateOf`  -  must import runtime getValue/setValue.
  */
 @Stable
 class ChartViewportState(startMs: Long, endMs: Long) {
@@ -294,7 +294,7 @@ fun TimeSeriesChart(
 
         if (unit.isNotBlank()) {
             Text(
-                "unit: $unit  ·  drag to pan · pinch to zoom",
+                "unit: $unit  .  drag to pan . pinch to zoom",
                 style    = MaterialTheme.typography.labelSmall,
                 color    = MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier = Modifier.padding(top = 2.dp),

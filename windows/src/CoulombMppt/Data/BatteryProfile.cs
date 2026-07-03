@@ -1,11 +1,11 @@
 namespace CoulombMppt.Data;
 
-// Resolved battery profile — drives all energy math in the Windows app.
+// Resolved battery profile  -  drives all energy math in the Windows app.
 // Mirrors the Android BatteryProfile. Created by MpptController.ResolvedBatteryProfile().
 public sealed record BatteryProfile(
     double EmptyV,       // 0% SoC voltage
     double FullV,        // 100% SoC voltage
-    double NominalV,     // midpoint voltage, used for Wh = Ah × V
+    double NominalV,     // midpoint voltage, used for Wh = Ah x V
     double CapacityAh)   // total pack capacity in Ah
 {
     public double CapacityWh => NominalV * CapacityAh;

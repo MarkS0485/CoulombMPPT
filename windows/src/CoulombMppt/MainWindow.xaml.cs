@@ -15,7 +15,7 @@ public partial class MainWindow : Window, IDisposable
 {
     // System-tray presence. Minimising hides the window to the tray; the icon's
     // double-click / "Open" restores it, "Exit" really quits. Uses WinForms
-    // NotifyIcon (no extra NuGet) — fully qualified so it doesn't clash with WPF.
+    // NotifyIcon (no extra NuGet)  -  fully qualified so it doesn't clash with WPF.
     private WinForms.NotifyIcon? _tray;
     private bool _trayHintShown;
 
@@ -88,7 +88,7 @@ public partial class MainWindow : Window, IDisposable
             {
                 _trayHintShown = true;
                 _tray?.ShowBalloonTip(2000, "CoulombMPPT",
-                    "Still running — click the tray icon to reopen.", WinForms.ToolTipIcon.Info);
+                    "Still running  -  click the tray icon to reopen.", WinForms.ToolTipIcon.Info);
             }
         }
     }
@@ -185,25 +185,25 @@ public partial class MainWindow : Window, IDisposable
         var name = mac != null ? ServiceLocator.Controllers.Find(mac)?.Label : null;
 
         // A live phone relay means the desktop has no BLE link of its own but is
-        // still receiving fresh telemetry — show that rather than "Failed".
+        // still receiving fresh telemetry  -  show that rather than "Failed".
         var stateLabel = ble.RelayActive ? "Relay (phone)" : s switch
         {
             ConnectionState.Ready               => "Connected",
-            ConnectionState.Connecting          => "Connecting…",
-            ConnectionState.DiscoveringServices => "Discovering…",
-            ConnectionState.Reconnecting        => "Reconnecting…",
+            ConnectionState.Connecting          => "Connecting...",
+            ConnectionState.DiscoveringServices => "Discovering...",
+            ConnectionState.Reconnecting        => "Reconnecting...",
             ConnectionState.Failed              => "Failed",
-            ConnectionState.Scanning            => "Scanning…",
+            ConnectionState.Scanning            => "Scanning...",
             _                                   => "Disconnected",
         };
         if (ble.DemoMode) stateLabel += " (demo)";
 
-        StatusInline.Text   = name != null ? $"{stateLabel} · {name}" : stateLabel;
+        StatusInline.Text   = name != null ? $"{stateLabel} . {name}" : stateLabel;
         StatusBarText.Text  = StatusInline.Text;
         CurrentMacText.Text = mac ?? "";
 
         HeroInline.Text = live != null
-            ? $"{live.BatteryVoltage:0.0} V · {live.ChargerState.Label()}"
+            ? $"{live.BatteryVoltage:0.0} V . {live.ChargerState.Label()}"
             : "";
 
         if (live != null)

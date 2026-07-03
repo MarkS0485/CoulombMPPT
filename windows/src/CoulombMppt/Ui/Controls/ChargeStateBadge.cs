@@ -7,7 +7,7 @@ namespace CoulombMppt.Ui.Controls;
 
 // A compact, colour-coded charger-state pill (the WPF answer to the Android
 // ChargeStateBadge): a tinted rounded chip with a leading dot and the state
-// label, coloured by what the charger is doing — green while charging, amber
+// label, coloured by what the charger is doing  -  green while charging, amber
 // when the load is off, red on fault, grey when idle/unknown. Custom-drawn so it
 // stays dependency-free and sizes itself to its own text inside a StackPanel.
 public sealed class ChargeStateBadge : FrameworkElement
@@ -62,9 +62,9 @@ public sealed class ChargeStateBadge : FrameworkElement
 
     private static Color AccentColor(ChargerState s) => s switch
     {
-        ChargerState.Bulk or ChargerState.Boost or ChargerState.Floating => Color.FromRgb(0x16, 0xA3, 0x4A), // green — charging
-        ChargerState.LoadOff => Color.FromRgb(0xD9, 0x77, 0x06), // amber — load off
-        ChargerState.Fault   => Color.FromRgb(0xC8, 0x10, 0x2E), // red — fault
-        _                    => Color.FromRgb(0x6B, 0x72, 0x80), // grey — idle / unknown
+        ChargerState.Bulk or ChargerState.Boost or ChargerState.Floating => Color.FromRgb(0x16, 0xA3, 0x4A), // green  -  charging
+        ChargerState.LoadOff => Color.FromRgb(0xD9, 0x77, 0x06), // amber  -  load off
+        ChargerState.Fault   => Color.FromRgb(0xC8, 0x10, 0x2E), // red  -  fault
+        _                    => Color.FromRgb(0x6B, 0x72, 0x80), // grey  -  idle / unknown
     };
 }

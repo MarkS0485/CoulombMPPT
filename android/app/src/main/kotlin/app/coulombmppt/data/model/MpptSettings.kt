@@ -2,32 +2,32 @@ package app.coulombmppt.data.model
 
 import kotlinx.serialization.Serializable
 
-// Snapshot of the controller's writable settings (BLE_PROTOCOL.md §3.2).
+// Snapshot of the controller's writable settings (BLE_PROTOCOL.md s.3.2).
 // `convert` is hard-coded to 10 for every voltage field, which is what the
-// live telemetry uses too — confirm on hardware and tune per-field if any
+// live telemetry uses too  -  confirm on hardware and tune per-field if any
 // turn out to be different.
 @Serializable
 data class MpptSettings(
-    val batteryType:               Int,      // enum — codes TBD on hardware
+    val batteryType:               Int,      // enum  -  codes TBD on hardware
     val timerHours:                Int,
     val timerMinutes:              Int,
-    val chargeVoltageSetpoint:     Double,   // V — reg / 10 — "full" / boost target
-    val outputMode:                Int,      // enum — codes TBD
-    val cutoffVoltageSetpoint:     Double,   // V — reg / 10 — low-disconnect / "empty"
+    val chargeVoltageSetpoint:     Double,   // V  -  reg / 10  -  "full" / boost target
+    val outputMode:                Int,      // enum  -  codes TBD
+    val cutoffVoltageSetpoint:     Double,   // V  -  reg / 10  -  low-disconnect / "empty"
     val manualLoadOn:              Boolean,  // 0 / 1
-    val voltageMonitorMode:        Int,      // enum — codes TBD
-    val recoveryVoltageSetpoint:   Double,   // V — reg / 10 — load reconnect
+    val voltageMonitorMode:        Int,      // enum  -  codes TBD
+    val recoveryVoltageSetpoint:   Double,   // V  -  reg / 10  -  load reconnect
 ) {
     /**
      * Linear-interpolation SoC from the controller's own calibration.
      *
      * The cutoff and charge setpoints are the controller's actual idea of
      * "0%" and "100%", so we treat them as the SoC anchors. That works
-     * cleanly across battery chemistries (Mark's 24 V LiFePO4: 20.0 V → 0,
-     * 25.5 V → 100; a 12 V lead-acid pack: 11.1 V → 0, 14.4 V → 100).
+     * cleanly across battery chemistries (Mark's 24 V LiFePO4: 20.0 V -> 0,
+     * 25.5 V -> 100; a 12 V lead-acid pack: 11.1 V -> 0, 14.4 V -> 100).
      *
      * Returns a value in [0, 100], or null if the calibration is degenerate
-     * (e.g. cutoff ≥ charge, which would happen if we read garbage from a
+     * (e.g. cutoff >= charge, which would happen if we read garbage from a
      * not-yet-initialised firmware).
      */
     fun computeSoc(batteryVoltage: Double): Double? {

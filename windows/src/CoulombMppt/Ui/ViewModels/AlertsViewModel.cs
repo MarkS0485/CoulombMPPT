@@ -57,7 +57,7 @@ public sealed partial class AlertsViewModel : ObservableObject
         HasAlerts = Alerts.Count > 0;
         int active = Alerts.Count(a => a.IsActive);
         Summary = HasAlerts
-            ? $"{Alerts.Count} in the last {AlertStore.RetentionDays} days · {active} active"
+            ? $"{Alerts.Count} in the last {AlertStore.RetentionDays} days . {active} active"
             : $"No alerts in the last {AlertStore.RetentionDays} days.";
     }
 

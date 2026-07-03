@@ -6,7 +6,7 @@ package app.coulombmppt.data.modbus
 // frames and validate incoming ones.
 object ModbusCrc {
 
-    /** Returns the two CRC bytes in wire order — `[lo, hi]`. */
+    /** Returns the two CRC bytes in wire order  -  `[lo, hi]`. */
     fun compute(data: ByteArray, length: Int = data.size): ByteArray {
         var crc = 0xFFFF
         for (i in 0 until length) {

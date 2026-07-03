@@ -27,9 +27,9 @@ import app.coulombmppt.ui.theme.InkLo
 import app.coulombmppt.ui.theme.WarnAmber
 
 // Chip showing what the charger is doing right now. Maps the firmware enum
-// in BLE_PROTOCOL.md §3.1 (reg5 / reg6 / reg7) to a colour + icon + label.
+// in BLE_PROTOCOL.md s.3.1 (reg5 / reg6 / reg7) to a colour + icon + label.
 // Until we've round-tripped on hardware to nail down exact codes, unknown
-// values fall through to "—".
+// values fall through to " - ".
 @Composable
 fun ChargeStateBadge(state: ChargerState, modifier: Modifier = Modifier) {
     val (color, icon, label) = when (state) {
@@ -39,7 +39,7 @@ fun ChargeStateBadge(state: ChargerState, modifier: Modifier = Modifier) {
         ChargerState.Idle     -> Triple(InkLo,          Icons.Filled.BatteryStd,          "Idle")
         ChargerState.LoadOff  -> Triple(WarnAmber,      Icons.Filled.PowerSettingsNew,    "Load off")
         ChargerState.Fault    -> Triple(ErrRed,         Icons.Filled.Warning,             "Fault")
-        ChargerState.Unknown  -> Triple(InkLo,          Icons.Filled.BatteryStd,          "—")
+        ChargerState.Unknown  -> Triple(InkLo,          Icons.Filled.BatteryStd,          " - ")
     }
     Row(
         verticalAlignment = Alignment.CenterVertically,

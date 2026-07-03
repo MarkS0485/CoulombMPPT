@@ -1,7 +1,7 @@
 name: CI
 
 # Compile-validation only: proves both clients still build on every push / PR.
-# No secrets are needed — both apps build unsigned.
+# No secrets are needed  -  both apps build unsigned.
 
 on:
   push:
@@ -22,7 +22,7 @@ permissions:
 
 jobs:
   android:
-    name: Android · assembleDebug
+    name: Android . assembleDebug
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -41,7 +41,7 @@ jobs:
         run: ./gradlew :app:assembleDebug --no-daemon --stacktrace
 
   windows:
-    name: Windows · dotnet build
+    name: Windows . dotnet build
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v7

@@ -18,7 +18,7 @@ import kotlinx.coroutines.flow.callbackFlow
 // IMPORTANT: we deliberately scan with NO filter. The original ZhiJinPower
 // vendor app does the same (`uni.startBluetoothDevicesDiscovery({})` with
 // no service UUID, no name) because cheap BLE modules typically don't
-// advertise their service UUIDs in the scan-response packet — the service
+// advertise their service UUIDs in the scan-response packet  -  the service
 // only appears after you connect and run service discovery. A
 // ScanFilter.setServiceUuid(NUS) would silently drop those devices, which
 // is exactly what was happening in the v0.1 build.
@@ -33,7 +33,7 @@ class BleScanner(private val context: Context) {
         val name: String?,
         val rssi: Int,
         // Raw Victron manufacturer payload (company 0x02E1) if this advert
-        // carries one — lets the pairing UI flag it and route to the Victron
+        // carries one  -  lets the pairing UI flag it and route to the Victron
         // driver. Null for everything else.
         val victronData: ByteArray? = null,
     ) {
@@ -68,7 +68,7 @@ class BleScanner(private val context: Context) {
             }
         }
 
-        // No ScanFilter — same behaviour as the original vendor app. We
+        // No ScanFilter  -  same behaviour as the original vendor app. We
         // pass an empty filter list (which the framework accepts on API 26+)
         // so we get every advertising BLE peripheral in range.
         val settings = ScanSettings.Builder()

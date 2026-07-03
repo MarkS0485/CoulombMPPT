@@ -106,7 +106,7 @@ class FakeMpptSource(
     }
 }
 
-// Crude V→SoC table for a 12 V lead-acid battery. Used as a fallback when
+// Crude V->SoC table for a 12 V lead-acid battery. Used as a fallback when
 // we don't have voltage calibration from the controller's own setpoints.
 // Real SoC computation uses `BatteryProfile.computeSoc` (see MpptLive.kt).
 fun estimateSoc(vBat: Double): Double = when {

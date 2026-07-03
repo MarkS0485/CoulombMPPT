@@ -50,21 +50,21 @@ class AppSettingsViewModel(
 
     // --- PC sync ---------------------------------------------------------
 
-    /** Parse + save a `coulomb://pair?…` link, then probe the PC immediately. */
+    /** Parse + save a `coulomb://pair?...` link, then probe the PC immediately. */
     fun pairPc(link: String) {
         val parsed = RemotePairing.parse(link)
         if (parsed == null) {
-            transient.value = Transient(status = "Couldn't read that link — paste the full coulomb://pair… link from the PC.")
+            transient.value = Transient(status = "Couldn't read that link  -  paste the full coulomb://pair... link from the PC.")
             return
         }
         viewModelScope.launch {
-            transient.value = Transient(busy = true, status = "Pairing…")
+            transient.value = Transient(busy = true, status = "Pairing...")
             pairingStore.save(parsed)
             val r = sync.testConnection()
             transient.value = Transient(
                 busy = false,
                 status = r.fold(
-                    onSuccess = { "Paired with ${parsed.baseUrl} ✓" },
+                    onSuccess = { "Paired with ${parsed.baseUrl} " },
                     onFailure = { "Saved, but couldn't reach the PC: ${it.message}" },
                 ),
             )
@@ -73,10 +73,10 @@ class AppSettingsViewModel(
 
     fun testPc() {
         viewModelScope.launch {
-            transient.value = Transient(busy = true, status = "Testing…")
+            transient.value = Transient(busy = true, status = "Testing...")
             val r = sync.testConnection()
             transient.value = Transient(busy = false, status = r.fold(
-                onSuccess = { "PC reachable ✓" },
+                onSuccess = { "PC reachable " },
                 onFailure = { "Unreachable: ${it.message}" },
             ))
         }
@@ -90,10 +90,10 @@ class AppSettingsViewModel(
             return
         }
         viewModelScope.launch {
-            transient.value = Transient(busy = true, status = "Syncing…")
+            transient.value = Transient(busy = true, status = "Syncing...")
             val r = sync.sync(sel.id, sel.mac)
             transient.value = Transient(busy = false, status = r.fold(
-                onSuccess = { "Synced — $it" },
+                onSuccess = { "Synced  -  $it" },
                 onFailure = { "Sync failed: ${it.message}" },
             ))
         }

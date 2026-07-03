@@ -1,5 +1,5 @@
 <!--
-Keep this PR a focused patch — see CONTRIBUTING.md.
+Keep this PR a focused patch  -  see CONTRIBUTING.md.
 Fill in the section below and tick the boxes that apply.
 -->
 
@@ -15,7 +15,7 @@ Fill in the section below and tick the boxes that apply.
 
 ## Checklist
 
-- [ ] This PR does **one thing** — unrelated changes are split out.
+- [ ] This PR does **one thing**  -  unrelated changes are split out.
 - [ ] The diff is a **focused patch**: only the lines that needed to change, no wholesale rewrites or drive-by reformatting.
 - [ ] Builds locally and **CI is green** (Android `assembleDebug` + Windows `dotnet build`).
 - [ ] If the BLE/Modbus protocol changed, **both apps** and `docs/BLE_PROTOCOL.md` were updated together.

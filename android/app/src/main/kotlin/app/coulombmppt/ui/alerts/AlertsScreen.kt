@@ -56,10 +56,10 @@ fun AlertsScreen(
             BrandTopBar(
                 title    = "Alerts",
                 subtitle = when {
-                    state.loading            -> "Loading…"
+                    state.loading            -> "Loading..."
                     state.rows.isEmpty()     -> "No alerts in the last 7 days"
-                    active == 0              -> "${state.rows.size} historical · all dismissed"
-                    else                      -> "$active active · ${state.rows.size} total · last 7 days"
+                    active == 0              -> "${state.rows.size} historical . all dismissed"
+                    else                      -> "$active active . ${state.rows.size} total . last 7 days"
                 },
                 onBack   = onBack,
             )
@@ -69,7 +69,7 @@ fun AlertsScreen(
             Box(modifier = Modifier.fillMaxSize().padding(padding),
                 contentAlignment = Alignment.Center) {
                 Text(
-                    if (state.loading) "Loading…" else "Nothing to see here — the controller's been behaving.",
+                    if (state.loading) "Loading..." else "Nothing to see here  -  the controller's been behaving.",
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
@@ -135,7 +135,7 @@ private fun AlertRowItem(row: AlertRow, onDismiss: () -> Unit) {
             Text(
                 DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT)
                     .format(Date(row.tsMs)) +
-                    if (isDismissed) " · dismissed" else "",
+                    if (isDismissed) " . dismissed" else "",
                 style = MaterialTheme.typography.labelSmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
@@ -173,4 +173,3 @@ private fun displayKind(raw: String): String = when (raw) {
     "LoadOverCurrent"     -> "Load overcurrent"
     else                   -> raw
 }
-

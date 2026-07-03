@@ -9,7 +9,7 @@ namespace CoulombMppt.Ui.Pages;
 
 // Code-behind page (no view-model): a live tap on the BLE transport's raw frame
 // stream plus a manual register-write tool. Diagnostics are inherently
-// imperative — subscribe, marshal, append, cap — so a VM would add no value.
+// imperative  -  subscribe, marshal, append, cap  -  so a VM would add no value.
 public partial class DiagnosticsPage : UserControl
 {
     private const int MaxRows = 500;
@@ -23,7 +23,7 @@ public partial class DiagnosticsPage : UserControl
         InitializeComponent();
         FrameList.ItemsSource = _rows;
         // This page is cached and reused, so the live tap must be (re)attached
-        // every time it is shown — not once in the constructor. Subscribing on
+        // every time it is shown  -  not once in the constructor. Subscribing on
         // Loaded (idempotently) and detaching on Unloaded keeps the frame
         // monitor working on the second and later visits.
         Loaded   += (_, _) => { _ble.FrameSeen -= OnFrame; _ble.FrameSeen += OnFrame; };
@@ -65,7 +65,7 @@ public partial class DiagnosticsPage : UserControl
             return;
         }
 
-        WriteStatus.Text = "Writing…";
+        WriteStatus.Text = "Writing...";
         try
         {
             bool ok = await _ble.WriteRegisterAsync(reg, val);

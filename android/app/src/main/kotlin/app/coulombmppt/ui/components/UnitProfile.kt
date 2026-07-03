@@ -17,7 +17,7 @@ import app.coulombmppt.data.model.PairedController
 // iconKey string in three places.
 //
 // Mirrors `UnitProfile` from the sister coulombmonitor app, but the labels
-// and accent come from the PairedController record itself — the user can
+// and accent come from the PairedController record itself  -  the user can
 // rename and re-style each MPPT they pair, no hard-coded unit table.
 data class UnitProfile(
     val title:     String,

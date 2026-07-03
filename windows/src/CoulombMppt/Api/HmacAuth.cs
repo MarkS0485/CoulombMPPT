@@ -16,7 +16,7 @@ namespace CoulombMppt.Api;
 //   "\n" + lowercase-hex-sha256(body)
 //
 // Server rejects: missing/malformed header, unknown or revoked keyId, ts skew
-// > ±60 s, replayed nonce (5-min cache), signature mismatch (constant-time).
+// > +/-60 s, replayed nonce (5-min cache), signature mismatch (constant-time).
 // Body is read fully and rewound so the downstream handler can re-read it.
 public static class HmacAuth
 {

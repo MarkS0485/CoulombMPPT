@@ -51,7 +51,7 @@ object Routes {
     fun inverter(controllerId: String) = "$INVERTER/$controllerId"
 }
 
-// Routes that show the bottom nav bar — top-level screens only.
+// Routes that show the bottom nav bar  -  top-level screens only.
 private val BOTTOM_NAV_ROUTES = setOf(
     Routes.CONTROLLERS, Routes.ALERTS, Routes.PAIRING, Routes.APP_SETTINGS,
 )

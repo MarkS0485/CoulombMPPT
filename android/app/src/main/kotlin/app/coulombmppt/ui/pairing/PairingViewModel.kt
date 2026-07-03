@@ -58,7 +58,7 @@ class PairingViewModel(
                     if (list.none { it.address == d.address }) {
                         // Sort: named devices first (strongest signal first within each group),
                         // then unnamed by signal strength. Most cheap BLE modules expose a
-                        // short name like "BT05" or "ZJ_…" — those bubble to the top.
+                        // short name like "BT05" or "ZJ_..."  -  those bubble to the top.
                         val merged = (list + d).sortedWith(
                             compareByDescending<BleScanner.Discovery> { !it.name.isNullOrBlank() }
                                 .thenByDescending { it.rssi }
@@ -77,7 +77,7 @@ class PairingViewModel(
 
     /** Best guess of a device's type from its advertisement, used by a plain
      *  tap. Victron has a clean manufacturer signature; Renogy's BT-1/BT-2
-     *  dongles advertise as "BT-TH-…". Anything else is the generic controller;
+     *  dongles advertise as "BT-TH-...". Anything else is the generic controller;
      *  the user can override via long-press. */
     private fun guessType(d: BleScanner.Discovery): DeviceType = when {
         d.isVictron -> DeviceType.VictronInstantReadout
@@ -124,7 +124,7 @@ class PairingViewModel(
     }
 
     /** Complete a Victron pairing once the user has entered the advertisement
-     *  key (32 hex chars from VictronConnect → Product Info → Instant Readout). */
+     *  key (32 hex chars from VictronConnect -> Product Info -> Instant Readout). */
     fun confirmVictron(keyHex: String, onDone: (controllerId: String) -> Unit) {
         val d = _state.value.pendingVictron ?: return
         viewModelScope.launch {

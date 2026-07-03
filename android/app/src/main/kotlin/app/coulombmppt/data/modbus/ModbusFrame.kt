@@ -10,7 +10,7 @@ object ModbusFrame {
 
     private const val TAG = "ModbusFrame"
 
-    const val SLAVE: Int = 0x01     // default unit address for our controller — see BLE_PROTOCOL.md §6.5
+    const val SLAVE: Int = 0x01     // default unit address for our controller  -  see BLE_PROTOCOL.md s.6.5
 
     const val FN_READ:    Int = 0x03  // Read Holding Registers
     const val FN_READ_IN: Int = 0x04  // Read Input Registers (EPEver live data)
@@ -37,7 +37,7 @@ object ModbusFrame {
 
     /**
      * Build a "Write Multiple Registers" frame for a single 16-bit value.
-     * Used for every settings write — see BLE_PROTOCOL.md §4.
+     * Used for every settings write  -  see BLE_PROTOCOL.md s.4.
      */
     fun writeSingle(address: Int, value: Int, slave: Int = SLAVE): ByteArray {
         val payload = byteArrayOf(
@@ -83,7 +83,7 @@ object ModbusFrame {
         if (frame.size < 5) return null                     // slave + fn + bc + crcLo + crcHi minimum
         if ((frame[0].toInt() and 0xFF) != slave) return null
         if (!ModbusCrc.verify(frame)) {
-            AppLogger.w(TAG, "CRC error on ${frame.size}B frame — dropping (got ${
+            AppLogger.w(TAG, "CRC error on ${frame.size}B frame  -  dropping (got ${
                 "%02X %02X".format(frame[frame.size - 2].toInt() and 0xFF, frame[frame.size - 1].toInt() and 0xFF)
             })")
             return null

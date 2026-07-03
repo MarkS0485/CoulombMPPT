@@ -1,6 +1,6 @@
 namespace CoulombMppt.Data;
 
-// Port of the Android EnergyComputer — computes daily PV generation, battery
+// Port of the Android EnergyComputer  -  computes daily PV generation, battery
 // I/O, and EA SUN inverter inference from a list of LiveSamples.
 public static class EnergyComputer
 {

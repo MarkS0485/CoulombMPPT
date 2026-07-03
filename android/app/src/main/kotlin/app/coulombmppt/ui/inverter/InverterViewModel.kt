@@ -18,7 +18,7 @@ import app.coulombmppt.di.ServiceLocator
 // ViewModel for the dedicated Inverter / EA SUN screen.
 // Wraps EnergyViewModel's logic and exposes individual StateFlows so the
 // screen can bind each piece of data independently. The 3-minute rolling
-// buffer logic is identical to EnergyViewModel.kt — kept here so the
+// buffer logic is identical to EnergyViewModel.kt  -  kept here so the
 // screen doesn't depend on EnergyViewModel's internal EnergyUiState.
 class InverterViewModel : ViewModel() {
 

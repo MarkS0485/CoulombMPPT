@@ -8,7 +8,7 @@ using CoulombMppt.Services;
 
 namespace CoulombMppt.Ui.ViewModels;
 
-// Full live-telemetry readout — every decoded field plus the raw status
+// Full live-telemetry readout  -  every decoded field plus the raw status
 // registers, for when you want to see exactly what the controller reported.
 public sealed partial class LiveViewModel : ObservableObject
 {
@@ -30,31 +30,31 @@ public sealed partial class LiveViewModel : ObservableObject
 
     [ObservableProperty] private bool   _isReady;
     [ObservableProperty] private bool   _hasLive;
-    [ObservableProperty] private string _updatedLabel = "—";
+    [ObservableProperty] private string _updatedLabel = " - ";
 
-    [ObservableProperty] private string _batteryVolts = "—";
-    [ObservableProperty] private string _chargeCurrent = "—";
-    [ObservableProperty] private string _dischargeCurrent = "—";
-    [ObservableProperty] private string _batteryWatts = "—";
-    [ObservableProperty] private string _loadWatts = "—";
-    [ObservableProperty] private string _pvWatts = "—";
-    [ObservableProperty] private string _temperature = "—";
-    [ObservableProperty] private string _totalAh = "—";
-    [ObservableProperty] private string _soc = "—";
-    [ObservableProperty] private string _chargerState = "—";
+    [ObservableProperty] private string _batteryVolts = " - ";
+    [ObservableProperty] private string _chargeCurrent = " - ";
+    [ObservableProperty] private string _dischargeCurrent = " - ";
+    [ObservableProperty] private string _batteryWatts = " - ";
+    [ObservableProperty] private string _loadWatts = " - ";
+    [ObservableProperty] private string _pvWatts = " - ";
+    [ObservableProperty] private string _temperature = " - ";
+    [ObservableProperty] private string _totalAh = " - ";
+    [ObservableProperty] private string _soc = " - ";
+    [ObservableProperty] private string _chargerState = " - ";
 
-    [ObservableProperty] private string _solarStatusRaw = "—";
-    [ObservableProperty] private string _workStatusRaw = "—";
-    [ObservableProperty] private string _powerStatusRaw = "—";
+    [ObservableProperty] private string _solarStatusRaw = " - ";
+    [ObservableProperty] private string _workStatusRaw = " - ";
+    [ObservableProperty] private string _powerStatusRaw = " - ";
 
     // --- Live rolling chart series (last hour, ~1 Hz) ----
     [ObservableProperty] private IReadOnlyList<double> _voltageHistory = Array.Empty<double>();
     [ObservableProperty] private IReadOnlyList<double> _chargeHistory  = Array.Empty<double>();
     [ObservableProperty] private IReadOnlyList<double> _pvHistory      = Array.Empty<double>();
-    // Shared time axis (unix-ms) for all three live charts — drives the hover
+    // Shared time axis (unix-ms) for all three live charts  -  drives the hover
     // tooltip's timestamp readout.
     [ObservableProperty] private IReadOnlyList<long>   _timeAxis        = Array.Empty<long>();
-    [ObservableProperty] private string _liveChartCaption = "Waiting for telemetry…";
+    [ObservableProperty] private string _liveChartCaption = "Waiting for telemetry...";
 
     [RelayCommand]
     private async Task Refresh()
@@ -77,7 +77,7 @@ public sealed partial class LiveViewModel : ObservableObject
         BatteryWatts     = $"{l.BatteryWatts:0.0} W";
         LoadWatts        = $"{l.LoadWatts:0.0} W";
         PvWatts          = $"{l.ApproxPvWatts:0.0} W";
-        Temperature      = $"{l.TemperatureC:0.0} °C";
+        Temperature      = $"{l.TemperatureC:0.0}  degC";
         TotalAh          = $"{l.TotalAccumulatedAh:0.0} Ah";
         Soc              = $"{l.SocEstimate:0} %";
         ChargerState     = l.ChargerState.Label();
@@ -107,8 +107,8 @@ public sealed partial class LiveViewModel : ObservableObject
 
         var span = (_liveBuf[^1].Ts - _liveBuf[0].Ts) / 60000.0;
         LiveChartCaption = _liveBuf.Count < 2
-            ? "Collecting… charts fill as telemetry streams in"
-            : $"Last {span:0} min · {_liveBuf.Count} samples (1 Hz, in-memory)";
+            ? "Collecting... charts fill as telemetry streams in"
+            : $"Last {span:0} min . {_liveBuf.Count} samples (1 Hz, in-memory)";
     }
 
     private static void RunOnUi(Action a)

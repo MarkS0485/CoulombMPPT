@@ -28,13 +28,13 @@ import app.coulombmppt.ui.theme.WarnAmber
 // Bespoke energy-flow diagram ported from the sister coulombmonitor app
 // (Unit 001 OverviewTab). Three rounded-rect nodes laid out as:
 //
-//     ┌───────┐                       ┌─────────┐
-//     │Battery│ <- vertical arrow ->  │  ...    │
-//     └───────┘                       └─────────┘
+//
+//     Battery <- vertical arrow ->    ...
+//
 //          ↕
-//     ┌───────┐    ─→    ┌─────────┐  ─→    ┌──────┐
-//     │ Solar │          │ DC Bus  │        │ Load │
-//     └───────┘          └─────────┘        └──────┘
+//         ->      ->
+//      Solar            DC Bus           Load
+//
 //
 // Each arrow's width scales linearly with the watts flowing through it;
 // arrows carry an inline kW/W label so the direction reads at a glance.
@@ -42,7 +42,7 @@ import app.coulombmppt.ui.theme.WarnAmber
 @Composable
 fun EnergyFlow(
     pvWatts:       Double,
-    batteryWatts:  Double,    // positive = charging (PV→batt), negative = discharging (batt→load)
+    batteryWatts:  Double,    // positive = charging (PV->batt), negative = discharging (batt->load)
     loadWatts:     Double,
     busVoltage:    Double,    // labelled at the centre node
     modifier:      Modifier = Modifier,
@@ -165,7 +165,7 @@ fun EnergyFlow(
         val battColor = if (charging) ChargingGreen else WarnAmber
         val loadColor = LoadNavy
 
-        // Solar → DC bus
+        // Solar -> DC bus
         arrow(cxPv + nodeW / 2, yMid, cxBus - nodeW / 2, yMid, pvWatts, solColor)
         flowLabel(cxPv + nodeW / 2, yMid, cxBus - nodeW / 2, yMid, pvWatts, solColor)
 
@@ -181,13 +181,13 @@ fun EnergyFlow(
             kotlin.math.abs(batteryWatts), battColor,
         )
 
-        // DC bus → Load
+        // DC bus -> Load
         arrow(cxBus + nodeW / 2, yMid, cxLoad - nodeW / 2, yMid, loadWatts, loadColor)
         flowLabel(cxBus + nodeW / 2, yMid, cxLoad - nodeW / 2, yMid, loadWatts, loadColor)
 
         // Nodes
         drawNode(cxPv,   yMid, "Solar", "%.0f W".format(pvWatts), labelColor)
-        val busLabel = if (busVoltage > 0) "%.2f V".format(busVoltage) else "—"
+        val busLabel = if (busVoltage > 0) "%.2f V".format(busVoltage) else " - "
         drawNode(cxBus,  yMid, "DC bus", busLabel, labelColor)
         val battLabel = if (charging) "+%.0f W".format(kotlin.math.abs(batteryWatts))
                         else           "-%.0f W".format(kotlin.math.abs(batteryWatts))

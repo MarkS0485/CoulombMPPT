@@ -129,8 +129,8 @@
     </Style>
 
     <!-- OutlinedButton's look, but for ToggleButtons (e.g. the Pause / Follow
-         toggles). A Button-targeted style cannot be applied to a ToggleButton —
-         doing so throws a XamlParseException at parse time — so toggles need
+         toggles). A Button-targeted style cannot be applied to a ToggleButton  -
+         doing so throws a XamlParseException at parse time  -  so toggles need
          their own style. The IsChecked trigger makes the engaged state visible. -->
     <Style x:Key="OutlinedToggle" TargetType="ToggleButton">
         <Setter Property="Background"      Value="Transparent"/>

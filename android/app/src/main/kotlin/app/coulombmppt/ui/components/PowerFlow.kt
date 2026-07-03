@@ -37,13 +37,13 @@ import app.coulombmppt.ui.theme.SolarAmber
 
 // Sankey-ish three-node power-flow strip:
 //
-//   [ PV ]  ──►─►─►  [ BATTERY ]  ──►─►─►  [ LOAD ]
+//   [ PV ]    [ BATTERY ]    [ LOAD ]
 //
-// Arrows animate when current is flowing — easiest way to communicate
+// Arrows animate when current is flowing  -  easiest way to communicate
 // charging vs idle vs discharging without reading the digits. Each node is a
 // small chip; the line between them is dashed and the dashes scroll left to
 // right when active. If the firmware turns out not to expose PV-side data
-// (see BLE_PROTOCOL.md §7.1), pass pvWatts = null and the PV node renders
+// (see BLE_PROTOCOL.md s.7.1), pass pvWatts = null and the PV node renders
 // as a "?" placeholder instead of disappearing.
 @Composable
 fun PowerFlow(
@@ -119,7 +119,7 @@ private fun FlowCanvas(
         val cxLoad = size.width - nodeR - 4f
         val cxBat = (cxPv + cxLoad) / 2f
 
-        // PV → Battery line.
+        // PV -> Battery line.
         drawFlowLine(
             from = Offset(cxPv + nodeR, cy),
             to   = Offset(cxBat - nodeR, cy),
@@ -127,7 +127,7 @@ private fun FlowCanvas(
             active = chargeActive,
             phase = phase,
         )
-        // Battery → Load line.
+        // Battery -> Load line.
         drawFlowLine(
             from = Offset(cxBat + nodeR, cy),
             to   = Offset(cxLoad - nodeR, cy),
@@ -147,7 +147,7 @@ private fun FlowCanvas(
 
         // Captions under each node.
         listOf(
-            Triple(cxPv,   "PV",   pvWatts?.let { "%.0f W".format(it) } ?: "—"),
+            Triple(cxPv,   "PV",   pvWatts?.let { "%.0f W".format(it) } ?: " - "),
             Triple(cxBat,  "BATT", if (batteryWatts >= 0) "+%.0f W".format(batteryWatts) else "%.0f W".format(batteryWatts)),
             Triple(cxLoad, "LOAD", "%.0f W".format(loadWatts)),
         ).forEach { (cx, label, value) ->

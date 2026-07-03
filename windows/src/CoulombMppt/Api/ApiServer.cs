@@ -28,7 +28,7 @@ public sealed class ApiServer
     {
         PairedClients = new PairedClientStore();
         // Compute the cert thumbprint EAGERLY. The pairing QR must carry it even
-        // before the server is started — users click Generate before Start, and
+        // before the server is started  -  users click Generate before Start, and
         // an empty t= gives the client a "cert pin mismatch" that looks like a
         // TLS fault when it's really a UX-ordering one.
         try

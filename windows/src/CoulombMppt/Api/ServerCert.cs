@@ -6,7 +6,7 @@ namespace CoulombMppt.Api;
 
 // Self-signed RSA cert used by Kestrel and pinned by the remote client (cert
 // SHA-256 thumbprint travels in the QR). Persisted as a password-protected PFX
-// in %APPDATA% so the same cert is reused across launches — otherwise pinned
+// in %APPDATA% so the same cert is reused across launches  -  otherwise pinned
 // clients would all break on every restart.
 public static class ServerCert
 {
@@ -55,7 +55,7 @@ public static class ServerCert
                 if (ip.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork)
                     san.AddIpAddress(ip);
         }
-        catch { /* offline machine — name-only SAN is fine */ }
+        catch { /* offline machine  -  name-only SAN is fine */ }
         req.CertificateExtensions.Add(san.Build());
         req.CertificateExtensions.Add(new X509BasicConstraintsExtension(false, false, 0, false));
         req.CertificateExtensions.Add(new X509KeyUsageExtension(

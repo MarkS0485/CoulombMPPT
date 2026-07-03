@@ -34,7 +34,7 @@
                                VerticalAlignment="Center" Margin="12,0,0,0"/>
                 </StackPanel>
                 <TextBlock Style="{StaticResource Caption}" Margin="0,6,0,0" TextWrapping="Wrap"
-                           Text="Address and value accept decimal or 0x-prefixed hex. Writes go straight to the controller — use with care."/>
+                           Text="Address and value accept decimal or 0x-prefixed hex. Writes go straight to the controller  -  use with care."/>
             </StackPanel>
         </Border>
 

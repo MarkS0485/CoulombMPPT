@@ -17,14 +17,14 @@ import app.coulombmppt.data.model.PairedController
 import app.coulombmppt.data.repo.MpptRepository
 
 // Owns the "write a downsampled live-sample row every SAMPLE_INTERVAL_MS"
-// background loop. One recorder job per (controllerId, repo). Idempotent —
+// background loop. One recorder job per (controllerId, repo). Idempotent  -
 // calling start() with the same id is a no-op if a job is already running.
 //
 // Why a separate component instead of writing inside MpptRepository?
-//  • Keeps the BLE layer free of DB concerns.
-//  • Lets the foreground service drive the same recorder when the UI is
+//  - Keeps the BLE layer free of DB concerns.
+//  - Lets the foreground service drive the same recorder when the UI is
 //    backgrounded, without duplicating sampling logic in two places.
-//  • The retention prune lives here too — runs once on start() so a
+//  - The retention prune lives here too  -  runs once on start() so a
 //    long-paused app cleans up before chart queries fan out.
 class HistoryRecorder(
     private val dao: LiveSampleDao,

@@ -24,17 +24,17 @@ import app.coulombmppt.data.log.AppLogger
 // HTTPS client for the Windows local API. Two security properties, both
 // implemented with platform APIs only (no OkHttp / no extra dependency):
 //
-//  1. Certificate pinning — the server uses a self-signed cert, so instead of
+//  1. Certificate pinning  -  the server uses a self-signed cert, so instead of
 //     a CA chain we trust exactly the leaf whose SHA-256(DER) matches the
 //     thumbprint from the pairing link. A permissive hostname verifier is fine
 //     *because* the pin already authenticates the server.
 //
-//  2. Coulomb1 HMAC request signing — reproduces HmacAuth on the Windows side:
+//  2. Coulomb1 HMAC request signing  -  reproduces HmacAuth on the Windows side:
 //       canonical = METHOD \n PATH \n QUERY \n ts \n nonce \n hex(sha256(body))
 //       sig       = base64( HMAC-SHA256(secret, canonical) )
-//       header    = Authorization: Coulomb1 keyId=…,ts=…,nonce=…,sig=…
+//       header    = Authorization: Coulomb1 keyId=...,ts=...,nonce=...,sig=...
 //     QUERY is the raw (already-encoded) query string with the leading '?'
-//     stripped, exactly as Kestrel sees it — so we sign the same bytes we send.
+//     stripped, exactly as Kestrel sees it  -  so we sign the same bytes we send.
 class CoulombApiClient(private val pairing: RemotePairing) {
 
     private val json = Json { ignoreUnknownKeys = true; encodeDefaults = true }
@@ -45,7 +45,7 @@ class CoulombApiClient(private val pairing: RemotePairing) {
 
     private data class HttpResult(val code: Int, val body: String)
 
-    /** Open ping — verifies reachability + cert pin without auth. */
+    /** Open ping  -  verifies reachability + cert pin without auth. */
     suspend fun ping(): Result<String> =
         request("GET", "/api/ping", auth = false, body = null).map { it.body }
 
@@ -65,7 +65,7 @@ class CoulombApiClient(private val pairing: RemotePairing) {
 
     // --- Remote-control mode ----------------------------------------------
 
-    /** Current PC status — connection state plus the latest live + settings. */
+    /** Current PC status  -  connection state plus the latest live + settings. */
     suspend fun status(): Result<RemoteStatus> =
         request("GET", "/api/v1/status", auth = true, body = null)
             .mapCatching { json.decodeFromString<RemoteStatus>(it.body) }
@@ -82,7 +82,7 @@ class CoulombApiClient(private val pairing: RemotePairing) {
     }
 
     /** Relay one live frame from this phone's BLE session to the PC.
-     *  Used by hybrid mode; best-effort — caller should swallow failures. */
+     *  Used by hybrid mode; best-effort  -  caller should swallow failures. */
     suspend fun pushLive(frame: RemoteLiveFrame): Result<Unit> {
         val payload = json.encodeToString(frame)
         return request("POST", "/api/v1/live/push", auth = true, body = payload).map { }

@@ -22,11 +22,11 @@ assessment and any fix as it progresses.
 This project controls real hardware and can be exposed to a network, so the
 sensitive surfaces are:
 
-- **The Windows remote API** (`windows/src/CoulombMppt/Api/`) — an in-process
+- **The Windows remote API** (`windows/src/CoulombMppt/Api/`)  -  an in-process
   HTTPS server with HMAC-authenticated clients, a self-signed certificate, and
   optional UPnP port-forwarding. Anything that weakens authentication, exposes
   the certificate/keys, or widens what an unpaired client can reach is in scope.
-- **BLE control of the charge controller** — settings writes change real
+- **BLE control of the charge controller**  -  settings writes change real
   charge/cut-off voltages. Treat anything that could send unintended writes as a
   safety issue, not just a software bug.
 - **Pairing** (QR / HMAC key exchange) and any stored secrets, keystores, or

@@ -11,7 +11,7 @@ namespace CoulombMppt.Ui.ViewModels;
 
 // Read-only view-model for the Battery Model / Calibration page. Visualises the
 // learned battery model (OCV table, resistance, baseload) that BatteryObserver
-// consumes — it changes no inference behaviour. Mirrors InverterViewModel's
+// consumes  -  it changes no inference behaviour. Mirrors InverterViewModel's
 // construction/threading: subscribe to BLE + controller change events, marshal
 // to the UI via RunOnUi, and re-read the persisted model on a DispatcherTimer.
 public sealed partial class BatteryModelViewModel : ObservableObject
@@ -44,28 +44,28 @@ public sealed partial class BatteryModelViewModel : ObservableObject
 
     // ---- Internal resistance ----
     [ObservableProperty] private bool   _hasResistance;
-    [ObservableProperty] private string _rGlobalMilliohms = "—";
+    [ObservableProperty] private string _rGlobalMilliohms = " - ";
     [ObservableProperty] private string _rTotalSamples    = "0";
     [ObservableProperty] private IReadOnlyList<ResistanceBinRow> _resistanceBins = Array.Empty<ResistanceBinRow>();
 
     // ---- Baseload band ----
     [ObservableProperty] private bool   _hasBaseload;
-    [ObservableProperty] private string _baseloadMean   = "—";
-    [ObservableProperty] private string _baseloadP50    = "—";
-    [ObservableProperty] private string _baseloadP90    = "—";
+    [ObservableProperty] private string _baseloadMean   = " - ";
+    [ObservableProperty] private string _baseloadP50    = " - ";
+    [ObservableProperty] private string _baseloadP90    = " - ";
     [ObservableProperty] private string _baseloadSamples = "0";
 
     // ---- Live estimate vs legacy ----
     [ObservableProperty] private bool   _hasEstimate;
     [ObservableProperty] private bool   _estimateIsLearning;
-    [ObservableProperty] private string _liveBusLabel     = "—";
-    [ObservableProperty] private string _liveSocLabel     = "—";
-    [ObservableProperty] private string _legacyEstLabel   = "—";
+    [ObservableProperty] private string _liveBusLabel     = " - ";
+    [ObservableProperty] private string _liveSocLabel     = " - ";
+    [ObservableProperty] private string _legacyEstLabel   = " - ";
     [ObservableProperty] private string _estimateModeNote = "";
 
     // ---- Freshness / anchors ----
-    [ObservableProperty] private string _learnedAtLabel = "—";
-    [ObservableProperty] private string _capacityLabel  = "—";
+    [ObservableProperty] private string _learnedAtLabel = " - ";
+    [ObservableProperty] private string _capacityLabel  = " - ";
 
     public BatteryModelViewModel()
     {
@@ -105,8 +105,8 @@ public sealed partial class BatteryModelViewModel : ObservableObject
             HasResistance = false;
             ResistanceBins = Array.Empty<ResistanceBinRow>();
             HasBaseload   = false;
-            LearnedAtLabel = "—";
-            CapacityLabel  = "—";
+            LearnedAtLabel = " - ";
+            CapacityLabel  = " - ";
             // Still publish the linear reference so the chart can show "what we used to assume".
             PublishLinearReference(profile);
             SyncEstimate();
@@ -118,8 +118,8 @@ public sealed partial class BatteryModelViewModel : ObservableObject
         IsCalibrated   = usable && !learning;
         string conf    = model.ConfidencePct.ToString("0", CultureInfo.InvariantCulture);
         StatusLabel    = IsCalibrated
-            ? $"Calibrated · {conf}% confidence"
-            : $"Calibrating · {conf}% confidence";
+            ? $"Calibrated . {conf}% confidence"
+            : $"Calibrating . {conf}% confidence";
         PillKind       = IsCalibrated ? StatusKind.Online : StatusKind.Stale;
         GateContext    = $"Live inference engages at {_settings.MinConfidenceForLivePct.ToString("0", CultureInfo.InvariantCulture)}% confidence.";
 
@@ -131,13 +131,13 @@ public sealed partial class BatteryModelViewModel : ObservableObject
         // ---- Resistance ----
         var r = model.R;
         HasResistance    = r.HasResistance;
-        RGlobalMilliohms = (r.RGlobalOhms * 1000.0).ToString("0.0", CultureInfo.InvariantCulture) + " mΩ";
+        RGlobalMilliohms = (r.RGlobalOhms * 1000.0).ToString("0.0", CultureInfo.InvariantCulture) + " mohm";
         RTotalSamples    = r.TotalSamples.ToString("N0", CultureInfo.InvariantCulture);
         ResistanceBins   = r.Bins
             .Select(b => new ResistanceBinRow(
-                SocRange: $"{b.SocLo.ToString("0", CultureInfo.InvariantCulture)}–{b.SocHi.ToString("0", CultureInfo.InvariantCulture)} %",
-                TempRange: $"{b.TLo.ToString("0", CultureInfo.InvariantCulture)}–{b.THi.ToString("0", CultureInfo.InvariantCulture)} °C",
-                Milliohms: (b.ROhms * 1000.0).ToString("0.0", CultureInfo.InvariantCulture) + " mΩ",
+                SocRange: $"{b.SocLo.ToString("0", CultureInfo.InvariantCulture)}-{b.SocHi.ToString("0", CultureInfo.InvariantCulture)} %",
+                TempRange: $"{b.TLo.ToString("0", CultureInfo.InvariantCulture)}-{b.THi.ToString("0", CultureInfo.InvariantCulture)}  degC",
+                Milliohms: (b.ROhms * 1000.0).ToString("0.0", CultureInfo.InvariantCulture) + " mohm",
                 Samples: b.SampleCount.ToString("N0", CultureInfo.InvariantCulture)))
             .ToList();
 
@@ -154,10 +154,10 @@ public sealed partial class BatteryModelViewModel : ObservableObject
         LearnedAtLabel = model.UpdatedMs > 0
             ? DateTimeOffset.FromUnixTimeMilliseconds(model.UpdatedMs).ToLocalTime()
                   .ToString("d MMM yyyy HH:mm", CultureInfo.InvariantCulture)
-            : "—";
+            : " - ";
         CapacityLabel = model.CapacityAh > 0
             ? model.CapacityAh.ToString("0.#", CultureInfo.InvariantCulture) + " Ah"
-            : "—";
+            : " - ";
 
         SyncEstimate();
     }
@@ -185,9 +185,9 @@ public sealed partial class BatteryModelViewModel : ObservableObject
         {
             HasEstimate        = false;
             EstimateIsLearning = false;
-            LiveBusLabel       = "—";
-            LiveSocLabel       = "—";
-            LegacyEstLabel     = "—";
+            LiveBusLabel       = " - ";
+            LiveSocLabel       = " - ";
+            LegacyEstLabel     = " - ";
             EstimateModeNote   = "";
             return;
         }
@@ -198,7 +198,7 @@ public sealed partial class BatteryModelViewModel : ObservableObject
         // BusLoadA: positive = bus drawing (inverter + house), negative = net charging.
         string dir = est.BusLoadA >= 0 ? "drawing" : "charging";
         LiveBusLabel = string.Format(CultureInfo.InvariantCulture,
-            "{0:+0.0;-0.0;0.0} A · {1:+0;-0;0} W ({2})", est.BusLoadA, est.BusLoadW, dir);
+            "{0:+0.0;-0.0;0.0} A . {1:+0;-0;0} W ({2})", est.BusLoadA, est.BusLoadW, dir);
         LiveSocLabel = est.Soc.ToString("0.0", CultureInfo.InvariantCulture) + " %";
 
         LegacyEstLabel = est.CrossCheckEasunA is { } a
@@ -206,8 +206,8 @@ public sealed partial class BatteryModelViewModel : ObservableObject
             : "unavailable";
 
         EstimateModeNote = est.IsLearning
-            ? "Still learning — the figure above is the legacy fallback until confidence clears the gate."
-            : "Live model inference active — read straight from the voltage sag.";
+            ? "Still learning  -  the figure above is the legacy fallback until confidence clears the gate."
+            : "Live model inference active  -  read straight from the voltage sag.";
     }
 
     // ---- Helpers ----
@@ -216,7 +216,7 @@ public sealed partial class BatteryModelViewModel : ObservableObject
     {
         string a = amps.ToString("0.00", CultureInfo.InvariantCulture) + " A";
         if (voltage > 0)
-            a += " · " + (amps * voltage).ToString("0", CultureInfo.InvariantCulture) + " W";
+            a += " . " + (amps * voltage).ToString("0", CultureInfo.InvariantCulture) + " W";
         return a;
     }
 

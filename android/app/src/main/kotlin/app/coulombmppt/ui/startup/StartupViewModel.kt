@@ -22,7 +22,7 @@ data class StartupUiState(
 )
 
 // Backs the launch chooser. Picks which MpptSource the app's real repositories
-// use this session — local BLE on this phone, or remote-control via the paired
+// use this session  -  local BLE on this phone, or remote-control via the paired
 // Windows PC's API.
 class StartupViewModel(
     private val pairingStore: RemotePairingStore = ServiceLocator.remotePairing,
@@ -44,7 +44,7 @@ class StartupViewModel(
     fun chooseRemote() = chooseMode(ConnectionMode.RemoteApi)
     fun chooseHybrid() = chooseMode(ConnectionMode.Hybrid)
 
-    // All modes run the foreground service — the difference is the *source*
+    // All modes run the foreground service  -  the difference is the *source*
     // (BLE vs PC API) and whether the live relay is active (Hybrid).
     private fun chooseMode(mode: ConnectionMode) {
         viewModelScope.launch {

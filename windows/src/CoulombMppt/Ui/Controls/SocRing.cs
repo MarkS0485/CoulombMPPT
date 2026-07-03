@@ -45,7 +45,7 @@ public sealed class SocRing : FrameworkElement
         var trackPen = new Pen(Brush(0xFFE2E5EE), Thickness);
         drawingContext.DrawEllipse(null, trackPen, center, radius, radius);
 
-        // Value arc — colour ramps from red (empty) through amber to green (full).
+        // Value arc  -  colour ramps from red (empty) through amber to green (full).
         var color = RampColor(pct);
         var valuePen = new Pen(new SolidColorBrush(color), Thickness)
         {
@@ -98,7 +98,7 @@ public sealed class SocRing : FrameworkElement
         return new Point(c.X + r * Math.Cos(rad), c.Y + r * Math.Sin(rad));
     }
 
-    // Red < 25, amber < 60, green otherwise — same intent as the alert thresholds.
+    // Red < 25, amber < 60, green otherwise  -  same intent as the alert thresholds.
     private static Color RampColor(double pct) => pct switch
     {
         < 25 => Color.FromRgb(0xC8, 0x10, 0x2E),

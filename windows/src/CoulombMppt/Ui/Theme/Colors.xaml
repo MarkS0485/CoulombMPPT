@@ -56,7 +56,7 @@
     <SolidColorBrush x:Key="CoolBlue"    Color="{StaticResource CoolBlueColor}"/>
     <SolidColorBrush x:Key="ProbeSlate"  Color="{StaticResource ProbeSlateColor}"/>
 
-    <!-- Brand top-bar gradient: navy → red, same as the heater client. -->
+    <!-- Brand top-bar gradient: navy -> red, same as the heater client. -->
     <LinearGradientBrush x:Key="BrandTopBarBrush" StartPoint="0,0" EndPoint="1,0">
         <GradientStop Color="{StaticResource CoulombNavyColor}" Offset="0.0"/>
         <GradientStop Color="{StaticResource CoulombRedColor}"  Offset="1.0"/>

@@ -10,7 +10,7 @@
     <ScrollViewer VerticalScrollBarVisibility="Auto">
         <StackPanel Margin="20">
             <c:PageHeader Title="App settings"
-                          Subtitle="Preferences for this Windows client — changes save immediately"/>
+                          Subtitle="Preferences for this Windows client  -  changes save immediately"/>
 
             <!-- Connection -->
             <Border Style="{StaticResource Card}" Margin="0,0,0,10">

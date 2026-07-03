@@ -44,11 +44,11 @@ object EnergyComputer {
             if (dtMs <= 0 || dtMs > MAX_INTEGRATION_GAP_MS) continue
             val dtH = dtMs / 3_600_000.0
 
-            // PV energy: trapezoidal average of pvWatts × dt.
+            // PV energy: trapezoidal average of pvWatts x dt.
             val avgPv = (r0.pvWatts + r1.pvWatts) / 2.0
             pvWh += avgPv * dtH
 
-            // MPPT net: (charge - discharge) × average voltage × dt.
+            // MPPT net: (charge - discharge) x average voltage x dt.
             val avgV     = (r0.batteryVoltage + r1.batteryVoltage) / 2.0
             val avgChg   = (r0.chargeCurrent + r1.chargeCurrent) / 2.0
             val avgDis   = (r0.dischargeCurrent + r1.dischargeCurrent) / 2.0
@@ -87,10 +87,10 @@ object EnergyComputer {
     }
 
     /**
-     * Given a short window of recent live samples (e.g. the last 2–3 minutes),
+     * Given a short window of recent live samples (e.g. the last 2-3 minutes),
      * estimate the real-time EA SUN net current in amps.
      *
-     * The battery's voltage change rate → net amps via [BatteryProfile.inferredNetCurrentA].
+     * The battery's voltage change rate -> net amps via [BatteryProfile.inferredNetCurrentA].
      * Subtracting the MPPT's sensed (charge - discharge) gives the EA SUN share.
      *
      * Returns null if the profile is missing or the window is too short.

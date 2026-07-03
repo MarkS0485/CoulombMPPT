@@ -73,7 +73,7 @@ fun InverterScreen(
         containerColor = MaterialTheme.colorScheme.background,
         topBar = {
             BrandTopBar(
-                title    = "Inverter · EA SUN",
+                title    = "Inverter . EA SUN",
                 subtitle = "Inferred inverter current & daily energy",
                 onBack   = onBack,
             )
@@ -87,14 +87,14 @@ fun InverterScreen(
                 .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
-            // ── 1. Live estimate card ───────────────────────────────────────
+            //  1. Live estimate card
             if (!hasBatteryProfile) {
                 ProfileRequiredCard()
             } else {
                 LiveEstimateCard(liveEasunA)
             }
 
-            // ── 2. EnergyFlow ──────────────────────────────────────────────
+            //  2. EnergyFlow
             val today = todayEnergy
             if (today != null) {
                 EnergyFlow(
@@ -106,7 +106,7 @@ fun InverterScreen(
                 )
             }
 
-            // ── 3. Daily breakdown tiles ────────────────────────────────────
+            //  3. Daily breakdown tiles
             if (today != null) {
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(10.dp),
@@ -127,7 +127,7 @@ fun InverterScreen(
                     )
                     NumberTile(
                         label    = "EA SUN net",
-                        value    = today.easunNetWh?.let { "%.0f".format(it) } ?: "—",
+                        value    = today.easunNetWh?.let { "%.0f".format(it) } ?: " - ",
                         unit     = if (today.easunNetWh != null) "Wh" else "",
                         accent   = when {
                             today.easunNetWh == null -> null
@@ -139,12 +139,12 @@ fun InverterScreen(
                 }
             }
 
-            // ── 4. 7-day EA SUN bar chart ───────────────────────────────────
+            //  4. 7-day EA SUN bar chart
             if (weekEnergy.isNotEmpty()) {
                 WeeklyEasunChart(weekEnergy)
             }
 
-            // ── 5. Profile warning (repeat at bottom if needed) ─────────────
+            //  5. Profile warning (repeat at bottom if needed)
             if (!hasBatteryProfile) {
                 ProfileInfoCard()
             }
@@ -152,7 +152,7 @@ fun InverterScreen(
     }
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
+//
 
 @Composable
 private fun LiveEstimateCard(liveEasunA: Float?) {
@@ -255,7 +255,7 @@ private fun WeeklyEasunChart(weekEnergy: List<DayEnergy>) {
 
     // Separate the days by sign so we can colour them independently. Vico
     // ColumnCartesianLayer supports per-column colouring via a provider that
-    // maps series index → column spec. We use two series: series-0 for green
+    // maps series index -> column spec. We use two series: series-0 for green
     // (positive or zero), series-1 for amber (negative). We keep a zero
     // placeholder in the series that doesn't apply to each position so the
     // x-axis indices stay aligned.
@@ -310,7 +310,7 @@ private fun WeeklyEasunChart(weekEnergy: List<DayEnergy>) {
         verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         Text(
-            "EA SUN — last 7 days",
+            "EA SUN  -  last 7 days",
             style = MaterialTheme.typography.titleSmall,
             color = MaterialTheme.colorScheme.onSurface,
         )

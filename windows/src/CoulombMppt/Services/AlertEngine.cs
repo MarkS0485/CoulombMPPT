@@ -10,11 +10,11 @@ namespace CoulombMppt.Services;
 //
 // Ported from the Android AlertEngine. The Windows build surfaces alerts
 // in-app (AlertRaised / CriticalAlert events drive a dashboard banner) and to
-// the log + AlertStore, rather than posting OS toasts — the desktop monitor is
+// the log + AlertStore, rather than posting OS toasts  -  the desktop monitor is
 // normally on-screen, and this keeps the build free of a toast dependency.
 public sealed class AlertEngine : IDisposable
 {
-    // Thresholds — identical to the Android client.
+    // Thresholds  -  identical to the Android client.
     public const double OvHeadroomV = 0.5;   // alert this far above "full"
     public const double UvFloorV    = 0.3;   // alert this far below "empty"
     public const double HysteresisV = 0.2;   // clear once retreated by this much
@@ -37,7 +37,7 @@ public sealed class AlertEngine : IDisposable
     private readonly AppSettings     _settings;
     private readonly AlertStore      _store;
 
-    // Per-controller active flags (kind name → still triggered?). In-memory:
+    // Per-controller active flags (kind name -> still triggered?). In-memory:
     // on restart we re-evaluate fresh, which is the desired behaviour.
     private readonly Dictionary<string, HashSet<string>> _active = new(StringComparer.OrdinalIgnoreCase);
     private readonly object _lock = new();
@@ -45,7 +45,7 @@ public sealed class AlertEngine : IDisposable
 
     /// <summary>Raised for every new alert (both Warn and Critical).</summary>
     public event Action<AlertRecord>? AlertRaised;
-    /// <summary>Raised only for Critical alerts — the dashboard surfaces these prominently.</summary>
+    /// <summary>Raised only for Critical alerts  -  the dashboard surfaces these prominently.</summary>
     public event Action<AlertRecord>? CriticalAlert;
 
     public AlertEngine(MpptClient client, ControllerStore controllers, AppSettings settings, AlertStore store)
@@ -145,7 +145,7 @@ public sealed class AlertEngine : IDisposable
             bool wasActive = set.Contains(kind.Name);
             if (triggered && !wasActive) { set.Add(kind.Name); fire = true; }
             else if (cleared && wasActive) { set.Remove(kind.Name);
-                Log.I("alerts", $"cleared {kind.DisplayName} {mac} — back inside safe band"); }
+                Log.I("alerts", $"cleared {kind.DisplayName} {mac}  -  back inside safe band"); }
         }
         if (!fire) return;
 

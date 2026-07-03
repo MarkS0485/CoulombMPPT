@@ -31,7 +31,7 @@ import java.util.concurrent.atomic.AtomicReference
 //   - frames:       Flow<ByteArray> of reassembled Modbus frames coming back
 //                   from the device.
 //
-// The reassembly buffer (see BLE_PROTOCOL.md §6.4) accumulates notification
+// The reassembly buffer (see BLE_PROTOCOL.md s.6.4) accumulates notification
 // payloads and emits a frame each time it has slave+fn+bc+payload+crc bytes
 // for fn=0x03, or 8 bytes for fn=0x10. Anything unrecognised is dropped at
 // the buffer's edge so a stray packet can't permanently desync us.
@@ -40,10 +40,10 @@ import java.util.concurrent.atomic.AtomicReference
 // everything tied to a single BluetoothGatt lives in a [Conn] holder, and
 // each gatt gets its *own* BluetoothGattCallback bound to that holder. So a
 // late callback fired by a torn-down gatt can only resolve its own (already
-// abandoned) deferreds — it can never complete the wrong operation on a fresh
+// abandoned) deferreds  -  it can never complete the wrong operation on a fresh
 // session, and it can never leave a stale gatt holding the radio. connect()
 // also closes any prior gatt up front and on every failure path, which is
-// what stops the "leaked GATT client → status 133 → device refuses new links"
+// what stops the "leaked GATT client -> status 133 -> device refuses new links"
 // spiral that previously forced a delete-and-re-add to recover.
 class NusTransport(
     private val context: Context,
@@ -95,7 +95,7 @@ class NusTransport(
     suspend fun connect(macAddress: String): Result<Unit> = connectionMutex.withLock {
         // Always start from a clean slate. Without this, a connect() that
         // follows a half-finished attempt (service-discovery / MTU / notify
-        // timeout — none of which fire STATE_DISCONNECTED) would leak the old
+        // timeout  -  none of which fire STATE_DISCONNECTED) would leak the old
         // gatt, and these single-link UART bridges then refuse the new link.
         closeCurrent()
 
@@ -133,7 +133,7 @@ class NusTransport(
                 gatt.discoverServices()
                 withTimeoutOrNull(8000) { conn.servicesDiscovered.await() } ?: error("discoverServices timeout")
 
-                // MTU negotiation is required after all — without it the
+                // MTU negotiation is required after all  -  without it the
                 // 25-byte live response gets truncated by the default 23-byte
                 // ATT MTU and the controller doesn't bother splitting (we saw
                 // zero frames through when we tried removing this). The previous
@@ -147,7 +147,7 @@ class NusTransport(
                 val (writeable, notifyable) = if (serviceUuid != null) {
                     // Single known service (our controller). Behaviour unchanged:
                     // pick characteristics by property, falling back across the
-                    // two NUS chars. See BLE_PROTOCOL.md §1.1: the original app
+                    // two NUS chars. See BLE_PROTOCOL.md s.1.1: the original app
                     // writes to 0x0003, which is non-standard.
                     val service = gatt.getService(serviceUuid)
                         ?: error("device does not expose service $serviceUuid")
@@ -184,7 +184,7 @@ class NusTransport(
                 )
 
                 // Vendor app pauses 100 ms before registering its notify
-                // callback. Same reason as above — the BLE bridge wants a breath.
+                // callback. Same reason as above  -  the BLE bridge wants a breath.
                 delay(100)
 
                 gatt.setCharacteristicNotification(notifyable, true)
@@ -249,7 +249,7 @@ class NusTransport(
     }
 
     // Release a *specific* connection. Only mutates shared state if that
-    // connection is still the live one — a callback from an already-replaced
+    // connection is still the live one  -  a callback from an already-replaced
     // gatt just closes its own orphaned handle so it can't hold the radio.
     @SuppressLint("MissingPermission")
     private fun teardown(conn: Conn) {
@@ -284,12 +284,12 @@ class NusTransport(
 
     // --- Notification reassembly ---
     //
-    // `reassembly` is an ArrayDeque<Byte> — not thread-safe. Android 13+
+    // `reassembly` is an ArrayDeque<Byte>  -  not thread-safe. Android 13+
     // dispatches BluetoothGatt callbacks from a binder thread pool, so two
     // notifications can race here on different threads. Without the lock,
     // concurrent addAll/removeFirst interleave and `ByteArray(n) {
     // reassembly.removeFirst() }` can observe a null boxed Byte mid-
-    // mutation — auto-unbox via Number.byteValue() then NPEs in the GATT
+    // mutation  -  auto-unbox via Number.byteValue() then NPEs in the GATT
     // callback. The result is every response gets dropped, polling times
     // out, and the source spirals into reconnect loops. See logcat from
     // 2026-05-24 09:36 for the symptom trail.
@@ -324,7 +324,7 @@ class NusTransport(
                 val bc = reassembly[2].toInt() and 0xFF
                 3 + bc + 2
             }
-            0x10 -> 8                                          // slave fn addr×2 qty×2 crc×2
+            0x10 -> 8                                          // slave fn addrx2 qtyx2 crcx2
             else -> {
                 reassembly.removeFirst()
                 return tryConsumeFrame()

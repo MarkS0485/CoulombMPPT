@@ -287,9 +287,9 @@ fun ControllerSettingsScreen(
     }
 }
 
-// Generic enum picker — Material3 ExposedDropdownMenuBox. Used for the
+// Generic enum picker  -  Material3 ExposedDropdownMenuBox. Used for the
 // BatteryType and OutputMode registers. The enum codes are still best-
-// guess on this firmware (BLE_PROTOCOL.md §3.2 marks them TBD), so the
+// guess on this firmware (BLE_PROTOCOL.md s.3.2 marks them TBD), so the
 // row carries a small caveat at the bottom; the user can re-pick freely
 // to round-trip and confirm what each code does.
 @OptIn(ExperimentalMaterial3Api::class)
@@ -337,7 +337,7 @@ fun ControllerSettingsScreen(
                 }
             }
             Text(
-                "Codes still being verified on hardware — pick a value, watch the controller, " +
+                "Codes still being verified on hardware  -  pick a value, watch the controller, " +
                 "and we'll lock in the mapping as you go.",
                 style = MaterialTheme.typography.labelSmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -364,4 +364,3 @@ fun ControllerSettingsScreen(
         Text(text, color = MaterialTheme.colorScheme.error)
     }
 }
-

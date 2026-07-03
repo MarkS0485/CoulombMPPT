@@ -16,7 +16,7 @@ data class AlertsUiState(
     val loading: Boolean = true,
 )
 
-/** VM for the global Alerts screen — every controller's recent alerts in
+/** VM for the global Alerts screen  -  every controller's recent alerts in
  *  one feed, dismissable. Pulls from AlertsDao with a 7-day window. */
 class AlertsViewModel : ViewModel() {
 

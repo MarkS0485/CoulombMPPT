@@ -6,7 +6,7 @@ namespace CoulombMppt.Data;
 // Per-controller persistence for the learned battery model. One small JSON
 // object per MAC under %APPDATA%\CoulombMppt\models\. Unlike HistoryStore (an
 // append-only NDJSON time-series) the model is a single rolling blob, rewritten
-// whole on each periodic persist — the same pattern as ControllerStore.Save().
+// whole on each periodic persist  -  the same pattern as ControllerStore.Save().
 //
 // Best-effort throughout: the model is a learned convenience, never load-bearing
 // for the BLE link, so every path swallows IO/parse errors rather than throwing
@@ -52,7 +52,7 @@ public sealed class BatteryModelStore
             var line = JsonSerializer.Serialize(model, Json);
             lock (_lock) File.WriteAllText(FileFor(mac), line);
         }
-        catch { /* swallow — model is non-critical */ }
+        catch { /* swallow  -  model is non-critical */ }
     }
 
     /// <summary>Drop the learned model for <paramref name="mac"/> (e.g. on re-pair

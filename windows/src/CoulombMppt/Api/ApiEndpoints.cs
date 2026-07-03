@@ -99,7 +99,7 @@ public static class ApiEndpoints
         app.MapPost("/api/v1/demo/start", () => { ServiceLocator.Ble.StartDemo(); return Ok(); });
         app.MapPost("/api/v1/demo/stop",  () => { ServiceLocator.Ble.StopDemo();  return Ok(); });
 
-        // --- Hybrid relay (Android phone → Windows live push) ---------
+        // --- Hybrid relay (Android phone -> Windows live push) ---------
 
         // The Android app in Hybrid mode calls this endpoint to relay each live
         // frame (~1 Hz). We inject it into MpptClient so the dashboard, history

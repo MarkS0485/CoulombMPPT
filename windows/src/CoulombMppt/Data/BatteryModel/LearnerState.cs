@@ -12,17 +12,17 @@ namespace CoulombMppt.Data.BatteryModel;
 // backfill runs before live frames are processed for that MAC). Everything is
 // best-effort: the methods never throw on bad data, they just skip.
 
-/// <summary>A normalised frame — the minimal set of fields the classifiers
+/// <summary>A normalised frame  -  the minimal set of fields the classifiers
 /// need, shared by live <see cref="MpptLive"/> and replayed <see cref="LiveSample"/>.</summary>
 internal readonly record struct LearnerFrame(
     long   TimestampMs,
     double BatteryVoltage,   // V
-    double ChargeCurrent,    // A, PV → battery (≥0)
-    double DischargeCurrent, // A, battery → load terminal (≥0, ~0 on this bus)
+    double ChargeCurrent,    // A, PV -> battery (>=0)
+    double DischargeCurrent, // A, battery -> load terminal (>=0, ~0 on this bus)
     double TemperatureC,
     bool   LinkReady,        // true for live Ready frames and all replayed rows
-    // The controller's own coarse V→SoC estimate. Used only to BOOTSTRAP the
-    // coulomb anchor before the learner has ≥2 OCV points of its own — after
+    // The controller's own coarse V->SoC estimate. Used only to BOOTSTRAP the
+    // coulomb anchor before the learner has >=2 OCV points of its own  -  after
     // that, rest re-anchoring against the learned curve takes over.
     double SocHint = double.NaN)
 {
@@ -58,14 +58,14 @@ internal sealed class BaseloadAccumulator
         _m2   += delta * (amps - _mean);
 
         int b = (int)Math.Floor(amps / BucketA);
-        b = Math.Clamp(b, 0, Buckets - 1);        // negatives (net charge) → bucket 0
+        b = Math.Clamp(b, 0, Buckets - 1);        // negatives (net charge) -> bucket 0
         _hist[b]++;
     }
 
     public double Mean => Count > 0 ? _mean : 0;
     public double Std  => Count > 1 ? Math.Sqrt(_m2 / (Count - 1)) : 0;
 
-    /// <summary>Histogram percentile (bucket mid-point) — coarse but robust and
+    /// <summary>Histogram percentile (bucket mid-point)  -  coarse but robust and
     /// O(buckets), no need to retain the raw samples.</summary>
     public double Percentile(double p)
     {
@@ -119,12 +119,12 @@ internal sealed class LearnerCore
 
     // Gaps larger than this break coulomb integration (matches EnergyComputer).
     private const long  MaxGapMs            = 5 * 60_000L;
-    private const double ChargeDeadbandA    = 0.2;     // |I| below this ≈ "no current"
+    private const double ChargeDeadbandA    = 0.2;     // |I| below this ~= "no current"
     private const double RMinOhms           = 0.0005;  // sanity window for an R candidate
     private const double RMaxOhms           = 2.0;
     private const int    RBinMinSamples     = 5;       // per-bin needs this many to emit
     private const double BusLoadLowPassA    = 0.3;     // EMA factor for the integrator feed
-    private const double RestBusDeadbandA   = 1.0;     // inferred draw above this ⇒ not rest
+    private const double RestBusDeadbandA   = 1.0;     // inferred draw above this => not rest
 
     // Capacity anchor (Ah). Set by the learner from the resolved profile.
     public double CapacityAh { get; set; }
@@ -195,7 +195,7 @@ internal sealed class LearnerCore
     }
 
     /// <summary>Build a piecewise OCV table from the buckets, sorted ascending by
-    /// SoC and forced monotonic-increasing in voltage (NMC) — drop any point that
+    /// SoC and forced monotonic-increasing in voltage (NMC)  -  drop any point that
     /// would invert the curve so InterpOcv/InvertOcv stay well-defined.</summary>
     public OcvTable BuildOcvTable()
     {
@@ -210,7 +210,7 @@ internal sealed class LearnerCore
         foreach (var (soc, v, n) in raw)
         {
             if (!double.IsFinite(v)) continue;
-            if (v <= lastV) continue;            // would invert monotonic OCV — drop it
+            if (v <= lastV) continue;            // would invert monotonic OCV  -  drop it
             pts.Add(new OcvPoint(Math.Clamp(soc, 0, 100), v, n));
             lastV = v;
         }
@@ -282,7 +282,7 @@ internal sealed class LearnerCore
             double dvDtMv = dvMv / (dtMs / 1000.0);
             bool flat = Math.Abs(dvDtMv) <= _restDvDtThresholdMv;
             // Flat AND no current still isn't rest if a usable model says the bus
-            // is drawing meaningfully — that's a steady overnight discharge whose
+            // is drawing meaningfully  -  that's a steady overnight discharge whose
             // sagged voltage would pollute the OCV table. Only gate once we have a
             // model to judge with; before that, every flat run is a candidate.
             double? infBus = InferBus(f, _soc);
@@ -297,7 +297,7 @@ internal sealed class LearnerCore
         }
         else { _inRestRun = false; }
 
-        // --- PV-TRANSIENT: fast step in charge current ⇒ R candidate ----------
+        // --- PV-TRANSIENT: fast step in charge current => R candidate ----------
         if (_haveLast && dtMs > 0 && dtMs <= _rTransientMaxStepMs)
         {
             double dI = f.ChargeCurrent - _lastChargeA;
@@ -317,11 +317,11 @@ internal sealed class LearnerCore
             }
         }
 
-        // --- QUIET-NIGHT: overnight, PV≈0, discharging ⇒ baseload sample -------
+        // --- QUIET-NIGHT: overnight, PV~=0, discharging => baseload sample -------
         if (f.LinkReady && noCharge && IsQuietHour(f.TimestampMs))
         {
             double? busA = InferBus(f, _soc);
-            // Only count genuine draw (positive) — the band the inverter wanders.
+            // Only count genuine draw (positive)  -  the band the inverter wanders.
             if (busA is { } a && a > 0) { _baseload.Add(a); Dirty = true; }
         }
 
@@ -354,7 +354,7 @@ internal sealed class LearnerCore
     {
         if (FirstLearnMs == 0) FirstLearnMs = f.TimestampMs;
 
-        // At rest terminal V ≈ OCV, so we have a clean SoC↔OCV pair. The SoC we
+        // At rest terminal V ~= OCV, so we have a clean SoC<->OCV pair. The SoC we
         // attach it to, in priority order:
         //   1. the controller's coarse SoC hint (always live, reliable enough at
         //      rest, and crucially independent per rest so distinct rests build
@@ -395,7 +395,7 @@ internal sealed class LearnerCore
     }
 
     /// <summary>Saturating-product confidence rollup (0..100): OCV SoC-span
-    /// coverage × R sample count × baseload sample count, each mapped to 0..1.</summary>
+    /// coverage x R sample count x baseload sample count, each mapped to 0..1.</summary>
     public static double ConfidencePct(OcvTable ocv, ResistanceModel r, BaseloadStats bl)
     {
         // OCV coverage: span of learned SoC over the full 0..100 range.
@@ -403,7 +403,7 @@ internal sealed class LearnerCore
         if (ocv.Count >= 2)
         {
             double span = ocv.Points[^1].SocPct - ocv.Points[0].SocPct;
-            ocvCov = Math.Clamp(span / 60.0, 0, 1);   // ~60% SoC span ⇒ full marks
+            ocvCov = Math.Clamp(span / 60.0, 0, 1);   // ~60% SoC span => full marks
         }
         double rCov  = Math.Clamp(r.TotalSamples / 20.0, 0, 1);   // ~20 R candidates
         double blCov = Math.Clamp(bl.SampleCount / 200.0, 0, 1);  // ~200 baseload samples

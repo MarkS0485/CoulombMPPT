@@ -20,7 +20,7 @@
         <StackPanel Margin="20">
 
             <!-- ===== Page header ===== -->
-            <c:PageHeader Title="Inverter · EA SUN"
+            <c:PageHeader Title="Inverter . EA SUN"
                           Subtitle="Inferred from battery voltage dynamics"/>
 
             <!-- ===== Live estimate: gauge + watts label ===== -->

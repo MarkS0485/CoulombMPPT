@@ -9,7 +9,7 @@ import androidx.compose.ui.unit.sp
 val Mono = FontFamily.Monospace
 val Sans = FontFamily.SansSerif
 
-// Same scale as coulombmonitor — display/headline for hero numbers, label for
+// Same scale as coulombmonitor  -  display/headline for hero numbers, label for
 // tile captions, mono for any live value where digit-width consistency helps.
 val CoulombTypography = Typography(
     displayLarge   = TextStyle(fontFamily = Sans, fontWeight = FontWeight.ExtraBold, fontSize = 48.sp, letterSpacing = (-0.5).sp),

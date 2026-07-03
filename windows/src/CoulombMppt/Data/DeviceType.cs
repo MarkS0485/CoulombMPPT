@@ -12,6 +12,6 @@ public enum DeviceType
 
     // Victron SmartSolar/BlueSolar "Instant Readout": telemetry decoded
     // passively from the BLE manufacturer advertisement (AES-CTR with a
-    // per-device key) — no connection. Handled by MpptClient's Victron watch.
+    // per-device key)  -  no connection. Handled by MpptClient's Victron watch.
     VictronInstantReadout = 1,
 }

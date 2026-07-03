@@ -9,7 +9,7 @@ it is simple: **be respectful, be constructive, act in good faith.**
 - Critique code and ideas, not people.
 - Accept and give feedback gracefully; assume good intent.
 - Respect that this is **proprietary, confidential** software (see
-  [LICENSE](LICENSE)) — do not share code, credentials, protocol details, or
+  [LICENSE](LICENSE))  -  do not share code, credentials, protocol details, or
   hardware specifics outside the people authorised to work on it.
 
 ## Unacceptable behaviour

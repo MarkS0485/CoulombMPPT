@@ -104,13 +104,13 @@ fun ControllersHomeScreen(
 }
 
 private fun subtitleFor(state: ControllersHomeUiState): String {
-    if (state.demoMode) return "Demo mode · synthetic telemetry"
+    if (state.demoMode) return "Demo mode . synthetic telemetry"
     val total  = state.cards.size
     val online = state.cards.count { it.connection == MpptSource.Connection.Connected }
     return when (total) {
         0 -> "No controllers paired"
-        1 -> if (online == 1) "1 controller · online" else "1 controller · offline"
-        else -> "$total controllers · $online online"
+        1 -> if (online == 1) "1 controller . online" else "1 controller . offline"
+        else -> "$total controllers . $online online"
     }
 }
 
@@ -160,7 +160,7 @@ private fun UnitCard(card: ControllerCard, onClick: () -> Unit) {
     val profile = UnitProfile.of(card.controller, fallbackTitle = "MPPT")
     val (statusLabel, statusKind) = when (card.connection) {
         MpptSource.Connection.Connected    -> "Online"      to StatusKind.Connected
-        MpptSource.Connection.Connecting   -> "Connecting…" to StatusKind.Connecting
+        MpptSource.Connection.Connecting   -> "Connecting..." to StatusKind.Connecting
         MpptSource.Connection.Disconnected -> "Offline"     to StatusKind.Disconnected
     }
     val offline = card.connection != MpptSource.Connection.Connected
@@ -215,17 +215,17 @@ private fun UnitCard(card: ControllerCard, onClick: () -> Unit) {
                 )
                 if (offline) {
                     Text(
-                        "—  awaiting live frames",
+                        " -   awaiting live frames",
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
                 } else {
-                    // Show the raw electrical primaries — charge current,
-                    // battery voltage, discharge current — instead of a
+                    // Show the raw electrical primaries  -  charge current,
+                    // battery voltage, discharge current  -  instead of a
                     // rolled-up kW figure. At household scale a 38 W PV
                     // input rounds to "0.04 kW" and reads as noise; the
                     // amps-and-volts form makes the underlying physics
-                    // visible (V_bat × I_charge ≈ PV power).
+                    // visible (V_bat x I_charge ~= PV power).
                     Row(horizontalArrangement = Arrangement.spacedBy(14.dp)) {
                         Headline("PV",   card.live?.chargeCurrent,    "A")
                         Headline("BATT", card.live?.batteryVoltage,   "V", isVoltage = true)
@@ -324,4 +324,3 @@ private fun EmptyState(onOpenPairing: () -> Unit) {
         }
     }
 }
-

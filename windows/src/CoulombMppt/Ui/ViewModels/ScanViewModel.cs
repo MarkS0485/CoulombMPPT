@@ -46,7 +46,7 @@ public sealed partial class ScanViewModel : ObservableObject
         if (d.IsVictron)
         {
             // Victron needs its per-device Instant Readout key before we can
-            // decode anything — prompt, and bail if cancelled/invalid.
+            // decode anything  -  prompt, and bail if cancelled/invalid.
             var key = VictronKeyPrompt.Show(d.Display);
             if (!VictronDecoder.IsValidKey(key)) return;
             _ctrls.Pair(d.Mac, d.Name, DeviceType.VictronInstantReadout, key);
@@ -72,7 +72,7 @@ public sealed partial class ScanViewModel : ObservableObject
     {
         if (c == null) return;
         // Drop the BLE link first if we're connected to (or chasing) this one,
-        // otherwise the reconnect loop keeps targeting a MAC we just deleted —
+        // otherwise the reconnect loop keeps targeting a MAC we just deleted  -
         // the desktop equivalent of the Android "had to delete and re-add it"
         // confusion.
         await _ble.DisconnectIfTargetingAsync(c.Mac);

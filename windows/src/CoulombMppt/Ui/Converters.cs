@@ -67,10 +67,10 @@ public sealed class StatusLabelToKindConverter : IValueConverter
         {
             "Connected"     => StatusKind.Online,
             "Relay (phone)" => StatusKind.Online,
-            "Connecting…"   => StatusKind.Stale,
-            "Discovering…"  => StatusKind.Stale,
-            "Reconnecting…" => StatusKind.Stale,
-            "Scanning…"     => StatusKind.Stale,
+            "Connecting..."   => StatusKind.Stale,
+            "Discovering..."  => StatusKind.Stale,
+            "Reconnecting..." => StatusKind.Stale,
+            "Scanning..."     => StatusKind.Stale,
             "Failed"        => StatusKind.Warning,
             _               => StatusKind.Offline,
         };
@@ -79,7 +79,7 @@ public sealed class StatusLabelToKindConverter : IValueConverter
         => throw new NotSupportedException();
 }
 
-// Alert severity string ("CRIT" / "WARN") → banner/text brush.
+// Alert severity string ("CRIT" / "WARN") -> banner/text brush.
 public sealed class SeverityToBrushConverter : IValueConverter
 {
     public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
@@ -96,7 +96,7 @@ public sealed class SeverityToBrushConverter : IValueConverter
         => throw new NotSupportedException();
 }
 
-// Tx/Rx direction → brush (Diagnostics frame log). True = PC → controller.
+// Tx/Rx direction -> brush (Diagnostics frame log). True = PC -> controller.
 public sealed class TxToBrushConverter : IValueConverter
 {
     public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
@@ -108,7 +108,7 @@ public sealed class TxToBrushConverter : IValueConverter
         => throw new NotSupportedException();
 }
 
-// Unix-ms timestamp → local "HH:mm:ss" string.
+// Unix-ms timestamp -> local "HH:mm:ss" string.
 public sealed class UnixMsToTimeConverter : IValueConverter
 {
     public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
@@ -121,7 +121,7 @@ public sealed class UnixMsToTimeConverter : IValueConverter
         => throw new NotSupportedException();
 }
 
-// Unix-ms timestamp → local "yyyy-MM-dd HH:mm:ss" string.
+// Unix-ms timestamp -> local "yyyy-MM-dd HH:mm:ss" string.
 public sealed class UnixMsToDateTimeConverter : IValueConverter
 {
     public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)

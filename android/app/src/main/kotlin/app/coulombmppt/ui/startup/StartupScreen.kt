@@ -29,9 +29,9 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 
 // Launch chooser: pick the data source + relay mode for this session.
-//  • Local Bluetooth — phone connects to BLE directly. PC gets history sync only.
-//  • Remote API      — PC holds BLE; phone reads via the PC's API.
-//  • Hybrid          — Phone holds BLE AND relays live data to the PC (~1 Hz).
+//  - Local Bluetooth  -  phone connects to BLE directly. PC gets history sync only.
+//  - Remote API       -  PC holds BLE; phone reads via the PC's API.
+//  - Hybrid           -  Phone holds BLE AND relays live data to the PC (~1 Hz).
 @Composable
 fun StartupScreen(
     onLocal: (configured: Boolean) -> Unit,
@@ -65,11 +65,11 @@ fun StartupScreen(
 
         ChoiceCard(
             icon    = Icons.Filled.CloudSync,
-            title   = "Hybrid — BLE + live relay",
+            title   = "Hybrid  -  BLE + live relay",
             body    = if (state.pcPaired)
-                "This phone holds the BLE link AND streams live data to ${state.pcBaseUrl ?: "the paired PC"} in real time. Take your phone out — the Windows dashboard stays live."
+                "This phone holds the BLE link AND streams live data to ${state.pcBaseUrl ?: "the paired PC"} in real time. Take your phone out  -  the Windows dashboard stays live."
             else
-                "Requires a paired Windows PC (App settings → PC sync). Phone holds BLE and relays data.",
+                "Requires a paired Windows PC (App settings -> PC sync). Phone holds BLE and relays data.",
             enabled = state.pcPaired,
             onClick = { vm.chooseHybrid(); onLocal(state.isConfigured) },
         )
@@ -80,7 +80,7 @@ fun StartupScreen(
             body    = if (state.pcPaired)
                           "View and control through ${state.pcBaseUrl ?: "the paired PC"}. The PC holds the BLE link."
                       else
-                          "Pair a Windows PC first: App settings → PC sync.",
+                          "Pair a Windows PC first: App settings -> PC sync.",
             enabled = state.pcPaired,
             onClick = { vm.chooseRemote(); onRemote() },
         )

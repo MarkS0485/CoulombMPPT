@@ -35,11 +35,11 @@ class HybridLiveRelay(
         socForFrame: (MpptLive) -> Double,
     ) {
         stop()
-        AppLogger.i(TAG, "relay start → $mac")
+        AppLogger.i(TAG, "relay start -> $mac")
         relayJob = scope.launch {
             val pairing = pairingStore.snapshot()
             if (pairing == null) {
-                AppLogger.w(TAG, "no PC paired — relay not started")
+                AppLogger.w(TAG, "no PC paired  -  relay not started")
                 return@launch
             }
             val client = CoulombApiClient(pairing)
@@ -56,7 +56,7 @@ class HybridLiveRelay(
                     val now = System.currentTimeMillis()
                     if (now - lastTs < RELAY_INTERVAL_MS) return@collect
                     lastTs = now
-                    // Give the BLE loop a moment — post-collection yield.
+                    // Give the BLE loop a moment  -  post-collection yield.
                     delay(50)
                     val frame = RemoteLiveFrame(
                         mac                = mac,

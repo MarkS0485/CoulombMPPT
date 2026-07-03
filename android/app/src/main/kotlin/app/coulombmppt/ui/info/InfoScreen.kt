@@ -35,7 +35,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import app.coulombmppt.ui.components.BrandTopBar
 import app.coulombmppt.ui.theme.UnitAccent001
 
-// "Install info" — equivalent of UnitDetailScreen's Info tab in the sister
+// "Install info"  -  equivalent of UnitDetailScreen's Info tab in the sister
 // app. Identity card (home icon in copper + label + topology), then a
 // definition list of the live system specs, then a notes card. Reads
 // largely from the cached battery profile so it works even when the
@@ -52,7 +52,7 @@ fun InfoScreen(
         topBar = {
             BrandTopBar(
                 title    = "Install info",
-                subtitle = "ZhiJinPower MPPT · Coulomb rebuild",
+                subtitle = "ZhiJinPower MPPT . Coulomb rebuild",
                 onBack   = onBack,
             )
         },
@@ -114,8 +114,8 @@ private fun IdentityCard(state: InfoUiState) {
                     color = MaterialTheme.colorScheme.onSurfaceVariant)
             }
         }
-        DefRow("Topology",   "PV → MPPT → Battery → Load · fully islanded")
-        DefRow("Controller", "ZhiJinPower (枝晋能源) · Modbus RTU over BLE")
+        DefRow("Topology",   "PV -> MPPT -> Battery -> Load . fully islanded")
+        DefRow("Controller", "ZhiJinPower () . Modbus RTU over BLE")
     }
 }
 

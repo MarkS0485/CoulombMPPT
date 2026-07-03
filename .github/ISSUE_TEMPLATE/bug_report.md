@@ -16,8 +16,8 @@ A clear, concise description of what's wrong.
 
 **To reproduce**
 Steps to reproduce:
-1. …
-2. …
+1. ...
+2. ...
 3. See error
 
 **Expected behaviour**
@@ -27,7 +27,7 @@ What you expected to happen instead.
 - App version (e.g. 0.1.0):
 - Android: device + OS version  /  Windows: edition + build:
 - Controller model / firmware (if known):
-- Connection: real BLE  ·  remote API  ·  demo mode
+- Connection: real BLE  .  remote API  .  demo mode
 
 **Logs / frames**
 If it's a connection or protocol issue, attach the relevant lines from the

@@ -13,7 +13,7 @@ enum class DeviceType {
 
     /** Victron SmartSolar/BlueSolar "Instant Readout": telemetry is decoded
      *  passively from the BLE manufacturer advertisement (AES-CTR with a
-     *  per-device key) — no connection. Handled by VictronBleSource. */
+     *  per-device key)  -  no connection. Handled by VictronBleSource. */
     VictronInstantReadout,
 
     /** Renogy Rover/Wanderer/DCC via a BT-1/BT-2 dongle: Modbus-RTU over a
@@ -22,7 +22,7 @@ enum class DeviceType {
     Renogy,
 
     /** EPEver/EPSolar Tracer: Modbus input registers (fn 0x04). EPEver has no
-     *  native BLE, so this needs a transparent RS485↔BLE bridge that exposes a
+     *  native BLE, so this needs a transparent RS485<->BLE bridge that exposes a
      *  UART-like GATT service. Handled by ModbusBleSource with the EPEver profile. */
     Epever;
 

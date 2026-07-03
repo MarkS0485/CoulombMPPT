@@ -20,8 +20,8 @@
         <StackPanel Margin="20">
 
             <!-- ===== Page header + status pill ===== -->
-            <c:PageHeader Title="Battery model · Calibration"
-                          Subtitle="What the app has learned about this battery — read straight from the voltage, no inference changes here.">
+            <c:PageHeader Title="Battery model . Calibration"
+                          Subtitle="What the app has learned about this battery  -  read straight from the voltage, no inference changes here.">
                 <c:PageHeader.ActionContent>
                     <c:StatusPill Label="{Binding StatusLabel}" Kind="{Binding PillKind}"/>
                 </c:PageHeader.ActionContent>
@@ -40,7 +40,7 @@
                     <TextBlock Text="&#xE7BA;" FontFamily="Segoe MDL2 Assets" FontSize="16"
                                Foreground="{StaticResource WarnAmber}"
                                VerticalAlignment="Center" Margin="0,0,10,0"/>
-                    <TextBlock Text="No model learned yet — leave the app running overnight with a battery profile set."
+                    <TextBlock Text="No model learned yet  -  leave the app running overnight with a battery profile set."
                                TextWrapping="Wrap"
                                Foreground="{StaticResource InkHi}" VerticalAlignment="Center"/>
                 </StackPanel>
@@ -52,7 +52,7 @@
                     <TextBlock Text="RESTED OCV vs STATE OF CHARGE" Style="{StaticResource SectionHeader}"/>
                     <c:OxyChartControl x:Name="OcvChart" Height="260" Margin="0,4,0,0"/>
                     <TextBlock Style="{StaticResource Caption}" Margin="0,6,0,0" TextWrapping="Wrap"
-                               Text="Dots are learned open-circuit-voltage anchors (size ≈ sample count); the solid line is the piecewise curve the app uses. The dashed line is the old linear assumption — the gap between them is the calibration gained."/>
+                               Text="Dots are learned open-circuit-voltage anchors (size ~= sample count); the solid line is the piecewise curve the app uses. The dashed line is the old linear assumption  -  the gap between them is the calibration gained."/>
                 </StackPanel>
             </Border>
 
@@ -125,7 +125,7 @@
 
                     <TextBlock Style="{StaticResource Caption}" Margin="2,8,0,0"
                                Visibility="{Binding HasResistance, Converter={StaticResource BoolToVisInv}}"
-                               Text="No resistance learned yet — the global fallback is in use."/>
+                               Text="No resistance learned yet  -  the global fallback is in use."/>
                 </StackPanel>
             </Border>
 
@@ -166,7 +166,7 @@
                         </Border>
                     </Grid>
                     <TextBlock Style="{StaticResource Caption}" Margin="2,8,0,0" TextWrapping="Wrap">
-                        <Run Text="Inferred quiescent bus draw the inverter wanders around · "/>
+                        <Run Text="Inferred quiescent bus draw the inverter wanders around . "/>
                         <Run Text="{Binding BaseloadSamples, Mode=OneWay}"/>
                         <Run Text=" samples."/>
                     </TextBlock>
@@ -186,7 +186,7 @@
                         </Grid.ColumnDefinitions>
                         <Border Grid.Column="0" Style="{StaticResource TileCard}">
                             <StackPanel>
-                                <TextBlock Text="NEW MODEL · BUS LOAD" Style="{StaticResource TileCaption}"/>
+                                <TextBlock Text="NEW MODEL . BUS LOAD" Style="{StaticResource TileCaption}"/>
                                 <TextBlock Style="{StaticResource Metric}" FontSize="18"
                                            Foreground="{StaticResource SolarTeal}"
                                            Text="{Binding LiveBusLabel}" TextWrapping="Wrap"/>

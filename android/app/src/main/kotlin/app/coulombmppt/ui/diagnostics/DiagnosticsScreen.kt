@@ -46,7 +46,7 @@ fun DiagnosticsScreen(
         topBar = {
             BrandTopBar(
                 title    = "Diagnostics",
-                subtitle = if (state.connected) "Last ${state.frames.size} frames · newest first"
+                subtitle = if (state.connected) "Last ${state.frames.size} frames . newest first"
                            else                   "Not connected",
                 onBack   = onBack,
             )
@@ -66,7 +66,7 @@ fun DiagnosticsScreen(
                 if (state.frames.isEmpty()) {
                     item {
                         Text(
-                            "No frames yet — connect to the controller and wait a second.",
+                            "No frames yet  -  connect to the controller and wait a second.",
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                             style = MaterialTheme.typography.bodySmall,
                             modifier = Modifier.padding(8.dp),
@@ -77,7 +77,7 @@ fun DiagnosticsScreen(
                     state.frames,
                     // Index makes the key unique even when two consecutive
                     // polls send identical bytes in the same millisecond
-                    // (timestamp + contentHashCode alone wasn't enough —
+                    // (timestamp + contentHashCode alone wasn't enough  -
                     // crashed LazyColumn with a duplicate-key IAE).
                     key = { i, d -> "$i-${d.timestampMs}-${d.bytes.contentHashCode()}" },
                 ) { _, d ->
@@ -113,7 +113,7 @@ private fun CalibrationCard(
             Stat("Empty",    "%.2f V".format(cs.cutoffVoltageSetpoint),   BatteryBlue)
         }
         Text(
-            "SoC ring is computed as (Vbat − empty) / (full − empty).",
+            "SoC ring is computed as (Vbat - empty) / (full - empty).",
             style = MaterialTheme.typography.labelSmall,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
@@ -178,7 +178,7 @@ private fun FrameRow(d: MpptSource.Diag) {
 }
 
 // Tiny inline summary for each frame so the user (or future me) can see
-// "READ regs @0x0001 qty=16" or "READ resp 10 regs: r1=255 r2=0 …" without
+// "READ regs @0x0001 qty=16" or "READ resp 10 regs: r1=255 r2=0 ..." without
 // counting hex bytes.
 private fun parseFrame(d: MpptSource.Diag): String {
     val bytes = d.bytes

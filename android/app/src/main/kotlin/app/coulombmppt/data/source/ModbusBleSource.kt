@@ -26,11 +26,11 @@ import kotlin.coroutines.coroutineContext
 
 // How to read live telemetry from a Modbus-over-BLE device that isn't our own
 // controller. Renogy and EPEver differ only in GATT layout, slave id, function
-// code, which register block to read, and how to decode it — captured here so
+// code, which register block to read, and how to decode it  -  captured here so
 // one source class drives both. Read-only for now (no settings write).
 data class ModbusDeviceProfile(
     val slave: Int,
-    val serviceUuid: UUID?,        // null → search every service for the chars
+    val serviceUuid: UUID?,        // null -> search every service for the chars
     val writeUuid: UUID?,
     val notifyUuid: UUID?,
     val function: Int,             // ModbusFrame.FN_READ (0x03) or FN_READ_IN (0x04)
@@ -77,7 +77,7 @@ class ModbusBleSource(
     @Volatile private var liveCount = 0
 
     override suspend fun start(macAddress: String) {
-        AppLogger.i(TAG, "start($macAddress) — slave=0x${profile.slave.toString(16)} fn=0x${profile.function.toString(16)}")
+        AppLogger.i(TAG, "start($macAddress)  -  slave=0x${profile.slave.toString(16)} fn=0x${profile.function.toString(16)}")
         userStopped = false
         lastMac = macAddress
         beginStateBridge()
@@ -122,7 +122,7 @@ class ModbusBleSource(
         reconnectJob = scope.launch {
             var backoff = 1_000L
             while (isActive && !userStopped) {
-                AppLogger.i(TAG, "reconnect in ${backoff}ms — $reason")
+                AppLogger.i(TAG, "reconnect in ${backoff}ms  -  $reason")
                 delay(backoff)
                 if (userStopped) return@launch
                 _conn.value = MpptSource.Connection.Connecting
@@ -170,7 +170,7 @@ class ModbusBleSource(
                 if (got == null) {
                     consecutiveTimeouts++
                     if (consecutiveTimeouts >= 4 && !userStopped) {
-                        AppLogger.w(TAG, "4+ timeouts — forcing reconnect")
+                        AppLogger.w(TAG, "4+ timeouts  -  forcing reconnect")
                         transport.close()
                         return@launch
                     }
@@ -230,7 +230,7 @@ object DeviceProfiles {
         decode = ::decodeRenogy,
     )
 
-    // EPEver/EPSolar Tracer over a transparent RS485↔BLE bridge. Input
+    // EPEver/EPSolar Tracer over a transparent RS485<->BLE bridge. Input
     // registers (fn 0x04) from 0x3100; standard slave id 1.
     val EPEVER = ModbusDeviceProfile(
         slave = 0x01,
@@ -246,9 +246,9 @@ object DeviceProfiles {
 
 private fun signedHigh(reg: Int): Int = ((reg shr 8) and 0xFF).let { if (it >= 128) it - 256 else it }
 
-// Renogy block at 0x0100: word0 SOC%, word1 battV ×0.1, word2 chargeI ×0.01,
-// word3 hi=controller temp / lo=battery temp (signed), word4 loadV ×0.1,
-// word5 loadI ×0.01, word6 loadW, word7 pvV ×0.1, word8 pvI ×0.01, word9 pvW.
+// Renogy block at 0x0100: word0 SOC%, word1 battV x0.1, word2 chargeI x0.01,
+// word3 hi=controller temp / lo=battery temp (signed), word4 loadV x0.1,
+// word5 loadI x0.01, word6 loadW, word7 pvV x0.1, word8 pvI x0.01, word9 pvW.
 private fun decodeRenogy(regs: IntArray): MpptLive? {
     if (regs.size < 10) return null
     val battV   = regs[1] / 10.0
@@ -269,8 +269,8 @@ private fun decodeRenogy(regs: IntArray): MpptLive? {
     )
 }
 
-// EPEver input registers at 0x3100: word0 PV V ÷100, word4 batt V ÷100,
-// word5 charge I ÷100, word12 load V ÷100, word13 load I ÷100.
+// EPEver input registers at 0x3100: word0 PV V /100, word4 batt V /100,
+// word5 charge I /100, word12 load V /100, word13 load I /100.
 private fun decodeEpever(regs: IntArray): MpptLive? {
     if (regs.size < 16) return null
     val battV   = regs[4] / 100.0

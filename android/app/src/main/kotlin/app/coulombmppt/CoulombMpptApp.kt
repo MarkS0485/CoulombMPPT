@@ -9,7 +9,7 @@ class CoulombMpptApp : Application() {
     override fun onCreate() {
         super.onCreate()
         ServiceLocator.init(this)
-        // AppLogger is up — wire the uncaught-exception handler so fatals
+        // AppLogger is up  -  wire the uncaught-exception handler so fatals
         // land in the per-launch log file before the process dies.
         CrashHandler.install()
         // We deliberately do NOT start the foreground polling service here.

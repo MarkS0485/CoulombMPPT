@@ -18,7 +18,7 @@ import app.coulombmppt.data.store.CoulombMpptSettings
 import app.coulombmppt.di.ServiceLocator
 
 data class InfoUiState(
-    val subtitle:           String = "Domestic solar · charge controller",
+    val subtitle:           String = "Domestic solar . charge controller",
     val batteryProfileRows: List<Pair<String, String>> = emptyList(),
     val liveRows:           List<Pair<String, String>> = emptyList(),
     val connectivityRows:   List<Pair<String, String>> = emptyList(),
@@ -27,7 +27,7 @@ data class InfoUiState(
     companion object {
         val defaultNotes = listOf(
             "Bluetooth communications reverse-engineered from the now-defunct ZhiJinPower vendor app. Protocol is Modbus RTU over Nordic UART; see docs/BLE_PROTOCOL.md.",
-            "PV-side power is approximated as battery voltage × charge current. The firmware doesn't expose a separate PV voltage register in the polled range — true PV figures may live elsewhere and need a Modbus scan to find.",
+            "PV-side power is approximated as battery voltage x charge current. The firmware doesn't expose a separate PV voltage register in the polled range  -  true PV figures may live elsewhere and need a Modbus scan to find.",
             "Total-energy reading is the controller's own lifetime counter (units inferred as kWh from cross-check against ~350 W panels for ~14 months).",
         )
     }
@@ -51,13 +51,13 @@ class InfoViewModel(
     val state: StateFlow<InfoUiState> = combine(
         settings.flow,
         repoFlow.flatMapLatest { repo ->
-            if (repo == null) flowOf(Triple(MpptSource.Connection.Disconnected, null as MpptLive?, "—"))
+            if (repo == null) flowOf(Triple(MpptSource.Connection.Disconnected, null as MpptLive?, " - "))
             else combine(repo.connection, repo.latest) { c, l -> Triple(c, l, repo.toString()) }
         },
     ) { prefs, triple ->
         val (conn, live, _) = triple
         InfoUiState(
-            subtitle = prefs.displayName ?: "Domestic solar · charge controller",
+            subtitle = prefs.displayName ?: "Domestic solar . charge controller",
             batteryProfileRows = batteryRows(prefs),
             liveRows = liveRows(live),
             connectivityRows = connectivityRows(prefs, conn),
@@ -74,7 +74,7 @@ class InfoViewModel(
             if (rec != null) add("Recovery" to "%.2f V".format(rec))
             add("Empty (cut-off)" to "%.2f V".format(low))
             add("Span" to "%.2f V".format(full - low))
-            // Heuristic chemistry guess — purely cosmetic.
+            // Heuristic chemistry guess  -  purely cosmetic.
             val chem = when {
                 full > 50 && low > 40 -> "Likely 48 V LiFePO4"
                 full > 25 && low > 18 -> "Likely 24 V LiFePO4"
@@ -91,7 +91,7 @@ class InfoViewModel(
             "Battery voltage"  to "%.2f V".format(live.batteryVoltage),
             "Charge current"   to "%.2f A".format(live.chargeCurrent),
             "Load current"     to "%.2f A".format(live.dischargeCurrent),
-            "Controller temp"  to "%.1f °C".format(live.temperatureC),
+            "Controller temp"  to "%.1f  degC".format(live.temperatureC),
             "Lifetime accumulated" to "%.1f Ah".format(live.totalAccumulatedAh),
             "Charger state"    to live.chargerState.name,
         )
@@ -106,7 +106,7 @@ class InfoViewModel(
         "Mode"           to if (prefs.useFakeSource) "Demo (synthetic data)" else "Live BLE",
         "Connection"     to when (conn) {
             MpptSource.Connection.Connected    -> "Connected"
-            MpptSource.Connection.Connecting   -> "Connecting…"
+            MpptSource.Connection.Connecting   -> "Connecting..."
             MpptSource.Connection.Disconnected -> "Disconnected"
         },
     )

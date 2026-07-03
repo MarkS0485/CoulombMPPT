@@ -27,7 +27,7 @@ interface MpptSource {
      *  successful read; null until the first read completes. */
     val settings:   Flow<MpptSettings?>
     /** Raw byte stream for the diagnostic view. Best-effort, dropping is
-     *  acceptable — never blocks the data path. */
+     *  acceptable  -  never blocks the data path. */
     val diagnostics: Flow<Diag>
 
     suspend fun start(macAddress: String)

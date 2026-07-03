@@ -67,7 +67,7 @@ public sealed class BatteryObserver : IDisposable
         _client.LiveChanged -= OnLive;
     }
 
-    /// <summary>Drop the cached model so the next frame reloads it — call after
+    /// <summary>Drop the cached model so the next frame reloads it  -  call after
     /// the learner persists or the active controller changes.</summary>
     public void InvalidateModel()
     {
@@ -137,7 +137,7 @@ public sealed class BatteryObserver : IDisposable
             }
         }
 
-        // Fallback: legacy estimate (net current; bus draw ≈ −net) while learning.
+        // Fallback: legacy estimate (net current; bus draw ~= -net) while learning.
         double conf = model?.ConfidencePct ?? 0;
         double busFallbackA = crossCheck is { } e ? -e : 0;
         return new InverterEstimate(

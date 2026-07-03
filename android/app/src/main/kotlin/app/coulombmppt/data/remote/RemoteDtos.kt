@@ -6,7 +6,7 @@ import kotlinx.serialization.Serializable
 // ASP.NET minimal-API JSON (web defaults), which is what both the GET
 // /api/v1/history response and the POST /api/v1/history/ingest body use.
 
-/** One telemetry row over the wire — mirrors Windows LiveSample / Android
+/** One telemetry row over the wire  -  mirrors Windows LiveSample / Android
  *  LiveSampleRow field-for-field. */
 @Serializable
 data class RemoteSample(
@@ -88,9 +88,9 @@ data class RemoteStatus(
     val settings: RemoteSettingsDto? = null,
 )
 
-// --- Hybrid relay mode (phone → PC live push) --------------------------------
+// --- Hybrid relay mode (phone -> PC live push) --------------------------------
 
-/** POST /api/v1/live/push body — a single live frame from the phone's BLE link.
+/** POST /api/v1/live/push body  -  a single live frame from the phone's BLE link.
  *  Field names match the Windows LiveDto so no extra mapping is needed there. */
 @Serializable
 data class RemoteLiveFrame(

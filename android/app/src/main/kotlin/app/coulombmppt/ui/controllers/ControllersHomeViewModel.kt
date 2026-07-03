@@ -39,7 +39,7 @@ data class ControllersHomeUiState(
 // paired set changes.
 //
 // Repositories live in ServiceLocator so they survive ViewModel recreates.
-// We never call stop() here — repositories are process-scoped and stopping
+// We never call stop() here  -  repositories are process-scoped and stopping
 // would tear down a connection that other screens (Unit Detail) depend on.
 @OptIn(ExperimentalCoroutinesApi::class)
 class ControllersHomeViewModel(
@@ -58,7 +58,7 @@ class ControllersHomeViewModel(
         .flatMapLatest { s -> buildCardsFlow(s.controllers, s.useFakeSource).let { it } }
         .stateIn(viewModelScope, SharingStarted.Eagerly, ControllersHomeUiState())
 
-    /** Make sure every paired controller has a started repository. Idempotent —
+    /** Make sure every paired controller has a started repository. Idempotent  -
      *  MpptRepository.start cancels any previous collector first. */
     private fun ensureReposStarted(
         controllers: List<PairedController>,
@@ -86,7 +86,7 @@ class ControllersHomeViewModel(
                     id          = "demo",
                     mac         = "00:00:00:00:00:00",
                     displayName = "Demo controller",
-                    siteLabel   = "Synthetic telemetry · gentle diurnal curve",
+                    siteLabel   = "Synthetic telemetry . gentle diurnal curve",
                 )
                 ControllersHomeUiState(
                     demoMode = true,
@@ -131,4 +131,3 @@ class ControllersHomeViewModel(
         return live.socEstimate
     }
 }
-

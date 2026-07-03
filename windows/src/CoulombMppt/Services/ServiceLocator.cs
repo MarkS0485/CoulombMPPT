@@ -4,7 +4,7 @@ using CoulombMppt.Data;
 
 namespace CoulombMppt.Services;
 
-// Manual composition root — no DI container, matching the heater client. Stores
+// Manual composition root  -  no DI container, matching the heater client. Stores
 // are constructed first (they're pure data), then the BLE client, then the
 // controllers/services that depend on them. Everything is reachable as a static
 // singleton so the API route table and the WPF view-models can self-resolve.

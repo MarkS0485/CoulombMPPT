@@ -10,12 +10,12 @@ this one is shorter and tells you which Kotlin file does each thing.
 Service: `6E400001-B5A3-F393-E0A9-E50E24DCCA9E` (Nordic UART Service)
 
 Two characteristics under the service. The original vendor app wrote to the
-notify char (`…0003`), which is non-standard. We probe both and pick by
-property — see `data/ble/NusTransport.kt`.
+notify char (`...0003`), which is non-standard. We probe both and pick by
+property  -  see `data/ble/NusTransport.kt`.
 
 ```
-…0002   typical NUS write     (we try here first)
-…0003   typical NUS notify    (vendor app wrote here too; fallback for writes)
+...0002   typical NUS write     (we try here first)
+...0003   typical NUS notify    (vendor app wrote here too; fallback for writes)
 ```
 
 After connect we negotiate MTU 64 (`data/ble/BleConstants.kt`) and enable
@@ -27,11 +27,11 @@ Modbus RTU, slave address 0x01. The full PDU is just:
 
 ```
 +--------+--------+----- payload -----+----------+----------+
-| 0x01   |  fn    |  …                | CRC LO   | CRC HI   |
+| 0x01   |  fn    |  ...                | CRC LO   | CRC HI   |
 +--------+--------+-------------------+----------+----------+
 ```
 
-CRC-16/Modbus (poly 0xA001, init 0xFFFF, low byte first) — implemented in
+CRC-16/Modbus (poly 0xA001, init 0xFFFF, low byte first)  -  implemented in
 `data/modbus/ModbusCrc.kt`.
 
 Function codes used by the firmware:
@@ -43,17 +43,17 @@ Function codes used by the firmware:
 
 ## Live telemetry (poll)
 
-Build with `MpptProtocol.pollLive()` → `01 03 00 01 00 10 <crc>`.
+Build with `MpptProtocol.pollLive()` -> `01 03 00 01 00 10 <crc>`.
 
-Response is fn=0x03 / byteCount=20 → 10 registers, decoded by
+Response is fn=0x03 / byteCount=20 -> 10 registers, decoded by
 `BleMpptSource.emitLive(...)`:
 
 | Reg | Field              | Scale | Notes                       |
 | --- | ------------------ | ----- | --------------------------- |
-|  0  | (model_type)       | —     | Discarded.                  |
+|  0  | (model_type)       |  -      | Discarded.                  |
 |  1  | `batteryVoltage`   | /10   | V (likely battery bus).     |
-|  2  | `chargeCurrent`    | /10   | A — PV → battery.           |
-|  3  | `dischargeCurrent` | /10   | A — battery → load.         |
+|  2  | `chargeCurrent`    | /10   | A  -  PV -> battery.           |
+|  3  | `dischargeCurrent` | /10   | A  -  battery -> load.         |
 |  4  | `temperatureC`     | /100  | Controller temp.            |
 |  5  | `solarStatusRaw`   | enum  | Codes not yet confirmed.    |
 |  6  | `workStatusRaw`    | enum  | "                           |
@@ -61,17 +61,17 @@ Response is fn=0x03 / byteCount=20 → 10 registers, decoded by
 |  8  | totalEnergy LO     | combined | `(1000*hi + lo)/10` kWh. |
 |  9  | totalEnergy HI     | "       | "                         |
 
-Polling cadence ≈ 4 Hz (`BleMpptSource.startPolling()` — 250 ms loop).
+Polling cadence ~= 4 Hz (`BleMpptSource.startPolling()`  -  250 ms loop).
 
 **PV-side fields are not exposed** in the polled register range. The app
-displays `approxPvWatts = batteryVoltage × chargeCurrent` as a placeholder.
+displays `approxPvWatts = batteryVoltage x chargeCurrent` as a placeholder.
 Worth scanning `0x0000..0x00FF` on hardware to find the real PV regs.
 
 ## Settings (read + write)
 
-Read with `MpptProtocol.pollSettings()` → `01 03 10 01 00 0F <crc>`.
+Read with `MpptProtocol.pollSettings()` -> `01 03 10 01 00 0F <crc>`.
 
-Response is fn=0x03 / byteCount=18 → 9 registers, decoded by
+Response is fn=0x03 / byteCount=18 -> 9 registers, decoded by
 `BleMpptSource.readSettings()`:
 
 | Reg | Address  | Field                    | Scale   | UI control                |
@@ -88,12 +88,12 @@ Response is fn=0x03 / byteCount=18 → 9 registers, decoded by
 
 Writes go via `MpptProtocol.writeRegister(address, value)`, which is just
 `fn=0x10`, qty=1, byteCount=2, value=BE16. The firmware ACKs with a fn=0x10
-echo (`slave fn addr qty crc`) — that's what `BleMpptSource.writeSetting()`
+echo (`slave fn addr qty crc`)  -  that's what `BleMpptSource.writeSetting()`
 waits on.
 
 ## What's missing / TODO
 
-1. **Enum value lists.** Battery type, output mode, voltage monitor mode —
+1. **Enum value lists.** Battery type, output mode, voltage monitor mode  -
    the vendor APK pulls these from `api/Product/getProductInfo?ukey=1`
    (now dead). On real hardware, try each plausible 16-bit value and watch
    the behaviour, or sniff a working firmware.

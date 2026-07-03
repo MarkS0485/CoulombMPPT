@@ -29,7 +29,7 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 
-// One numeric tile — uppercase label on top, mono value below, optional
+// One numeric tile  -  uppercase label on top, mono value below, optional
 // accent stripe + icon. Used across HomeScreen for the PV / battery / load
 // metric trio. Same visual idiom as coulombmonitor's NumberTile, with an extra
 // 4dp accent stripe on the left so the user can read "this is the PV side"

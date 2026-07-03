@@ -12,7 +12,7 @@ assignees: ''
 - [ ] Both
 
 **Is your request related to a problem?**
-A clear description of the problem. e.g. "I can't tell at a glance when …"
+A clear description of the problem. e.g. "I can't tell at a glance when ..."
 
 **Describe the solution you'd like**
 What you want to happen.

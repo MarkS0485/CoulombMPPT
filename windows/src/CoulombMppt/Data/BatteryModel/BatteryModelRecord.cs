@@ -2,7 +2,7 @@ namespace CoulombMppt.Data;
 
 // The learned battery-model state for one controller, persisted by
 // BatteryModelStore as a single small JSON blob per MAC. This is the output of
-// BatteryModelLearner and the input to BatteryObserver — the calibration the
+// BatteryModelLearner and the input to BatteryObserver  -  the calibration the
 // app builds for itself (mostly overnight) so it can read the unmeasured EA SUN
 // inverter draw from the voltage sag instead of differentiating SoC.
 //
@@ -35,7 +35,7 @@ public sealed record ResistanceModel(
     public bool HasResistance => RGlobalOhms > 0;
 }
 
-/// <summary>Distribution of the inferred quiescent overnight bus draw — the
+/// <summary>Distribution of the inferred quiescent overnight bus draw  -  the
 /// baseline the inverter wanders around, for the sag/anomaly indicator.</summary>
 public sealed record BaseloadStats(
     double MeanA, double StdA, double P50A, double P90A, int SampleCount)

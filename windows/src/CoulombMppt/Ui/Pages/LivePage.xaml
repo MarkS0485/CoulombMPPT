@@ -26,7 +26,7 @@
                 </c:PageHeader.ActionContent>
             </c:PageHeader>
 
-            <TextBlock Text="No telemetry yet — connect a controller or enable demo mode on the Dashboard."
+            <TextBlock Text="No telemetry yet  -  connect a controller or enable demo mode on the Dashboard."
                        Style="{StaticResource Caption}" Margin="0,0,0,8"
                        Visibility="{Binding HasLive, Converter={StaticResource BoolToVisInv}}"/>
 

@@ -4,7 +4,7 @@ namespace CoulombMppt.Ble;
 
 // Tiny helper for the two Modbus function codes the MPPT firmware speaks
 // (0x03 Read Holding Registers, 0x10 Write Multiple Registers). Ported from
-// the Android client's ModbusFrame.kt. No general-purpose Modbus library —
+// the Android client's ModbusFrame.kt. No general-purpose Modbus library  -
 // one file is easier to audit than a third-party black box.
 public static class ModbusFrame
 {
@@ -77,7 +77,7 @@ public static class ModbusFrame
         if ((frame[0] & 0xFF) != Slave) return null;
         if (!ModbusCrc.Verify(frame))
         {
-            Log.W("ModbusFrame", $"CRC error on {frame.Length}B frame — dropping " +
+            Log.W("ModbusFrame", $"CRC error on {frame.Length}B frame  -  dropping " +
                   $"(got {frame[frame.Length - 2]:X2} {frame[frame.Length - 1]:X2})");
             return null;
         }
@@ -90,7 +90,7 @@ public static class ModbusFrame
                 if (frame.Length < 3 + byteCount + 2) return null;
                 return new Response(fn, frame[3..(3 + byteCount)]);
             case FnWrite:
-                if (frame.Length < 8) return null;        // slave fn addr×2 qty×2 crc×2
+                if (frame.Length < 8) return null;        // slave fn addrx2 qtyx2 crcx2
                 return new Response(fn, frame[2..6]);      // addr + qty echoed back
             default:
                 return null;

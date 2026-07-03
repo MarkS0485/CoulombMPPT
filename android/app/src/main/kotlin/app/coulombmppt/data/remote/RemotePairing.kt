@@ -10,7 +10,7 @@ import kotlinx.serialization.Serializable
 //
 //   u = base URL           (percent-encoded https://host:port)
 //   k = keyId              (HMAC key identifier)
-//   s = secret             (base64url, no padding — re-padded to std base64)
+//   s = secret             (base64url, no padding  -  re-padded to std base64)
 //   t = cert SHA-256       (uppercase hex of the server leaf cert DER)
 //
 // These mirror ApiServer.BuildPairingUri on the Windows side exactly.
@@ -22,7 +22,7 @@ data class RemotePairing(
     val certSha256: String,    // uppercase hex, no separators
 ) {
     companion object {
-        /** Parse a `coulomb://pair?u=…&k=…&s=…&t=…` link. Returns null on any
+        /** Parse a `coulomb://pair?u=...&k=...&s=...&t=...` link. Returns null on any
          *  malformed/missing field so the UI can show a clean error. */
         fun parse(raw: String): RemotePairing? {
             val uri = runCatching { Uri.parse(raw.trim()) }.getOrNull() ?: return null
@@ -42,7 +42,7 @@ data class RemotePairing(
             )
         }
 
-        /** base64url (RFC 4648, no padding) → standard base64. The Windows side
+        /** base64url (RFC 4648, no padding) -> standard base64. The Windows side
          *  encodes the secret URL-safe to keep the QR dense; the JCE Mac needs
          *  the raw bytes back, so we restore +/ and the = padding. */
         private fun base64UrlToStandard(s: String): String {

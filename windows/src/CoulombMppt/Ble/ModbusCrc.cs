@@ -6,7 +6,7 @@ namespace CoulombMppt.Ble;
 // we can both sign outgoing frames and validate incoming ones.
 public static class ModbusCrc
 {
-    /// <summary>Returns the two CRC bytes in wire order — [lo, hi].</summary>
+    /// <summary>Returns the two CRC bytes in wire order  -  [lo, hi].</summary>
     public static byte[] Compute(byte[] data, int length)
     {
         int crc = 0xFFFF;

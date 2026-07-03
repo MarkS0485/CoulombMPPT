@@ -11,7 +11,7 @@
                 <ResourceDictionary Source="Ui/Theme/Styles.xaml"/>
             </ResourceDictionary.MergedDictionaries>
 
-            <!-- Defaults applied to every control unless overridden — Segoe UI
+            <!-- Defaults applied to every control unless overridden  -  Segoe UI
                  12pt everywhere without re-stating it on each TextBlock. -->
             <Style TargetType="Window">
                 <Setter Property="FontFamily" Value="Segoe UI"/>

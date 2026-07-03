@@ -52,7 +52,7 @@ fun AppSettingsScreen(
 
     // QR scanner for the desktop app's pairing code. ZXing's CaptureActivity
     // handles the camera permission prompt itself; the decoded contents are the
-    // same coulomb://pair… string the paste field accepts.
+    // same coulomb://pair... string the paste field accepts.
     val scanLauncher = rememberLauncherForActivityResult(ScanContract()) { result ->
         result.contents?.let { vm.pairPc(it) }
     }
@@ -166,14 +166,14 @@ fun AppSettingsScreen(
                         ) { Text("Scan QR code") }
 
                         Text(
-                            "…or paste the link instead",
+                            "...or paste the link instead",
                             style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                         )
                         OutlinedTextField(
                             value = link,
                             onValueChange = { link = it },
-                            label = { Text("coulomb://pair…") },
+                            label = { Text("coulomb://pair...") },
                             singleLine = true,
                             modifier = Modifier.fillMaxWidth(),
                         )
@@ -200,12 +200,12 @@ fun AppSettingsScreen(
                         style = MaterialTheme.typography.titleMedium,
                         color = MaterialTheme.colorScheme.onSurface)
                     Text(
-                        "CoulombMPPT 0.1.0 — sibling app to CoulombMonitor.",
+                        "CoulombMPPT 0.1.0  -  sibling app to CoulombMonitor.",
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
                     Text(
-                        "Talks Modbus RTU over BLE NUS (6E40000x-…) to the MPPT solar charge controller. Protocol reverse-engineered from the defunct vendor's app (see docs/BLE_PROTOCOL.md).",
+                        "Talks Modbus RTU over BLE NUS (6E40000x-...) to the MPPT solar charge controller. Protocol reverse-engineered from the defunct vendor's app (see docs/BLE_PROTOCOL.md).",
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )

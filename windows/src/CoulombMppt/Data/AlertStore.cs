@@ -5,7 +5,7 @@ namespace CoulombMppt.Data;
 
 // Persists alert events to alerts.json in %APPDATA%\CoulombMppt. Alerts are
 // low-volume (rising-edge only, with hysteresis), so unlike the history store
-// we can keep the whole list in memory and rewrite the file on each mutation —
+// we can keep the whole list in memory and rewrite the file on each mutation  -
 // same JSON-blob pattern as the other stores. Mirrors the Android AlertsDao.
 public sealed class AlertStore
 {
@@ -56,7 +56,7 @@ public sealed class AlertStore
                           .ToArray();
     }
 
-    /// <summary>Undismissed alerts for one controller within the window — drives the dashboard banner.</summary>
+    /// <summary>Undismissed alerts for one controller within the window  -  drives the dashboard banner.</summary>
     public IReadOnlyList<AlertRecord> ActiveFor(string mac, long sinceMs)
     {
         lock (_lock)

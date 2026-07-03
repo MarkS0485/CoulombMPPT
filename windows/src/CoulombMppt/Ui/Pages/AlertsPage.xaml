@@ -55,7 +55,7 @@
                                                 <TextBlock Style="{StaticResource Caption}">
                                                     <Run Text="observed "/>
                                                     <Run Text="{Binding Observed, StringFormat={}{0:0.##}}"/>
-                                                    <Run Text="  ·  threshold "/>
+                                                    <Run Text="  .  threshold "/>
                                                     <Run Text="{Binding Threshold, StringFormat={}{0:0.##}}"/>
                                                 </TextBlock>
                                             </StackPanel>

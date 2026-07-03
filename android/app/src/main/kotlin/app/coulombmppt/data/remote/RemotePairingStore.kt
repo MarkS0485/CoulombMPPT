@@ -16,8 +16,8 @@ import kotlinx.serialization.json.Json
 private val Context.coulombRemoteDataStore by preferencesDataStore(name = "coulombmppt_remote")
 
 // How this device gets its telemetry:
-//  • LocalBluetooth — this phone holds the BLE link to the controller.
-//  • RemoteApi      — this phone has no BLE link; it views and controls the
+//  - LocalBluetooth  -  this phone holds the BLE link to the controller.
+//  - RemoteApi       -  this phone has no BLE link; it views and controls the
 //                     controller through the paired Windows PC's API (the PC
 //                     holds the BLE link and relays commands).
 enum class ConnectionMode {

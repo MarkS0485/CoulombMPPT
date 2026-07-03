@@ -6,11 +6,11 @@ namespace CoulombMppt.Data;
 
 // Append-only time-series store, one NDJSON file per controller MAC under
 // %APPDATA%\CoulombMppt\history\. NDJSON (one JSON object per line) is chosen over
-// a single JSON array so appends are O(1) — we never rewrite the whole file on
+// a single JSON array so appends are O(1)  -  we never rewrite the whole file on
 // the hot sampling path, only on the periodic prune.
 //
 // At the default 30 s cadence a controller writes ~2,880 rows/day, so a 30-day
-// window is well under a megabyte — cheap to read whole for the chart, cheap to
+// window is well under a megabyte  -  cheap to read whole for the chart, cheap to
 // prune by rewrite.
 public sealed class HistoryStore
 {
@@ -33,7 +33,7 @@ public sealed class HistoryStore
         return Path.Combine(_dir, safe + ".ndjson");
     }
 
-    /// <summary>Append one sample. Best-effort — never throws into the caller.</summary>
+    /// <summary>Append one sample. Best-effort  -  never throws into the caller.</summary>
     public void Append(string mac, LiveSample sample)
     {
         try
@@ -41,7 +41,7 @@ public sealed class HistoryStore
             var line = JsonSerializer.Serialize(sample, Json);
             lock (_lock) File.AppendAllText(FileFor(mac), line + "\n");
         }
-        catch { /* swallow — history is non-critical */ }
+        catch { /* swallow  -  history is non-critical */ }
     }
 
     /// <summary>All samples for <paramref name="mac"/> newer than <paramref name="sinceMs"/>, oldest first.</summary>
@@ -76,8 +76,8 @@ public sealed class HistoryStore
     /// This is the ingest path used by the /api/v1/history/ingest endpoint so
     /// the other device (e.g. the Android app, which holds the BLE link while
     /// this PC is away) can fill the gaps in our time-series. Unlike Append it
-    /// rewrites the whole file, but ingest is a periodic sync — not the hot
-    /// per-frame path — and the 30-day file stays well under a megabyte.
+    /// rewrites the whole file, but ingest is a periodic sync  -  not the hot
+    /// per-frame path  -  and the 30-day file stays well under a megabyte.
     /// </summary>
     public int Merge(string mac, IReadOnlyList<LiveSample> samples)
     {

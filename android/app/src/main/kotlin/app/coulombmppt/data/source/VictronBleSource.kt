@@ -62,11 +62,11 @@ class VictronBleSource(
 
     @SuppressLint("MissingPermission")
     override suspend fun start(macAddress: String) {
-        AppLogger.i(TAG, "start($macAddress) — Victron Instant Readout")
+        AppLogger.i(TAG, "start($macAddress)  -  Victron Instant Readout")
         userStopped = false
         lastAdvertMs = 0L
         if (!VictronDecoder.isValidKey(keyHex)) {
-            AppLogger.w(TAG, "no/invalid advertisement key — cannot decode")
+            AppLogger.w(TAG, "no/invalid advertisement key  -  cannot decode")
             _conn.value = MpptSource.Connection.Disconnected
             return
         }
@@ -140,7 +140,7 @@ class VictronBleSource(
         )
     }
 
-    // Victron device-state codes → the app's heuristic ChargerState enum.
+    // Victron device-state codes -> the app's heuristic ChargerState enum.
     private fun mapState(state: Int, error: Int, charge: Double, vBat: Double): ChargerState = when {
         error != 0       -> ChargerState.Fault
         state == 0       -> ChargerState.Idle          // Off
@@ -158,10 +158,10 @@ class VictronBleSource(
                 delay(5_000)
                 val last = lastAdvertMs
                 if (last != 0L && System.currentTimeMillis() - last > ADVERT_TIMEOUT_MS) {
-                    // Adverts stopped — out of range, or VictronConnect grabbed
+                    // Adverts stopped  -  out of range, or VictronConnect grabbed
                     // the device (it suppresses Instant Readout while connected).
                     if (_conn.value == MpptSource.Connection.Connected) {
-                        AppLogger.w(TAG, "no adverts for ${ADVERT_TIMEOUT_MS}ms — marking offline")
+                        AppLogger.w(TAG, "no adverts for ${ADVERT_TIMEOUT_MS}ms  -  marking offline")
                         _conn.value = MpptSource.Connection.Disconnected
                     }
                 }

@@ -205,7 +205,7 @@ public sealed partial class HistoryViewModel : ObservableObject
         if (vs.Count == 0)
         {
             HasData = false;
-            Summary = "No samples in this range — pan or widen it.";
+            Summary = "No samples in this range  -  pan or widen it.";
             ClearSeries();
             return;
         }
@@ -219,7 +219,7 @@ public sealed partial class HistoryViewModel : ObservableObject
         var a = DateTimeOffset.FromUnixTimeMilliseconds(start).ToLocalTime();
         var b = DateTimeOffset.FromUnixTimeMilliseconds(end).ToLocalTime();
         HasData = true;
-        Summary = $"{vs.Count} pts · {a:dd MMM HH:mm} → {b:dd MMM HH:mm}";
+        Summary = $"{vs.Count} pts . {a:dd MMM HH:mm} -> {b:dd MMM HH:mm}";
     }
 
     private static void RunOnUi(Action a)

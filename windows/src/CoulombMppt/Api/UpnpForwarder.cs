@@ -5,7 +5,7 @@ using NatProto = Mono.Nat.Protocol;
 namespace CoulombMppt.Api;
 
 // Best-effort UPnP / NAT-PMP port forwarding. Lots of routers either don't
-// support it or have it disabled — that's fine, we just log the outcome and let
+// support it or have it disabled  -  that's fine, we just log the outcome and let
 // the user forward manually. The pairing UI surfaces which state we're in.
 public sealed class UpnpForwarder
 {
@@ -19,7 +19,7 @@ public sealed class UpnpForwarder
     public void Start(int port)
     {
         _port = port;
-        Status = "Searching for UPnP / NAT-PMP device…";
+        Status = "Searching for UPnP / NAT-PMP device...";
         StatusChanged?.Invoke();
         try
         {
@@ -65,7 +65,7 @@ public sealed class UpnpForwarder
                 PublicAddress = ext?.ToString();
             }
             catch { /* not all routers expose this */ }
-            Set($"Forwarded TCP {_port} → {PublicAddress ?? "(unknown WAN IP)"}");
+            Set($"Forwarded TCP {_port} -> {PublicAddress ?? "(unknown WAN IP)"}");
             Log.I("upnp", Status);
         }
         catch (Exception ex)

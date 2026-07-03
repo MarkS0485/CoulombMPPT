@@ -41,7 +41,7 @@
                         <Border CornerRadius="5" Padding="8,3" Margin="0,0,8,0"
                                 Background="#120F766E" BorderBrush="#300F766E" BorderThickness="1"
                                 Visibility="{Binding RelayActive, Converter={StaticResource BoolToVis}}">
-                            <TextBlock Text="↻ phone relay" FontSize="11" Foreground="{StaticResource SolarTeal}"/>
+                            <TextBlock Text=" phone relay" FontSize="11" Foreground="{StaticResource SolarTeal}"/>
                         </Border>
                         <c:StatusPill Label="{Binding StatusLabel}"
                                       Kind="{Binding StatusLabel, Converter={StaticResource StatusLabelToKind}}"
@@ -76,7 +76,7 @@
                 </Grid>
             </Border>
 
-            <!-- ============ HERO: identity · SoC · headline metrics ============ -->
+            <!-- ============ HERO: identity . SoC . headline metrics ============ -->
             <Border Style="{StaticResource Card}" Padding="18,16">
                 <Grid>
                     <Grid.ColumnDefinitions>
@@ -151,9 +151,9 @@
                                          HasInference="{Binding HasLiveEasun}"
                                          IsLive="{Binding HasLive}"/>
                     <TextBlock Style="{StaticResource Caption}" Margin="0,6,0,0" TextWrapping="Wrap"
-                               Text="The MPPT array figure is sensed directly. The EA SUN inverter's contribution is inferred from how the battery voltage moves versus the MPPT's known current — flowing into the bank when its panels are charging, out to the load when the inverter is drawing."/>
+                               Text="The MPPT array figure is sensed directly. The EA SUN inverter's contribution is inferred from how the battery voltage moves versus the MPPT's known current  -  flowing into the bank when its panels are charging, out to the load when the inverter is drawing."/>
                     <TextBlock Style="{StaticResource Caption}" Margin="0,4,0,0" Foreground="{StaticResource InkLo}"
-                               Text="Add the battery pack profile (App settings → Battery) to enable the EA SUN inference."
+                               Text="Add the battery pack profile (App settings -> Battery) to enable the EA SUN inference."
                                Visibility="{Binding HasEnergyProfile, Converter={StaticResource BoolToVisInv}}"/>
                 </StackPanel>
             </Border>
@@ -207,7 +207,7 @@
                         <TextBlock Grid.Column="0" VerticalAlignment="Center">
                             <Run Text="LIVE TREND" FontSize="10" FontWeight="SemiBold"
                                  Foreground="{StaticResource InkLo}"/>
-                            <Run Text="·" Foreground="{StaticResource InkLo}"/>
+                            <Run Text="." Foreground="{StaticResource InkLo}"/>
                             <Run Text="{Binding TrendRangeLabel, Mode=OneWay}" FontSize="10" FontWeight="SemiBold"
                                  Foreground="{StaticResource SolarTeal}"/>
                         </TextBlock>
@@ -220,14 +220,14 @@
                                     Command="{Binding SetTrendRangeCommand}" CommandParameter="30"/>
                             <Button Content="2h"  Style="{StaticResource RangeChip}"
                                     Command="{Binding SetTrendRangeCommand}" CommandParameter="120"/>
-                            <Button Content="⟲ Live" Style="{StaticResource RangeChip}" MinWidth="56" Margin="10,0,0,0"
+                            <Button Content=" Live" Style="{StaticResource RangeChip}" MinWidth="56" Margin="10,0,0,0"
                                     Command="{Binding SnapLiveCommand}"/>
                         </StackPanel>
                     </Grid>
 
                     <TextBlock Text="{Binding TrendReadout}" Style="{StaticResource Mono}" FontSize="12"
                                Foreground="{StaticResource InkHi}" Margin="0,8,0,2"/>
-                    <TextBlock Text="Drag to pan · scroll to zoom · hover to read off any moment — all three charts move together."
+                    <TextBlock Text="Drag to pan . scroll to zoom . hover to read off any moment  -  all three charts move together."
                                Style="{StaticResource Caption}" Foreground="{StaticResource InkLo}" Margin="0,0,0,2"/>
 
                     <TextBlock Text="Battery voltage (V)" Style="{StaticResource Caption}" Margin="2,8,0,2"/>
@@ -290,7 +290,7 @@
                         </Border>
                         <Border Style="{StaticResource GaugeCell}">
                             <c:RadialGauge Value="{Binding TemperatureC}" Min="0" Max="70"
-                                           Unit="°C" Label="Controller" ValueFormat="0.0"
+                                           Unit=" degC" Label="Controller" ValueFormat="0.0"
                                            Accent="{StaticResource WarnAmberColor}"/>
                         </Border>
                     </WrapPanel>
@@ -301,7 +301,7 @@
             <Border Style="{StaticResource Card}" Margin="0,12,0,0">
                 <StackPanel>
                     <TextBlock Text="PAIRED CONTROLLERS" Style="{StaticResource SectionHeader}"/>
-                    <TextBlock Text="No controllers paired yet — use Scan / pair to add one."
+                    <TextBlock Text="No controllers paired yet  -  use Scan / pair to add one."
                                Style="{StaticResource Caption}"
                                Visibility="{Binding Controllers.Count, Converter={StaticResource CountZeroToVis}}"/>
                     <ItemsControl ItemsSource="{Binding Controllers}">

@@ -10,9 +10,9 @@ over Bluetooth Low Energy:
 
 ```
 CoulombMPPT/
-├── android/   Kotlin / Jetpack Compose app  (JDK 17, Gradle 9)
-├── windows/   .NET 10 WPF desktop app        (WPF + WinForms tray + in-proc API)
-└── docs/      BLE_PROTOCOL.md — the shared wire protocol
+ android/   Kotlin / Jetpack Compose app  (JDK 17, Gradle 9)
+ windows/   .NET 10 WPF desktop app        (WPF + WinForms tray + in-proc API)
+ docs/      BLE_PROTOCOL.md  -  the shared wire protocol
 ```
 
 The two clients are independent builds but speak the **same Modbus-over-BLE
@@ -69,7 +69,7 @@ iscc windows/installer/CoulombMppt.iss            # needs Inno Setup 6
 [`.github/workflows/ci.yml`](.github/workflows/ci.yml) builds **both** apps on
 every push and PR to `main` (Android `assembleDebug` on Ubuntu, Windows
 `dotnet build` on Windows). There's no automated test suite yet, so CI is a
-compile gate — keep it green. Open PRs against `main`; small, single-purpose
+compile gate  -  keep it green. Open PRs against `main`; small, single-purpose
 PRs are reviewed fastest. See [`.github/PULL_REQUEST_TEMPLATE.md`](.github/PULL_REQUEST_TEMPLATE.md).
 
 Dependency bumps arrive automatically via
@@ -82,14 +82,14 @@ Dependency bumps arrive automatically via
 A little context so a patch fits the grain of the code:
 
 - **One repository object per controller.** Don't hold a global "current repo"
-  reference — go through the per-controller lookup (`ServiceLocator`). Multiple
+  reference  -  go through the per-controller lookup (`ServiceLocator`). Multiple
   paired controllers share one foreground service.
 - **Source seam = `MpptSource`.** Telemetry comes from a swappable source (real
   BLE, the remote-API relay, or the synthetic demo source). The repository never
-  knows which side it's on — keep that boundary clean.
+  knows which side it's on  -  keep that boundary clean.
 - **`start()` is idempotent on the controller's MAC.** Removing that guard makes
   ViewModels tear down the in-flight BLE connection on every settings emission,
-  causing a connect → disconnect → reconnect loop.
+  causing a connect -> disconnect -> reconnect loop.
 - **Mind the polling cadence.** The live BLE poll is sub-second; the history
   recorder downsamples to ~10 s. Don't raise the recorder rate without
   rethinking the retention budget.
@@ -102,6 +102,6 @@ A little context so a patch fits the grain of the code:
 
 ## Security
 
-Do **not** open a public issue for a security vulnerability — follow
+Do **not** open a public issue for a security vulnerability  -  follow
 [SECURITY.md](SECURITY.md). The Windows app exposes a remote HTTPS API with
 optional UPnP port-forwarding, so network-facing changes deserve extra care.

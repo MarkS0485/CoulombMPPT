@@ -4,21 +4,21 @@ using System.Windows.Media;
 
 namespace CoulombMppt.Ui.Controls;
 
-// Custom-drawn 270° radial gauge (no XAML, no charting dependency) matching the
+// Custom-drawn 270 deg radial gauge (no XAML, no charting dependency) matching the
 // SocRing style. Two modes:
-//   • Unidirectional (default): value sweeps from the lower-left (Min) clockwise
+//   - Unidirectional (default): value sweeps from the lower-left (Min) clockwise
 //     to the lower-right (Max).
-//   • Bidirectional: zero sits at 12 o'clock; positive values sweep right,
-//     negative values sweep left — used for battery / inverter current where
+//   - Bidirectional: zero sits at 12 o'clock; positive values sweep right,
+//     negative values sweep left  -  used for battery / inverter current where
 //     sign means charge vs. draw.
 //
 // Renders: faint full track, a coloured value arc with rounded caps, the big
 // numeric value + unit in the centre, the label underneath, and Min/Max ticks.
 public sealed class RadialGauge : FrameworkElement
 {
-    // The 270° arc: starts at 135° (≈ 7:30) and sweeps clockwise 270° to 405°
-    // (≈ 4:30), leaving the bottom 90° open. Angles use screen convention
-    // (0°=3 o'clock, +clockwise, −90°/270°=12 o'clock).
+    // The 270 deg arc: starts at 135 deg (~= 7:30) and sweeps clockwise 270 deg to 405 deg
+    // (~= 4:30), leaving the bottom 90 deg open. Angles use screen convention
+    // (0 deg=3 o'clock, +clockwise, -90 deg/270 deg=12 o'clock).
     private const double TrackStart = 135.0;
     private const double TrackSweep = 270.0;
     private const double TopAngle   = 270.0;   // 12 o'clock for bidirectional zero

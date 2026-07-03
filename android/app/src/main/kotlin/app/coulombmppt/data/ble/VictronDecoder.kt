@@ -4,7 +4,7 @@ import javax.crypto.Cipher
 import javax.crypto.spec.SecretKeySpec
 
 // Decoder for Victron's "Instant Readout" BLE manufacturer advertisement
-// (company id 0x02E1). The data is broadcast continuously — you decode it
+// (company id 0x02E1). The data is broadcast continuously  -  you decode it
 // passively, no connection. Layout and field scaling follow Victron's
 // "Extra Manufacturer Data" spec; the AES handling mirrors keshavdv/victron-ble.
 //
@@ -14,11 +14,11 @@ import javax.crypto.spec.SecretKeySpec
 //
 //   [0..1]  model id (LE)
 //   [2]     record type        (0x01 = solar charger)
-//   [3..4]  nonce / data counter (LE) — the AES-CTR IV
+//   [3..4]  nonce / data counter (LE)  -  the AES-CTR IV
 //   [5]     first byte of the key (key-check; must equal key[0])
 //   [6..]   AES-CTR ciphertext
 //
-// Records are ≤ 16 bytes, so CTR collapses to a single keystream block:
+// Records are <= 16 bytes, so CTR collapses to a single keystream block:
 // keystream = AES-ECB(key, counterBlock) where counterBlock holds the nonce in
 // its low two bytes (little-endian) and zeroes elsewhere.
 object VictronDecoder {
@@ -92,7 +92,7 @@ object VictronDecoder {
     private fun s16(b: ByteArray, i: Int): Int = u16(b, i).toShort().toInt()
     private fun u16(b: ByteArray, i: Int): Int = (b[i].toInt() and 0xFF) or ((b[i + 1].toInt() and 0xFF) shl 8)
 
-    /** Parse 32 hex chars (case-insensitive, optional spaces/colons) → 16 bytes. */
+    /** Parse 32 hex chars (case-insensitive, optional spaces/colons) -> 16 bytes. */
     fun hexToBytes(hex: String?): ByteArray? {
         if (hex == null) return null
         val clean = hex.filter { it.isLetterOrDigit() }
@@ -102,6 +102,6 @@ object VictronDecoder {
         }.getOrNull()
     }
 
-    /** True if [hex] is a usable 16-byte key — for validating user input. */
+    /** True if [hex] is a usable 16-byte key  -  for validating user input. */
     fun isValidKey(hex: String?): Boolean = hexToBytes(hex)?.size == 16
 }

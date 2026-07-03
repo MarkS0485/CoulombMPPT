@@ -59,7 +59,7 @@ import app.coulombmppt.ui.components.BrandTopBar
 // Bluetooth scan + pair screen. Requests the two Android 12+ runtime BLE
 // permissions, then lists every NUS-advertising device until the user picks
 // one. The "Demo mode" CTA at the bottom bypasses BLE entirely and runs the
-// FakeMpptSource — useful in the office without a controller plugged in.
+// FakeMpptSource  -  useful in the office without a controller plugged in.
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PairingScreen(
@@ -94,7 +94,7 @@ fun PairingScreen(
         topBar = {
             BrandTopBar(
                 title    = "Pair controller",
-                subtitle = if (state.scanning) "Scanning for any nearby BLE device…"
+                subtitle = if (state.scanning) "Scanning for any nearby BLE device..."
                            else                 "Pick your MPPT from the list",
                 onBack   = onBack,
             )
@@ -186,7 +186,7 @@ fun PairingScreen(
 }
 
 // Let the user pick how to talk to a device when auto-detection isn't enough
-// (Renogy BT-1/BT-2 dongles, an EPEver RS485↔BLE bridge, or forcing the type).
+// (Renogy BT-1/BT-2 dongles, an EPEver RS485<->BLE bridge, or forcing the type).
 @Composable
 private fun DeviceTypeDialog(
     deviceName: String,
@@ -195,7 +195,7 @@ private fun DeviceTypeDialog(
 ) {
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("Pair “$deviceName” as") },
+        title = { Text("Pair "$deviceName" as") },
         text = {
             Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
                 DeviceType.entries.forEach { type ->
@@ -212,8 +212,8 @@ private fun DeviceTypeDialog(
 }
 
 // Prompt for the per-device Victron Instant Readout key. The user copies it
-// from VictronConnect → device → Settings → Product info → "Instant readout via
-// Bluetooth" → Show encryption key.
+// from VictronConnect -> device -> Settings -> Product info -> "Instant readout via
+// Bluetooth" -> Show encryption key.
 @Composable
 private fun VictronKeyDialog(
     deviceName: String,
@@ -228,9 +228,9 @@ private fun VictronKeyDialog(
         text = {
             Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
                 Text(
-                    "“$deviceName” broadcasts encrypted Instant Readout data. " +
-                        "Paste its advertisement key — in VictronConnect open the device, " +
-                        "then Settings → Product info → “Instant readout via Bluetooth” → " +
+                    ""$deviceName" broadcasts encrypted Instant Readout data. " +
+                        "Paste its advertisement key  -  in VictronConnect open the device, " +
+                        "then Settings -> Product info -> "Instant readout via Bluetooth" -> " +
                         "Show encryption key.",
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -271,7 +271,7 @@ private fun ScanningPlaceholder() {
                 modifier = Modifier.size(20.dp),
             )
             Text(
-                "Scanning…",
+                "Scanning...",
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 style = MaterialTheme.typography.bodyMedium,
             )
@@ -287,8 +287,8 @@ private fun ScanningPlaceholder() {
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun DiscoveryRow(d: BleScanner.Discovery, onClick: () -> Unit, onLongClick: () -> Unit) {
-    // Tint the icon based on signal strength — green ≈ within touching
-    // distance (likely your MPPT), amber ≈ same room, red ≈ probably a
+    // Tint the icon based on signal strength  -  green ~= within touching
+    // distance (likely your MPPT), amber ~= same room, red ~= probably a
     // neighbour's device.
     val sigColor = when {
         d.rssi >= -60 -> MaterialTheme.colorScheme.tertiary
@@ -329,7 +329,7 @@ private fun DiscoveryRow(d: BleScanner.Discovery, onClick: () -> Unit, onLongCli
             )
             if (d.isVictron) {
                 Text(
-                    "Victron · Instant Readout (needs key)",
+                    "Victron . Instant Readout (needs key)",
                     style = MaterialTheme.typography.labelSmall,
                     color = MaterialTheme.colorScheme.tertiary,
                 )
@@ -342,4 +342,3 @@ private fun DiscoveryRow(d: BleScanner.Discovery, onClick: () -> Unit, onLongCli
         )
     }
 }
-

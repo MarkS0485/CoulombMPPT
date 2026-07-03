@@ -15,7 +15,7 @@ namespace CoulombMppt.Ui.ViewModels;
 //
 // Important: the poll loop re-reads the settings block on a timer, which fires
 // SettingsChanged. If we blindly re-populated the form on every such read we'd
-// wipe whatever the user is mid-way through editing — most visibly the "Manual
+// wipe whatever the user is mid-way through editing  -  most visibly the "Manual
 // load output" checkbox, which would silently snap back to the controller's
 // reported state before Apply ran, so the write always sent the OLD value. To
 // avoid that we track a "dirty" flag: once the user touches any field we stop
@@ -60,7 +60,7 @@ public sealed partial class SettingsViewModel : ObservableObject
     [ObservableProperty] private bool   _busy;
     [ObservableProperty] private string _status = "";
 
-    // Battery type combo index == firmware code (0 unknown … 4 lithium).
+    // Battery type combo index == firmware code (0 unknown ... 4 lithium).
     [ObservableProperty] private int _batteryTypeIndex;
     // Output mode combo index == firmware code (0 manual, 1 auto, 2 timer).
     [ObservableProperty] private int _outputModeIndex;
@@ -136,7 +136,7 @@ public sealed partial class SettingsViewModel : ObservableObject
             if (int.TryParse(TimerHoursInput, out var th) && int.TryParse(TimerMinutesInput, out var tm))
                 ok &= await _ble.SetTimerAsync(th, tm);
 
-            Status = ok ? "Settings written." : "One or more writes failed — check the log.";
+            Status = ok ? "Settings written." : "One or more writes failed  -  check the log.";
         }
         finally
         {
@@ -160,7 +160,7 @@ public sealed partial class SettingsViewModel : ObservableObject
             bool current = _ble.Settings?.ManualLoadOn ?? ManualLoadOn;
             bool target  = !current;
             bool ok = await _ble.SetManualLoadAsync(target);
-            if (!ok) { Status = "Load command not acknowledged — check the log."; return; }
+            if (!ok) { Status = "Load command not acknowledged  -  check the log."; return; }
 
             // The manual-load register only takes effect in Manual output mode;
             // warn rather than let the toggle look like a silent no-op.
@@ -168,9 +168,9 @@ public sealed partial class SettingsViewModel : ObservableObject
             Status = (target, mode == 0) switch
             {
                 (true,  true)  => "Load turned ON.",
-                (true,  false) => "Load ON sent — but output mode isn't Manual, so the controller may ignore it. Set Output mode = Manual and Apply.",
+                (true,  false) => "Load ON sent  -  but output mode isn't Manual, so the controller may ignore it. Set Output mode = Manual and Apply.",
                 (false, true)  => "Load turned OFF.",
-                (false, false) => "Load OFF sent — output mode isn't Manual; the controller may ignore it.",
+                (false, false) => "Load OFF sent  -  output mode isn't Manual; the controller may ignore it.",
             };
         }
         finally { Busy = false; }
@@ -181,7 +181,7 @@ public sealed partial class SettingsViewModel : ObservableObject
         if (_ble.State == ConnectionState.Ready) return true;
         var mac = ServiceLocator.Controllers.CurrentMac;
         if (string.IsNullOrEmpty(mac)) { Status = "No controller selected."; return false; }
-        Status = "Connecting…";
+        Status = "Connecting...";
         _ = _ble.ConnectAsync(mac);
         bool ready = await _ble.WaitReadyAsync(12_000);
         if (!ready) Status = "Could not connect.";

@@ -52,12 +52,12 @@ interface LiveSampleDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insert(row: LiveSampleRow)
 
-    /** All rows for a controller newer than `sinceMs`, ascending by time —
+    /** All rows for a controller newer than `sinceMs`, ascending by time  -
      *  shape the chart expects (left-to-right = oldest-to-newest). */
     @Query("SELECT * FROM live_sample WHERE controllerId = :controllerId AND tsMs >= :sinceMs ORDER BY tsMs ASC")
     fun streamSince(controllerId: String, sinceMs: Long): Flow<List<LiveSampleRow>>
 
-    /** One-shot list (not a Flow) for a controller newer than `sinceMs` — used
+    /** One-shot list (not a Flow) for a controller newer than `sinceMs`  -  used
      *  by the PC sync to read the window it needs to upload. */
     @Query("SELECT * FROM live_sample WHERE controllerId = :controllerId AND tsMs >= :sinceMs ORDER BY tsMs ASC")
     suspend fun listSince(controllerId: String, sinceMs: Long): List<LiveSampleRow>
@@ -65,8 +65,8 @@ interface LiveSampleDao {
     /** Downsampled view of [startMs, endMs]: rows averaged into time buckets
      *  of `bucketMs`. The chart picks `bucketMs` from the visible span so the
      *  result is roughly a fixed number of points regardless of how much raw
-     *  data the window covers — this is what makes navigation over any time
-     *  scale fast. `bucketMs` must be ≥ 1. */
+     *  data the window covers  -  this is what makes navigation over any time
+     *  scale fast. `bucketMs` must be >= 1. */
     @Query(
         """
         SELECT MIN(tsMs)        AS tsMs,
@@ -104,7 +104,7 @@ interface LiveSampleDao {
     """)
     suspend fun listRange(controllerId: String, startMs: Long, endMs: Long): List<LiveSampleRow>
 
-    /** Just the timestamps in the window — used to dedup downloaded PC rows
+    /** Just the timestamps in the window  -  used to dedup downloaded PC rows
      *  before insert (the autogen PK means OnConflict.IGNORE can't dedup by
      *  (controllerId, tsMs) for us). */
     @Query("SELECT tsMs FROM live_sample WHERE controllerId = :controllerId AND tsMs >= :sinceMs")

@@ -1,7 +1,7 @@
 <!--
   Monochrome status-bar / notification icon for the polling foreground
   service. Battery silhouette with a lightning bolt cut out of the
-  centre — instantly readable as "MPPT charge controller" without the
+  centre  -  instantly readable as "MPPT charge controller" without the
   full-colour brand logo, which Android Tiramisu+ would otherwise show
   as a featureless white square in the status bar.
 

@@ -19,7 +19,7 @@ namespace CoulombMppt.Ble;
 // expected to marshal to the UI thread via Dispatcher.BeginInvoke, exactly as
 // in the heater client.
 //
-// Modbus is half-duplex — only one transaction may be in flight at a time. We
+// Modbus is half-duplex  -  only one transaction may be in flight at a time. We
 // enforce that with a single _ioGate semaphore, so the reassembly buffer never
 // has to disambiguate two overlapping responses; whatever comes back belongs to
 // the transaction currently holding the gate.
@@ -30,14 +30,14 @@ public sealed class MpptClient : IAsyncDisposable
     private const int  ConnectSettleMs      = 1500;   // wait after link-up before GATT discovery
     private const int  NotifyPauseMs        = 100;    // pause before enabling notifications
     private const int  PreferredMtu         = 64;     // best-effort; WinRT auto-negotiates
-    private const int  MinUsablePduSize     = 28;     // live reply is 25B; one notification needs ATT_MTU ≥ 28
+    private const int  MinUsablePduSize     = 28;     // live reply is 25B; one notification needs ATT_MTU >= 28
     private const int  MtuWaitMs            = 4000;   // give Windows time to negotiate the MTU up after discovery
     private const int  MtuPollMs            = 200;    // cadence while waiting for the MTU to settle
     private const int  PollIntervalMs       = 1000;   // ~1 Hz live telemetry
     private const int  PollTimeoutMs        = 2500;   // per-transaction response timeout
     private const int  SettingsTimeoutMs    = 2500;
     private const int  WriteTimeoutMs       = 2500;
-    private const int  MaxTimeouts          = 4;      // consecutive live timeouts → reconnect
+    private const int  MaxTimeouts          = 4;      // consecutive live timeouts -> reconnect
     private const int  SettingsRefreshEvery = 30;     // re-read settings every N live polls
     private const int  ReconnectBaseMs      = 1000;   // backoff start
     private const int  ReconnectMaxMs       = 30_000; // backoff ceiling
@@ -124,7 +124,7 @@ public sealed class MpptClient : IAsyncDisposable
     // concurrently and corrupt _device/_session/_currentMac.
     private readonly SemaphoreSlim _connectGate = new(1, 1);
 
-    // Victron Instant Readout passive watch — no GATT connection; we decode the
+    // Victron Instant Readout passive watch  -  no GATT connection; we decode the
     // device's manufacturer advertisement as it broadcasts.
     private BluetoothLEAdvertisementWatcher? _victronWatcher;
     private string? _victronKey;
@@ -235,7 +235,7 @@ public sealed class MpptClient : IAsyncDisposable
     {
         StopDemo();
         _desiredMac = mac;
-        // Victron devices are read passively from their advertisement — there's
+        // Victron devices are read passively from their advertisement  -  there's
         // no GATT link to open. Route by the paired controller's device type.
         var ctrl = ServiceLocator.Controllers.Find(mac);
         if (ctrl?.DeviceType == DeviceType.VictronInstantReadout)
@@ -244,7 +244,7 @@ public sealed class MpptClient : IAsyncDisposable
             catch (Exception ex) { Fail($"Victron start threw: {ex.GetType().Name}: {ex.Message}"); }
             return;
         }
-        // Outer guard — the WinRT bindings throw assorted COMExceptions when
+        // Outer guard  -  the WinRT bindings throw assorted COMExceptions when
         // the radio is toggling; we'd rather show a red line than crash.
         try { await ConnectInnerAsync(mac).ConfigureAwait(false); }
         catch (Exception ex) { Fail($"Connect threw: {ex.GetType().Name}: {ex.Message}"); }
@@ -279,7 +279,7 @@ public sealed class MpptClient : IAsyncDisposable
         if (!VictronDecoder.IsValidKey(key))
         {
             Fail("This Victron device has no/invalid Instant Readout key. Re-pair and paste " +
-                 "the key from VictronConnect (Settings → Product info → Instant readout).");
+                 "the key from VictronConnect (Settings -> Product info -> Instant readout).");
             return;
         }
         ulong addr;
@@ -322,7 +322,7 @@ public sealed class MpptClient : IAsyncDisposable
             try { await Task.Delay(5_000, ct).ConfigureAwait(false); } catch { break; }
             // Adverts stop when the device goes out of range or VictronConnect
             // grabs it (Instant Readout is suppressed while connected). Keep the
-            // watcher running — just reflect the gap in the status line.
+            // watcher running  -  just reflect the gap in the status line.
             if (_lastVictronTick != 0 && Environment.TickCount64 - _lastVictronTick > 30_000
                 && State == ConnectionState.Ready)
                 State = ConnectionState.Reconnecting;
@@ -351,7 +351,7 @@ public sealed class MpptClient : IAsyncDisposable
             SocEstimate:        soc);
     }
 
-    // Victron device-state codes → the app's heuristic ChargerState enum.
+    // Victron device-state codes -> the app's heuristic ChargerState enum.
     private static ChargerState MapVictronState(int state, int error, double charge) =>
         error != 0 ? ChargerState.Fault : state switch
         {
@@ -377,8 +377,8 @@ public sealed class MpptClient : IAsyncDisposable
     }
 
     /// <summary>
-    /// If this client is currently targeting <paramref name="mac"/> — connected,
-    /// connecting, or mid-reconnect — drop the link and cancel auto-reconnect.
+    /// If this client is currently targeting <paramref name="mac"/>  -  connected,
+    /// connecting, or mid-reconnect  -  drop the link and cancel auto-reconnect.
     /// Used when the user forgets a controller so we don't leave a reconnect
     /// loop chasing a MAC that no longer exists in the store.
     /// </summary>
@@ -387,7 +387,7 @@ public sealed class MpptClient : IAsyncDisposable
         if (string.Equals(_currentMac, mac, StringComparison.OrdinalIgnoreCase) ||
             string.Equals(_desiredMac, mac, StringComparison.OrdinalIgnoreCase))
         {
-            Log.I("ble", $"Forgetting active target {mac} — disconnecting");
+            Log.I("ble", $"Forgetting active target {mac}  -  disconnecting");
             await DisconnectAsync().ConfigureAwait(false);
         }
     }
@@ -397,7 +397,7 @@ public sealed class MpptClient : IAsyncDisposable
     // run the discovery/teardown sequence at the same time and trample each
     // other's _device/_session. The reconnect paths fire ConnectInnerAsync only
     // as fire-and-forget continuations, so a queued attempt simply waits for
-    // the in-flight one to release the gate — no deadlock.
+    // the in-flight one to release the gate  -  no deadlock.
     private async Task ConnectInnerAsync(string mac)
     {
         await _connectGate.WaitAsync().ConfigureAwait(false);
@@ -423,7 +423,7 @@ public sealed class MpptClient : IAsyncDisposable
         if (nowTicks < _cooldownUntilTicks)
         {
             var remain = (_cooldownUntilTicks - nowTicks) / 1000.0;
-            Log.I("ble", $"Cooldown active — waiting {remain:F1}s before reconnect");
+            Log.I("ble", $"Cooldown active  -  waiting {remain:F1}s before reconnect");
             await Task.Delay((int)(_cooldownUntilTicks - nowTicks)).ConfigureAwait(false);
         }
 
@@ -460,7 +460,7 @@ public sealed class MpptClient : IAsyncDisposable
         Log.I("ble", $"Device handle obtained; ConnectionStatus={dev.ConnectionStatus}");
 
         // Open a GATT session and ask it to maintain the link. This nudges the
-        // OS into negotiating a larger MTU (best-effort — WinRT gives no direct
+        // OS into negotiating a larger MTU (best-effort  -  WinRT gives no direct
         // MTU-request API like Android's requestMtu()).
         try
         {
@@ -479,7 +479,7 @@ public sealed class MpptClient : IAsyncDisposable
         GattDeviceServicesResult svcResult;
         try { svcResult = await dev.GetGattServicesAsync(BluetoothCacheMode.Uncached); }
         catch (Exception ex) { Fail($"GetGattServicesAsync threw: {ex.GetType().Name}: {ex.Message}"); return; }
-        Log.I("ble", $"GetGattServicesAsync → Status={svcResult.Status} " +
+        Log.I("ble", $"GetGattServicesAsync -> Status={svcResult.Status} " +
                      $"ProtocolError={svcResult.ProtocolError} Services={svcResult.Services.Count}");
         if (svcResult.Status != GattCommunicationStatus.Success)
         {
@@ -532,8 +532,8 @@ public sealed class MpptClient : IAsyncDisposable
         // Pick by actual GATT PROPERTY first, then fall back to the conventional
         // NUS UUID. Property must win: this vendor's firmware ships the NUS
         // characteristics with their roles swapped relative to the Nordic
-        // convention — 6e400002 carries Notify and 6e400003 carries
-        // WriteWithoutResponse — so trusting the UUID labels picks both the
+        // convention  -  6e400002 carries Notify and 6e400003 carries
+        // WriteWithoutResponse  -  so trusting the UUID labels picks both the
         // wrong way round and the CCCD enable then throws COMException on a
         // characteristic that has no notify descriptor.
         GattCharacteristic? byUuidWrite  = null, byUuidNotify  = null;
@@ -577,20 +577,20 @@ public sealed class MpptClient : IAsyncDisposable
         Log.I("ble", "Notifications enabled");
 
         // Wait for a usable ATT MTU before we start polling. Windows has no
-        // requestMtu() — it negotiates the MTU on its own after the first ATT
-        // request (the discovery above) — and MaxPduSize is read as 23 at
+        // requestMtu()  -  it negotiates the MTU on its own after the first ATT
+        // request (the discovery above)  -  and MaxPduSize is read as 23 at
         // session-open before that settles. At MaxPduSize=23 a notification
         // carries only 20 bytes, so the controller's 25-byte live response is
         // truncated and silently dropped: it will NOT split a response across
         // notifications (the Android client must call requestMtu() for exactly
         // this reason). Polling at 23 yields zero frames and a reconnect
         // spiral, so give the MTU time to come up and, if it never does, drop
-        // the link — a fresh connection often renegotiates to the full size.
+        // the link  -  a fresh connection often renegotiates to the full size.
         int pdu = await WaitForUsableMtuAsync(MtuWaitMs).ConfigureAwait(false);
         if (pdu < MinUsablePduSize)
         {
-            Log.W("ble", $"MTU stuck at {pdu} (need ≥{MinUsablePduSize}); the controller's reply " +
-                         "won't fit in one notification and would be dropped — reconnecting to renegotiate");
+            Log.W("ble", $"MTU stuck at {pdu} (need >={MinUsablePduSize}); the controller's reply " +
+                         "won't fit in one notification and would be dropped  -  reconnecting to renegotiate");
             await TearDownAsync().ConfigureAwait(false);
             if (_reconnecting == 0 && AutoReconnect &&
                 string.Equals(_desiredMac, mac, StringComparison.OrdinalIgnoreCase))
@@ -603,7 +603,7 @@ public sealed class MpptClient : IAsyncDisposable
         State = ConnectionState.Ready;
         ClearError();
         _sessionCts = new CancellationTokenSource();
-        Log.I("ble", "Link is Ready — starting poll loop");
+        Log.I("ble", "Link is Ready  -  starting poll loop");
         _pollTask = Task.Run(() => PollLoop(_sessionCts.Token));
     }
 
@@ -625,7 +625,7 @@ public sealed class MpptClient : IAsyncDisposable
     }
 
     private void OnMaxPduSizeChanged(GattSession sender, object args)
-        => Log.I("ble", $"MaxPduSize changed → {sender.MaxPduSize}");
+        => Log.I("ble", $"MaxPduSize changed -> {sender.MaxPduSize}");
 
     private static string DescribeServiceFailure(GattCommunicationStatus s, byte? protoErr) => s switch
     {
@@ -633,8 +633,8 @@ public sealed class MpptClient : IAsyncDisposable
             => "Controller is not reachable. It may be out of range, asleep, or already connected to another device. " +
                "Power-cycle the controller, then try again.",
         GattCommunicationStatus.AccessDenied
-            => "Windows refused the GATT access — the controller may need to be paired through " +
-               "Windows Settings → Bluetooth & devices first. Open Settings, add it, then retry.",
+            => "Windows refused the GATT access  -  the controller may need to be paired through " +
+               "Windows Settings -> Bluetooth & devices first. Open Settings, add it, then retry.",
         GattCommunicationStatus.ProtocolError
             => $"GATT protocol error 0x{protoErr:X2}. The controller rejected our handshake.",
         _ => $"GetGattServicesAsync failed with {s}",
@@ -653,7 +653,7 @@ public sealed class MpptClient : IAsyncDisposable
         // Unblock a transaction parked on the dead link so it releases _ioGate
         // promptly, then take the gate ourselves before disposing anything.
         // Holding the gate guarantees we never dispose the GATT characteristics
-        // out from under an in-flight WriteValueAsync — which previously
+        // out from under an in-flight WriteValueAsync  -  which previously
         // surfaced as COM/ObjectDisposed exceptions and a stuck transaction.
         lock (_pendingLock) { _pending?.TrySetResult(false); }
         await _ioGate.WaitAsync().ConfigureAwait(false);
@@ -703,14 +703,14 @@ public sealed class MpptClient : IAsyncDisposable
 
     private void OnConnectionStatusChanged(BluetoothLEDevice sender, object args)
     {
-        Log.I("ble", $"ConnectionStatusChanged → {sender.ConnectionStatus}");
+        Log.I("ble", $"ConnectionStatusChanged -> {sender.ConnectionStatus}");
         if (sender.ConnectionStatus != BluetoothConnectionStatus.Disconnected) return;
 
         bool wasReady = State == ConnectionState.Ready;
         if (wasReady)
         {
             _cooldownUntilTicks = Environment.TickCount64 + CooldownMs;
-            Log.I("ble", $"Mid-session drop — applying {CooldownMs}ms cooldown");
+            Log.I("ble", $"Mid-session drop  -  applying {CooldownMs}ms cooldown");
         }
         var mac = _desiredMac;
         _ = Task.Run(async () =>
@@ -792,7 +792,7 @@ public sealed class MpptClient : IAsyncDisposable
                 Log.W("ble", $"Live poll timeout ({consecutiveTimeouts}/{MaxTimeouts})");
                 if (consecutiveTimeouts >= MaxTimeouts)
                 {
-                    Log.W("ble", "Too many timeouts — forcing reconnect");
+                    Log.W("ble", "Too many timeouts  -  forcing reconnect");
                     _ = ForceReconnect();
                     break;
                 }
@@ -827,7 +827,7 @@ public sealed class MpptClient : IAsyncDisposable
         var ct = _sessionCts?.Token ?? CancellationToken.None;
         bool ok = await TransactAsync(MpptProtocol.WriteRegister(address, value),
                                       Expect.WriteAck, WriteTimeoutMs, ct).ConfigureAwait(false);
-        Log.I("ble", $"WriteRegister(0x{address:X4}, {value}) → {(ok ? "ACK" : "no-ack")}");
+        Log.I("ble", $"WriteRegister(0x{address:X4}, {value}) -> {(ok ? "ACK" : "no-ack")}");
         if (ok)
         {
             try { await ReadSettingsInternalAsync(ct).ConfigureAwait(false); } catch { }
@@ -877,7 +877,7 @@ public sealed class MpptClient : IAsyncDisposable
         }
         finally
         {
-            // Only clear if it's still ours — a teardown may have already
+            // Only clear if it's still ours  -  a teardown may have already
             // replaced/nulled it.
             lock (_pendingLock) { if (ReferenceEquals(_pending, tcs)) _pending = null; }
             _ioGate.Release();
@@ -917,7 +917,7 @@ public sealed class MpptClient : IAsyncDisposable
             DataReader.FromBuffer(buf).ReadBytes(bytes);
             // Log the first few notifications (and every 30th thereafter) so the
             // log file shows definitively that frames are arriving and at what
-            // size — the MTU=23 truncation manifests here as short/absent frames.
+            // size  -  the MTU=23 truncation manifests here as short/absent frames.
             _notifyCount++;
             if (_notifyCount <= 10 || _notifyCount % 30 == 0)
                 Log.I("ble", $"notify rx #{_notifyCount}  {bytes.Length}B  {BitConverter.ToString(bytes)}");
@@ -927,13 +927,13 @@ public sealed class MpptClient : IAsyncDisposable
         catch (Exception ex)
         {
             // A notification can land just as the device is being torn down;
-            // reading its buffer then throws. Nothing to recover — drop it.
+            // reading its buffer then throws. Nothing to recover  -  drop it.
             Log.W("ble", $"Notification dropped: {ex.Message}");
         }
     }
 
     // Accumulate notification bytes and pull out whole Modbus frames. Resync
-    // by dropping a single byte whenever the head doesn't parse — ported from
+    // by dropping a single byte whenever the head doesn't parse  -  ported from
     // the Android NusTransport reassembler.
     private void ProcessIncoming(byte[] chunk)
     {
@@ -950,14 +950,14 @@ public sealed class MpptClient : IAsyncDisposable
                 int total;
                 if (fn == ModbusFrame.FnRead)       total = 3 + (_rxBuffer[2] & 0xFF) + 2;
                 else if (fn == ModbusFrame.FnWrite) total = 8;
-                else { _rxBuffer.RemoveAt(0); continue; }            // unknown fn → resync
+                else { _rxBuffer.RemoveAt(0); continue; }            // unknown fn -> resync
 
                 if (_rxBuffer.Count < total) break;                  // wait for the rest
 
                 var frame = _rxBuffer.GetRange(0, total).ToArray();
                 var resp  = ModbusFrame.Parse(frame);
                 if (resp != null) { _rxBuffer.RemoveRange(0, total); ready.Add(resp); }
-                else              { _rxBuffer.RemoveAt(0); }          // bad CRC → resync one byte
+                else              { _rxBuffer.RemoveAt(0); }          // bad CRC -> resync one byte
             }
         }
         foreach (var r in ready) RouteResponse(r);
@@ -1075,7 +1075,7 @@ public sealed class MpptClient : IAsyncDisposable
     private CancellationTokenSource? _demoCts;
 
     /// <summary>
-    /// Start feeding synthetic telemetry — a 12 V lead-acid pack on a
+    /// Start feeding synthetic telemetry  -  a 12 V lead-acid pack on a
     /// partly-cloudy day. Lets the UI be exercised with no hardware present.
     /// Ported from the Android FakeMpptSource.
     /// </summary>

@@ -21,7 +21,7 @@ data class ControllerSettingsUiState(
 
 // VM for the "edit charger setpoints" screen. Calls into MpptRepository for
 // reads/writes; converts between V/Hz/% display values and the raw 16-bit
-// register values the firmware expects (see BLE_PROTOCOL.md §3.2 / §4).
+// register values the firmware expects (see BLE_PROTOCOL.md s.3.2 / s.4).
 class ControllerSettingsViewModel : ViewModel() {
 
     private suspend fun repo(): MpptRepository =
@@ -73,7 +73,7 @@ class ControllerSettingsViewModel : ViewModel() {
 
     /**
      * Validate a charge voltage before writing.
-     * Range: 10.0–16.0 V (covers 12 V lead-acid / LFP / LiNMC banks).
+     * Range: 10.0-16.0 V (covers 12 V lead-acid / LFP / LiNMC banks).
      * Also guards: cutoff < charge (otherwise the controller can never charge).
      * Returns true if valid and the write should proceed.
      */
@@ -97,7 +97,7 @@ class ControllerSettingsViewModel : ViewModel() {
 
     /**
      * Validate a cutoff voltage before writing.
-     * Range: 10.0–16.0 V. Also guards: cutoff < charge voltage.
+     * Range: 10.0-16.0 V. Also guards: cutoff < charge voltage.
      * Returns true if valid and the write should proceed.
      */
     fun validateAndWriteCutoffVoltage(volts: Double, key: String): Boolean {

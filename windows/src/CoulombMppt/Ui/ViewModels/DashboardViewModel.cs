@@ -50,13 +50,13 @@ public sealed partial class DashboardViewModel : ObservableObject
     // --- Headline metrics ----
     [ObservableProperty] private double _soc;
     [ObservableProperty] private string _socCaption = "SoC";
-    [ObservableProperty] private string _batteryVoltsLabel = "—";
-    [ObservableProperty] private string _chargeLabel = "—";
-    [ObservableProperty] private string _loadLabel = "—";
-    [ObservableProperty] private string _pvLabel = "—";
-    [ObservableProperty] private string _tempLabel = "—";
-    [ObservableProperty] private string _totalAhLabel = "—";
-    [ObservableProperty] private string _chargerStateLabel = "—";
+    [ObservableProperty] private string _batteryVoltsLabel = " - ";
+    [ObservableProperty] private string _chargeLabel = " - ";
+    [ObservableProperty] private string _loadLabel = " - ";
+    [ObservableProperty] private string _pvLabel = " - ";
+    [ObservableProperty] private string _tempLabel = " - ";
+    [ObservableProperty] private string _totalAhLabel = " - ";
+    [ObservableProperty] private string _chargerStateLabel = " - ";
     [ObservableProperty] private bool   _hasLive;
 
     // --- Numeric live values for the gauges ----
@@ -90,11 +90,11 @@ public sealed partial class DashboardViewModel : ObservableObject
     [ObservableProperty] private string _relayLabel = "";
 
     // --- Energy / EA SUN ----
-    [ObservableProperty] private string _todayPvKwh     = "—";
-    [ObservableProperty] private string _todayBattIn    = "—";
-    [ObservableProperty] private string _todayBattOut   = "—";
-    [ObservableProperty] private string _todayEasun     = "—";
-    [ObservableProperty] private string _yesterdayPvKwh = "—";
+    [ObservableProperty] private string _todayPvKwh     = " - ";
+    [ObservableProperty] private string _todayBattIn    = " - ";
+    [ObservableProperty] private string _todayBattOut   = " - ";
+    [ObservableProperty] private string _todayEasun     = " - ";
+    [ObservableProperty] private string _yesterdayPvKwh = " - ";
     [ObservableProperty] private bool   _hasEnergyProfile;
     [ObservableProperty] private string _liveEasunLabel = "";
     [ObservableProperty] private bool   _hasLiveEasun;
@@ -114,7 +114,7 @@ public sealed partial class DashboardViewModel : ObservableObject
     [ObservableProperty] private string _flowStatusLabel = "Idle";
     [ObservableProperty] private string _updatedLabel = "";
 
-    // --- Interactive trend viewport — the three mini-charts share these so they
+    // --- Interactive trend viewport  -  the three mini-charts share these so they
     //     pan, zoom and scrub in lock-step (MiniChart's viewport mode). ----
     [ObservableProperty] private long   _trendViewStartMs;
     [ObservableProperty] private long   _trendViewEndMs;
@@ -249,7 +249,7 @@ public sealed partial class DashboardViewModel : ObservableObject
         string when = TrendCrosshairMs > 0
             ? DateTimeOffset.FromUnixTimeMilliseconds(s.Ts).ToLocalTime().ToString("HH:mm:ss", CultureInfo.InvariantCulture)
             : "live";
-        TrendReadout = $"{when}   ·   {s.V:0.00} V   ·   {s.Pv:0} W PV   ·   net {s.Net:+0;-0;0} W";
+        TrendReadout = $"{when}   .   {s.V:0.00} V   .   {s.Pv:0} W PV   .   net {s.Net:+0;-0;0} W";
     }
 
     // --- Sync ----
@@ -259,15 +259,15 @@ public sealed partial class DashboardViewModel : ObservableObject
         var s = _ble.State;
         // A live relay from the phone takes precedence: the desktop has no BLE
         // link of its own in that case, so showing "Failed/Disconnected" would
-        // be wrong — we're getting fresh data, just over the network.
+        // be wrong  -  we're getting fresh data, just over the network.
         StatusLabel = _ble.RelayActive ? "Relay (phone)" : s switch
         {
             ConnectionState.Ready               => "Connected",
-            ConnectionState.Connecting          => "Connecting…",
-            ConnectionState.DiscoveringServices => "Discovering…",
-            ConnectionState.Reconnecting        => "Reconnecting…",
+            ConnectionState.Connecting          => "Connecting...",
+            ConnectionState.DiscoveringServices => "Discovering...",
+            ConnectionState.Reconnecting        => "Reconnecting...",
             ConnectionState.Failed              => "Failed",
-            ConnectionState.Scanning            => "Scanning…",
+            ConnectionState.Scanning            => "Scanning...",
             _                                   => "Disconnected",
         };
         IsReady = s == ConnectionState.Ready;
@@ -286,12 +286,12 @@ public sealed partial class DashboardViewModel : ObservableObject
         if (live == null)
         {
             BatteryVoltsLabel = ChargeLabel = LoadLabel = PvLabel = TempLabel =
-                TotalAhLabel = ChargerStateLabel = "—";
+                TotalAhLabel = ChargerStateLabel = " - ";
             Soc = 0;
             BatteryVoltage = ChargeCurrentA = PvWatts = TemperatureC = 0;
             BatteryNetA = BatteryNetW = EasunNetA = EasunWatts = 0;
             ChargerStateValue = ChargerState.Unknown;
-            FlowStatusLabel = "—";
+            FlowStatusLabel = " - ";
             UpdatedLabel = "";
             return;
         }
@@ -300,7 +300,7 @@ public sealed partial class DashboardViewModel : ObservableObject
         ChargeLabel       = $"{live.ChargeCurrent:0.0} A";
         LoadLabel         = $"{live.DischargeCurrent:0.0} A";
         PvLabel           = $"{live.ApproxPvWatts:0} W";
-        TempLabel         = $"{live.TemperatureC:0.0} °C";
+        TempLabel         = $"{live.TemperatureC:0.0}  degC";
         TotalAhLabel      = $"{live.TotalAccumulatedAh:0.0} Ah";
         ChargerStateLabel = live.ChargerState.Label();
         ChargerStateValue = live.ChargerState;
@@ -318,7 +318,7 @@ public sealed partial class DashboardViewModel : ObservableObject
         if (RelayActive)
         {
             // We're being fed by the phone; the desktop's own BLE attempts (and
-            // their errors) are just noise in this mode — reflect relay status.
+            // their errors) are just noise in this mode  -  reflect relay status.
             StatusLabel = "Relay (phone)";
             if (!string.IsNullOrEmpty(LastError)) LastError = "";
         }
@@ -344,7 +344,7 @@ public sealed partial class DashboardViewModel : ObservableObject
 
         // Phase 2: prefer the sag-based observer once it clears the confidence
         // gate, else fall back to the legacy differentiator. Observer BusLoadA is
-        // positive when drawing, so EA SUN net (positive = charging) is −BusLoadA.
+        // positive when drawing, so EA SUN net (positive = charging) is -BusLoadA.
         var est    = ServiceLocator.Observer.Current;
         var easunA = EnergyComputer.LiveEasunA(_recentBuf, profile);
         ModelConfidencePct = est?.ConfidencePct ?? 0;
@@ -357,8 +357,8 @@ public sealed partial class DashboardViewModel : ObservableObject
             EasunNetA    = netA;
             EasunWatts   = -est.BusLoadW;
             LiveEasunLabel = netA >= 0
-                ? $"EA SUN  +{netA:0.0} A · +{EasunWatts:0} W  (array charging the bank)"
-                : $"EA SUN  {netA:0.0} A · {EasunWatts:0} W  (inverter drawing load)";
+                ? $"EA SUN  +{netA:0.0} A . +{EasunWatts:0} W  (array charging the bank)"
+                : $"EA SUN  {netA:0.0} A . {EasunWatts:0} W  (inverter drawing load)";
         }
         else if (easunA != null)
         {
@@ -367,8 +367,8 @@ public sealed partial class DashboardViewModel : ObservableObject
             EasunNetA    = easunA.Value;
             EasunWatts   = easunA.Value * live.BatteryVoltage;
             LiveEasunLabel = easunA.Value >= 0
-                ? $"EA SUN  +{easunA.Value:0.0} A · +{EasunWatts:0} W  (array charging the bank)"
-                : $"EA SUN  {easunA.Value:0.0} A · {EasunWatts:0} W  (inverter drawing load)";
+                ? $"EA SUN  +{easunA.Value:0.0} A . +{EasunWatts:0} W  (array charging the bank)"
+                : $"EA SUN  {easunA.Value:0.0} A . {EasunWatts:0} W  (inverter drawing load)";
         }
         else
         {
@@ -379,7 +379,7 @@ public sealed partial class DashboardViewModel : ObservableObject
         // Total battery throughput = MPPT net + inferred EA SUN net.
         BatteryNetA = mpptNetA + EasunNetA;
         BatteryNetW = BatteryNetA * live.BatteryVoltage;
-        FlowStatusLabel = BatteryNetW > 5 ? "Charging ↑" : BatteryNetW < -5 ? "Discharging ↓" : "Idle";
+        FlowStatusLabel = BatteryNetW > 5 ? "Charging ^" : BatteryNetW < -5 ? "Discharging v" : "Idle";
 
         UpdateScales();
 
@@ -421,7 +421,7 @@ public sealed partial class DashboardViewModel : ObservableObject
         EasunScaleMax  = NiceCeil(Math.Max(_maxEasun, 5));
     }
 
-    // Round up to a "nice" 1/2/5 × 10ⁿ ceiling so the dial labels read cleanly.
+    // Round up to a "nice" 1/2/5 x 10 ceiling so the dial labels read cleanly.
     private static double NiceCeil(double v)
     {
         if (v <= 0) return 1;
@@ -464,7 +464,7 @@ public sealed partial class DashboardViewModel : ObservableObject
                 string dir = today.EasunNetWh.Value >= 0 ? "net charging" : "net draw";
                 TodayEasun = $"{wh / 1000.0:0.00} kWh ({dir})";
             }
-            else TodayEasun = "—";
+            else TodayEasun = " - ";
         }
     }
 
@@ -475,7 +475,7 @@ public sealed partial class DashboardViewModel : ObservableObject
     }
 
     // Prefer the controller's own calibration (settings setpoints), then the
-    // cached profile on the paired record, then the crude V→SoC fallback.
+    // cached profile on the paired record, then the crude V->SoC fallback.
     private double ResolveSoc(MpptLive live)
     {
         var v = live.BatteryVoltage;
@@ -508,7 +508,7 @@ public sealed partial class DashboardViewModel : ObservableObject
             ? ""
             : active.Count == 1
                 ? active[0].Message
-                : $"{active.Count} active alerts — newest: {active[0].Message}";
+                : $"{active.Count} active alerts  -  newest: {active[0].Message}";
     }
 
     private static void RunOnUi(Action a)

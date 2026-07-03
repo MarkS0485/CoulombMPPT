@@ -6,16 +6,16 @@ using System.Windows.Threading;
 namespace CoulombMppt.Ui.Controls;
 
 // The dashboard centrepiece: a live, animated power-flow picture (the WPF answer
-// to the Android EnergyFlow composable). Three nodes — Solar array, the battery
-// bank, and the EA SUN inverter/load — joined by connectors whose thickness and
+// to the Android EnergyFlow composable). Three nodes  -  Solar array, the battery
+// bank, and the EA SUN inverter/load  -  joined by connectors whose thickness and
 // animated "marching dots" show how much power is moving and which way.
 //
-//   ☀ Solar ──▶ 🔋 Battery ◀──▶ ⚡ EA SUN
+//    Solar   Battery   EA SUN
 //
-//  • Solar → Battery: the sensed MPPT charge, always left-to-right.
-//  • Battery ↔ EA SUN: the *inferred* EA SUN contribution. Positive means its
-//    own panels are pushing charge into the bank (dots flow right→left, green);
-//    negative means the inverter is drawing load (dots flow left→right, copper).
+//  - Solar -> Battery: the sensed MPPT charge, always left-to-right.
+//  - Battery <-> EA SUN: the *inferred* EA SUN contribution. Positive means its
+//    own panels are pushing charge into the bank (dots flow right->left, green);
+//    negative means the inverter is drawing load (dots flow left->right, copper).
 //
 // Custom-drawn (no charting/animation NuGet) so it stays within the app's tiny
 // dependency budget, matching SocRing / RadialGauge / MiniChart.
@@ -105,13 +105,13 @@ public sealed class EnergyFlowDiagram : FrameworkElement
         double scale = Math.Max(50, Math.Max(SolarW, Math.Max(Math.Abs(EasunW), Math.Abs(BatteryNetW))));
 
         // ---- Connectors (drawn under the nodes so the rounded cards cap them) ----
-        // Solar → Battery: always charging direction (left → right).
+        // Solar -> Battery: always charging direction (left -> right).
         DrawConnector(dc, solar.Right, batt.Left, midY, SolarW, scale, Brush(TealC), travelPositive: true, faded: !IsLive);
 
-        // Battery ↔ EA SUN: direction depends on the sign of the inferred flow.
+        // Battery <-> EA SUN: direction depends on the sign of the inferred flow.
         bool easunCharges = EasunW >= 0;
         uint easunCol = easunCharges ? GreenC : CopperC;
-        // x0→x1 is the travel direction of the dots.
+        // x0->x1 is the travel direction of the dots.
         double e0 = easunCharges ? easun.Left : batt.Right;
         double e1 = easunCharges ? batt.Right : easun.Left;
         DrawConnector(dc, e0, e1, midY, Math.Abs(EasunW), scale, Brush(easunCol),
@@ -151,7 +151,7 @@ public sealed class EnergyFlowDiagram : FrameworkElement
         };
         dc.DrawLine(band, new Point(left, y), new Point(right, y));
 
-        // Marching dots — the sense of flow. Higher power ⇒ faster, denser.
+        // Marching dots  -  the sense of flow. Higher power => faster, denser.
         double len = right - left;
         int n = Math.Max(3, (int)(len / 22));
         double speed = 0.45 + 0.9 * f;
@@ -160,7 +160,7 @@ public sealed class EnergyFlowDiagram : FrameworkElement
         for (int i = 0; i <= n; i++)
         {
             double prog = Frac(i / (double)n + _phase * speed);
-            double t = travelPositive ? prog : 1 - prog;     // 0..1 along x0→x1
+            double t = travelPositive ? prog : 1 - prog;     // 0..1 along x0->x1
             double x = left + t * len;
             double a = Math.Sin(Math.PI * prog);             // fade in/out at the ends
             var c = new SolidColorBrush(Color.FromArgb((byte)(220 * a), dotBrush.Color.R, dotBrush.Color.G, dotBrush.Color.B));
@@ -207,7 +207,7 @@ public sealed class EnergyFlowDiagram : FrameworkElement
 
         if (faded)
         {
-            CenterText(dc, "—", 27, InkLo, FontWeights.SemiBold, cx, r.Top + r.Height * 0.52);
+            CenterText(dc, " - ", 27, InkLo, FontWeights.SemiBold, cx, r.Top + r.Height * 0.52);
             CenterText(dc, "add battery profile", 10.5, InkLo, FontWeights.Normal, cx, r.Bottom - 22);
             return;
         }
@@ -221,7 +221,7 @@ public sealed class EnergyFlowDiagram : FrameworkElement
         double cx = r.Left + r.Width / 2;
         DrawText(dc, "BATTERY BANK", 10.5, faded ? InkLo : BlueC, FontWeights.SemiBold, new Point(r.Left + 14, r.Top + 12));
 
-        // Horizontal battery glyph, filled to SoC with the red→amber→green ramp.
+        // Horizontal battery glyph, filled to SoC with the red->amber->green ramp.
         double soc = Math.Clamp(double.IsNaN(Soc) ? 0 : Soc, 0, 100);
         double bw = Math.Min(r.Width - 40, 120), bh = 26;
         double bx = cx - bw / 2, by = r.Top + 34;

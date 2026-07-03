@@ -19,7 +19,7 @@
                           Subtitle="Read and write the controller's configuration registers">
                 <c:PageHeader.ActionContent>
                     <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="Working…" Foreground="{StaticResource SolarTeal}" FontWeight="SemiBold"
+                        <TextBlock Text="Working..." Foreground="{StaticResource SolarTeal}" FontWeight="SemiBold"
                                    VerticalAlignment="Center" Margin="0,0,10,0"
                                    Visibility="{Binding Busy, Converter={StaticResource BoolToVis}}"/>
                         <Button Content="Read" Style="{StaticResource OutlinedButton}" Margin="0,0,6,0"
@@ -30,7 +30,7 @@
                 </c:PageHeader.ActionContent>
             </c:PageHeader>
 
-            <TextBlock Text="No settings loaded yet — press Read (the controller must be connected)."
+            <TextBlock Text="No settings loaded yet  -  press Read (the controller must be connected)."
                        Style="{StaticResource Caption}" Margin="0,0,0,8"
                        Visibility="{Binding HasSettings, Converter={StaticResource BoolToVisInv}}"/>
 

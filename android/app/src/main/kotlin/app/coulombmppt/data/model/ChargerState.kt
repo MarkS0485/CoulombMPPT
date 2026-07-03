@@ -2,7 +2,7 @@ package app.coulombmppt.data.model
 
 // Synthesised top-level charger state. We don't yet have ground truth for
 // the firmware's solar_status / work_status / power_status enum codes
-// (BLE_PROTOCOL.md §7.1 — they come from the cloud API not the APK). Until
+// (BLE_PROTOCOL.md s.7.1  -  they come from the cloud API not the APK). Until
 // they're verified on hardware we derive the state heuristically from the
 // numeric registers; once enum codes are known, swap the heuristic for a
 // direct mapping.
@@ -18,9 +18,9 @@ enum class ChargerState {
     companion object {
         /**
          * Heuristic mapping until the firmware enum codes are confirmed.
-         * Charge current present  → some flavour of charging (Bulk).
-         * Load current only       → discharging (Idle node, load on).
-         * Nothing                 → Idle.
+         * Charge current present  -> some flavour of charging (Bulk).
+         * Load current only       -> discharging (Idle node, load on).
+         * Nothing                 -> Idle.
          */
         fun fromRegisters(
             solarStatus: Int,
@@ -32,7 +32,7 @@ enum class ChargerState {
         ): ChargerState {
             // Fault bit is conventionally encoded high in this kind of
             // firmware. We treat any non-zero code in solarStatus combined
-            // with chargeCurrent == 0 and batteryVoltage > 10 V as Fault —
+            // with chargeCurrent == 0 and batteryVoltage > 10 V as Fault  -
             // refine when we have firmware docs.
             if (workStatus >= 0x10 || solarStatus >= 0x10) return Fault
             return when {

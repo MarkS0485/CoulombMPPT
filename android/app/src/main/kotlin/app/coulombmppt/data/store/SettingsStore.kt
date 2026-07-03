@@ -16,10 +16,10 @@ import app.coulombmppt.data.model.BatteryChemistry
 import app.coulombmppt.data.model.DeviceType
 import app.coulombmppt.data.model.PairedController
 
-// DataStore wrapper. The active source of truth is `controllers` — a JSON
+// DataStore wrapper. The active source of truth is `controllers`  -  a JSON
 // list of paired MPPT units, each with its own MAC, display name, accent
 // and cached battery profile. The single-controller legacy keys
-// (paired_mac, paired_name, cached_full_v, …) are still read so an upgrade
+// (paired_mac, paired_name, cached_full_v, ...) are still read so an upgrade
 // from a previous build migrates seamlessly into the list on first launch.
 //
 // Existing screens that read `settings.pairedMac`, `settings.displayName`,
@@ -66,7 +66,7 @@ class SettingsStore(private val context: Context) {
         val SELECTED_ID      = stringPreferencesKey("selected_controller_id")
         val USE_FAKE         = stringPreferencesKey("use_fake_source")
 
-        // Legacy single-controller keys — read for one-shot migration only.
+        // Legacy single-controller keys  -  read for one-shot migration only.
         val LEGACY_MAC          = stringPreferencesKey("paired_mac")
         val LEGACY_NAME         = stringPreferencesKey("paired_name")
         val LEGACY_FULL_V       = doublePreferencesKey("cached_full_v")
@@ -79,7 +79,7 @@ class SettingsStore(private val context: Context) {
     suspend fun snapshot(): CoulombMpptSettings = flow.first()
 
     /** Append-or-update a paired controller and select it. Identical MACs
-     *  are treated as the same controller — we update its display name and
+     *  are treated as the same controller  -  we update its display name and
      *  keep the existing id, profile cache and pair-date. */
     suspend fun pair(
         macAddress: String,
@@ -121,7 +121,7 @@ class SettingsStore(private val context: Context) {
         return result!!
     }
 
-    /** Legacy no-arg overload — unpairs the currently selected controller.
+    /** Legacy no-arg overload  -  unpairs the currently selected controller.
      *  Kept so AppSettingsScreen's "Unpair" button works without knowing
      *  about the multi-controller model yet. */
     suspend fun unpair() {
@@ -180,7 +180,7 @@ class SettingsStore(private val context: Context) {
     }
 
     /** Persist the user-supplied pack spec (chemistry / nominal V / user
-     *  full+empty / capacity). Any null arg leaves that field untouched —
+     *  full+empty / capacity). Any null arg leaves that field untouched  -
      *  use Double.NaN sentinel via a wrapper if "clear back to null" ever
      *  becomes necessary. */
     suspend fun updateBatteryPack(
@@ -228,7 +228,7 @@ class SettingsStore(private val context: Context) {
         }
     }
 
-    /** Legacy single-controller overload — routes to the currently selected
+    /** Legacy single-controller overload  -  routes to the currently selected
      *  controller. Kept so ControllerSettingsViewModel keeps compiling. */
     suspend fun saveBatteryProfile(fullV: Double, recoverV: Double, emptyV: Double) {
         val id = snapshot().selected?.id ?: return

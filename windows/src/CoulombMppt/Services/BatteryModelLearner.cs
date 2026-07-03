@@ -5,8 +5,8 @@ using CoulombMppt.Data.BatteryModel;
 namespace CoulombMppt.Services;
 
 // Background service that learns the per-controller battery model (OCV curve,
-// internal resistance, baseload band) from the live 1 Hz stream — mostly
-// overnight, when the house is quiet — and persists it via BatteryModelStore.
+// internal resistance, baseload band) from the live 1 Hz stream  -  mostly
+// overnight, when the house is quiet  -  and persists it via BatteryModelStore.
 // Lifecycle mirrors AlertEngine/HistoryRecorder: subscribe to LiveChanged,
 // classify each frame (rest / PV-transient / quiet-night / charging), feed the
 // accumulators, and persist a rebuilt BatteryModelRecord periodically.
@@ -152,7 +152,7 @@ public sealed class BatteryModelLearner : IDisposable
         if (rec != null)
         {
             _models.Save(mac, rec);
-            Log.I("model", $"persisted {mac}: ocv={rec.Ocv.Count} R={rec.R.RGlobalOhms:F4}Ω base={rec.Baseload.SampleCount} conf={rec.ConfidencePct:F0}%");
+            Log.I("model", $"persisted {mac}: ocv={rec.Ocv.Count} R={rec.R.RGlobalOhms:F4}ohm base={rec.Baseload.SampleCount} conf={rec.ConfidencePct:F0}%");
         }
     }
 
@@ -173,7 +173,7 @@ public sealed class BatteryModelLearner : IDisposable
 
     // Replay stored history through the SAME core/classifier code so rest +
     // baseload (and any luck with R) learn from before the app was running.
-    // 30 s rows are coarse — rest/baseload still work, R-transients mostly won't,
+    // 30 s rows are coarse  -  rest/baseload still work, R-transients mostly won't,
     // and that's fine: live 1 Hz fills R in.
     private void Backfill(string mac)
     {

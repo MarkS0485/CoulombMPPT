@@ -33,7 +33,7 @@ import app.coulombmppt.data.store.SettingsStore
 // band, so a slow recovery doesn't spam the user.
 //
 // Critical alerts (battery over/undervoltage) post a heads-up notification
-// on their own channel — lithium chemistries are genuinely dangerous when
+// on their own channel  -  lithium chemistries are genuinely dangerous when
 // over-volted and the user needs to know NOW.
 class AlertEngine(
     private val appContext: Context,
@@ -55,9 +55,9 @@ class AlertEngine(
     }
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Default + errorHandler)
     private val jobs = ConcurrentHashMap<String, Job>()
-    /** Per-controller active-flag map (kind → still triggered?). Lives only
+    /** Per-controller active-flag map (kind -> still triggered?). Lives only
      *  in memory; on process restart we re-evaluate fresh, which is the
-     *  right behaviour — the user expects a current snapshot of state. */
+     *  right behaviour  -  the user expects a current snapshot of state. */
     private val active = ConcurrentHashMap<String, MutableSet<Kind>>()
 
     fun start(controllerId: String, repo: MpptRepository) {
@@ -185,7 +185,7 @@ class AlertEngine(
             }
             cleared && wasActive -> {
                 activeSet.remove(kind)
-                AppLogger.i(TAG, "cleared ${kind.displayName} $controllerId — back inside safe band")
+                AppLogger.i(TAG, "cleared ${kind.displayName} $controllerId  -  back inside safe band")
             }
         }
     }
@@ -199,7 +199,7 @@ class AlertEngine(
                     "Critical battery alerts",
                     NotificationManager.IMPORTANCE_HIGH,
                 ).apply {
-                    description = "Battery overvoltage / undervoltage — potentially dangerous."
+                    description = "Battery overvoltage / undervoltage  -  potentially dangerous."
                     enableLights(true)
                     enableVibration(true)
                 }
@@ -217,7 +217,7 @@ class AlertEngine(
         )
         val notification: Notification = NotificationCompat.Builder(appContext, CHANNEL_ID)
             .setSmallIcon(R.drawable.ic_notification)
-            .setContentTitle("⚠ ${kind.displayName}")
+            .setContentTitle(" ${kind.displayName}")
             .setContentText(message)
             .setStyle(NotificationCompat.BigTextStyle().bigText(message))
             .setPriority(NotificationCompat.PRIORITY_HIGH)

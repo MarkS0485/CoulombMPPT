@@ -8,12 +8,12 @@ namespace CoulombMppt.Services;
 // is meant to do logging well (the whole reason this client exists), so this
 // is a step up from the heater's truncate-per-session logger:
 //
-//   • Everything goes to %APPDATA%\CoulombMppt\logs\log.txt.
-//   • At process start the previous session's log is archived to
+//   - Everything goes to %APPDATA%\CoulombMppt\logs\log.txt.
+//   - At process start the previous session's log is archived to
 //     session-<yyyyMMdd-HHmmss>.log; the newest MaxArchives are kept.
-//   • If the live log passes MaxBytes mid-session it's rolled into an archive
+//   - If the live log passes MaxBytes mid-session it's rolled into an archive
 //     and a fresh file is opened, so a runaway BLE loop can't fill the disk.
-//   • An in-memory ring buffer + LineWritten event lets the Log viewer page
+//   - An in-memory ring buffer + LineWritten event lets the Log viewer page
 //     live-tail without re-reading the file.
 public static class Log
 {
@@ -49,7 +49,7 @@ public static class Log
                 : "?";
             File.WriteAllText(LogPath,
                 $"=== {asmName} v{asmVer} (built {built}) ===\n" +
-                $"[{DateTime.Now:O}] session start — log open\n");
+                $"[{DateTime.Now:O}] session start  -  log open\n");
         }
         catch { /* never let the logger throw into hot paths */ }
     }

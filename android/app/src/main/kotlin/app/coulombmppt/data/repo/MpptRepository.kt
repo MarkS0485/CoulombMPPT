@@ -48,7 +48,7 @@ class MpptRepository(private val source: MpptSource) {
 
     // Bounded in-memory ring of recent live samples. Powers the Live-tab
     // sparklines without touching Room. Independent of (and complementary
-    // to) the persistent history written by HistoryRecorder downstream —
+    // to) the persistent history written by HistoryRecorder downstream  -
     // this one is cheap, lossless at 1 Hz, and resets on process death.
     private val _sampleRing = MutableStateFlow<List<MpptLive>>(emptyList())
     val sampleRing: StateFlow<List<MpptLive>> = _sampleRing.asStateFlow()
@@ -60,16 +60,16 @@ class MpptRepository(private val source: MpptSource) {
 
     // Guards start()/stop() so concurrent callers (PollingService watcher +
     // several ViewModels all reacting to the same settings emission) can't slip
-    // past the idempotency check together and launch two source.start() calls —
+    // past the idempotency check together and launch two source.start() calls  -
     // which raced into two connectGatt() and the BLE stack's status-133 churn.
     private val startLock = Any()
 
-    /** Begin (or continue) a session against `macAddress`. Idempotent — if
+    /** Begin (or continue) a session against `macAddress`. Idempotent  -  if
      *  already started against the same MAC, repeated calls are no-ops.
      *  Without this guard, multiple ViewModels (Controllers Home + Unit
      *  Detail) each call start() on every settings-flow emission and tear
      *  down the in-flight BLE connection, sending the source into an
-     *  endless connect → spurious-disconnect → reconnect loop. */
+     *  endless connect -> spurious-disconnect -> reconnect loop. */
     fun start(macAddress: String) = synchronized(startLock) {
         if (currentMac == macAddress && collector?.isActive == true) return@synchronized
         currentMac = macAddress
