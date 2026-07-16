@@ -323,14 +323,14 @@ class BleMpptSource(context: Context) : MpptSource {
         val frame = MpptProtocol.writeRegister(address, value)
         _diag.tryEmit(MpptSource.Diag(MpptSource.Diag.Direction.Tx, frame))
         transport.write(frame).getOrThrow()
-        withTimeoutOrNull(2000) {
+        val ack = withTimeoutOrNull(2000) {
             while (true) {
                 val r = oneshot.receive()
                 if (r.functionCode == ModbusFrame.FN_WRITE) return@withTimeoutOrNull r
             }
             @Suppress("UNREACHABLE_CODE") null
-        } ?: error("write ACK timed out")
-        Unit
+        }
+        if (ack == null) error("write ACK timed out")
     }
 
     fun shutdown() {
