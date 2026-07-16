@@ -25,9 +25,9 @@ public static class VictronKeyPrompt
         var root = new StackPanel { Margin = new Thickness(16) };
         root.Children.Add(new TextBlock
         {
-            Text = $""{deviceName}" broadcasts encrypted Instant Readout data. " +
-                   "Paste its advertisement key  -  in VictronConnect open the device, then " +
-                   "Settings -> Product info -> "Instant readout via Bluetooth" -> " +
+            Text = $"\"{deviceName}\" broadcasts encrypted Instant Readout data. " +
+                   "Paste its advertisement key - in VictronConnect open the device, then " +
+                   "Settings -> Product info -> \"Instant readout via Bluetooth\" -> " +
                    "Show encryption key.",
             TextWrapping = TextWrapping.Wrap,
             Margin = new Thickness(0, 0, 0, 10),

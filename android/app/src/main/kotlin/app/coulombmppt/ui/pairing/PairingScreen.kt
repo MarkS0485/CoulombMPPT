@@ -195,7 +195,7 @@ private fun DeviceTypeDialog(
 ) {
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("Pair "$deviceName" as") },
+        title = { Text("Pair \"$deviceName\" as") },
         text = {
             Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
                 DeviceType.entries.forEach { type ->
@@ -228,9 +228,9 @@ private fun VictronKeyDialog(
         text = {
             Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
                 Text(
-                    ""$deviceName" broadcasts encrypted Instant Readout data. " +
-                        "Paste its advertisement key  -  in VictronConnect open the device, " +
-                        "then Settings -> Product info -> "Instant readout via Bluetooth" -> " +
+                    "\"$deviceName\" broadcasts encrypted Instant Readout data. " +
+                        "Paste its advertisement key - in VictronConnect open the device, " +
+                        "then Settings -> Product info -> \"Instant readout via Bluetooth\" -> " +
                         "Show encryption key.",
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
