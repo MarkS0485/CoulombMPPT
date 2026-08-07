@@ -13,7 +13,7 @@ datastore            = "1.2.1"
 coroutines           = "1.11.0"
 vico                 = "3.2.3"
 room                 = "2.8.4"
-ksp                  = "2.3.10"
+ksp                  = "2.3.11"
 zxing                = "4.3.0"
 
 [libraries]
